@@ -1,11 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/",                 // domain kökü
   build: {
-    outDir: "docs",          // dist yerine docs klasörüne build al
+    outDir: 'docs',   // 💥 Build çıktısı dist değil, docs klasörü olacak
   },
 })
