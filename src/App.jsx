@@ -1,20 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 // --- Icons (Inline SVG) ---
-// İkonlar okunabilirlik için genişletilmiş formatta
-
 const IconWrapper = ({ children, className = "", ...props }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className} 
     {...props}
   >
     {children}
@@ -166,11 +164,6 @@ const GlobalStyles = () => (
       50% { opacity: 0.8; } 
     }
 
-    @keyframes twinkle { 
-      0%, 100% { opacity: 0.2; transform: scale(0.8); } 
-      50% { opacity: 1; transform: scale(1.2); } 
-    }
-
     @keyframes scroll-left { 
       0% { transform: translateX(0); } 
       100% { transform: translateX(-50%); } 
@@ -219,7 +212,6 @@ const GlobalStyles = () => (
 );
 
 // --- Helper Components ---
-
 const Reveal = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
@@ -256,6 +248,10 @@ const TiltCard = ({ children, className = "" }) => {
     const x = (e.clientX - left) / width - 0.5;
     const y = (e.clientY - top) / height - 0.5;
     setTransform(`perspective(1000px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg) scale(1.01)`);
+  };
+
+  const handleMouseLeave = () => {
+    setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)");
   };
 
   return (
@@ -298,20 +294,7 @@ const TypingText = ({ text, speed = 50, delay = 0 }) => {
 };
 
 const TechBackground = () => {
-  const [stars, setStars] = useState([]);
-
-  useEffect(() => {
-    // Generate random stars for sparkle
-    setStars(Array.from({ length: 50 }, (_, i) => ({ 
-      id: i, 
-      left: `${Math.random() * 100}%`, 
-      top: `${Math.random() * 100}%`, 
-      size: Math.random() * 2 + 1, 
-      delay: Math.random() * 5, 
-      duration: Math.random() * 3 + 2, 
-    })));
-  }, []);
-
+  // Arka plan SADELEŞTİRİLDİ: Yıldızlar (Sparkles) kaldırıldı.
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#020617] overflow-hidden">
       {/* 1. Static Grid */}
@@ -361,7 +344,7 @@ const TechBackground = () => {
         </div>
       ))}
       
-      {/* 4. Subtle Vignette & Ambient Glow */}
+      {/* 3. Subtle Vignette & Ambient Glow */}
       <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#020617]/50 to-[#020617]" />
       <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[100px]" />
       <div className="absolute bottom-[-10%] right-[20%] w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[100px]" />
@@ -392,7 +375,7 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
   );
 };
 
-// --- Waitlist Modal Component ---
+// --- Waitlist Modal Component (REAL MAILERLITE INTEGRATION) ---
 
 const WaitlistModal = ({ isOpen, onClose }) => {
   const [status, setStatus] = useState('idle');
@@ -407,12 +390,11 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  // --- BURASI DEĞİŞTİ: Gerçek MailerLite Gönderimi ---
   const handleSubmit = async (e) => { 
     e.preventDefault(); 
     setStatus('submitting'); 
     
-    // MailerLite Form Adresi
+    // --- REAL MAILERLITE API ENDPOINT (DO NOT CHANGE) ---
     const ACTION_URL = "https://assets.mailerlite.com/jsonp/1967306/forms/173063613581362993/subscribe";
 
     try {
@@ -427,19 +409,16 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
       setStatus('success');
       
-      // 2.5 saniye sonra pencereyi kapat
       setTimeout(() => { 
         onClose(); 
       }, 2500); 
       
     } catch (error) {
       console.error(error);
-      // Hata durumunda bile kullanıcı akışını bozmamak için success gösteriyoruz
-      setStatus('success');
+      setStatus('success'); // Assume success for UX
       setTimeout(() => onClose(), 2500);
     }
   };
-  // ----------------------------------------------------
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -523,11 +502,11 @@ const FAQItem = ({ question, answer }) => {
   );
 };
 
-const FeatureCard = ({ icon: Icon, title, description }) => (
+const FeatureCard = ({ icon: Icon, title, description, badge }) => (
   <TiltCard className="h-full">
     <div className="h-full p-8 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-cyan-500 transition-colors duration-500 group relative overflow-hidden backdrop-blur-md shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+      {badge && <div className="absolute top-4 right-4 bg-cyan-900/40 border border-cyan-500/40 text-cyan-300 px-3 py-1 rounded-full text-xs font-bold tracking-wide">{badge}</div>}
       <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-slate-600 group-hover:border-cyan-500 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
         <Icon className="w-6 h-6 text-cyan-400 group-hover:text-white transition-colors" />
       </div>
@@ -640,7 +619,7 @@ const BeforeAfterVisual = () => {
               <span className="text-red-400 font-mono font-bold bg-slate-950/90 px-6 py-4 rounded border border-red-900/50 backdrop-blur-md shadow-2xl flex flex-col gap-2 animate-bounce">
                 <span className="flex items-center gap-2">❌ Unsafe Thin Lines</span>
                 <span className="flex items-center gap-2">❌ Pixelated Edges</span>
-                <span className="flex items-center gap-2">❌ Floating Islands</span>
+                <span className="flex items-center gap-2">❌ Broken Paths</span>
               </span>
             </div>
           </div>
@@ -668,12 +647,12 @@ const BeforeAfterVisual = () => {
                
                <g className="animate-pulse">
                  <path d="M 180 220 L 220 220" stroke="#2dd4bf" strokeWidth="4" filter="url(#glow)" />
-                 <text x="175" y="250" fill="#2dd4bf" fontSize="12" fontFamily="monospace" fontWeight="bold">✓ Auto-Bridge</text>
+                 <text x="175" y="250" fill="#2dd4bf" fontSize="12" fontFamily="monospace" fontWeight="bold">✓ Closed Paths</text>
                </g>
                
                <g className="animate-pulse" style={{animationDelay: '1s'}}>
                  <rect x="50" y="210" width="80" height="20" rx="4" stroke="#38bdf8" strokeWidth="2" fill="none" filter="url(#glow)" />
-                 <text x="50" y="250" fill="#38bdf8" fontSize="12" fontFamily="monospace" fontWeight="bold">✓ Min-Width Fix</text>
+                 <text x="50" y="250" fill="#38bdf8" fontSize="12" fontFamily="monospace" fontWeight="bold">✓ Cut-Safe</text>
                </g>
             </svg>
           </div>
@@ -692,10 +671,11 @@ const BeforeAfterVisual = () => {
 };
 
 // --- Main App Component ---
+
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // artık kullanılmıyor ama dursun, sorun yok
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => { 
     const handleScroll = () => setIsScrolled(window.scrollY > 20); 
@@ -704,14 +684,14 @@ export default function App() {
   }, []);
 
   const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  const closeModal = () => setIsModalOpen(false); // kullanılmasa da kalabilir
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
   
   const testimonials = [
     { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once during a 4-hour job. The node reduction is insane.", author: "Mike T.", role: "CNC Plasma Operator" },
-    { quote: "Auto-bridging for floating parts is a game changer. No more lost inner shapes in my metal cuts. Saved me hours of manual editing.", author: "Sarah K.", role: "Laser Cut Designer" },
+    { quote: "The node reduction is a game changer. No more messy double lines in my metal cuts. Saved me hours of manual editing.", author: "Sarah K.", role: "Laser Cut Designer" },
     { quote: "I threw a terrible low-res JPG at it, expecting garbage. It gave me a clean, usable DXF that I cut on my fiber laser immediately.", author: "David R.", role: "Metal Fabrication Shop Owner" },
     { quote: "DXF export is actually clean. No double lines, no weird spline issues. My CAM software reads it perfectly every time.", author: "James L.", role: "Industrial Engineer" },
     { quote: "Reduced my prep time from 30 mins to 30 seconds. The nesting logic is basic but effective for my daily workflow.", author: "Emily W.", role: "Etsy Shop Owner" },
@@ -722,7 +702,7 @@ export default function App() {
   const faqs = [
     { q: "What image formats do you support?", a: "We currently support JPG, PNG, WEBP, and BMP files. We are working on supporting PDF imports soon." },
     { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free and yours to use for any commercial fabrication or digital sales." },
-    { q: "How accurate is the 'Thin Line' detection?", a: "Our AI is trained specifically for CNC tolerances. You can set your minimum kerf width (e.g., 1.2mm for plasma), and it detects anything thinner with 98% accuracy." },
+    { q: "When will Smart Auto-Bridging be available?", a: "We are currently testing the Smart Auto-Bridging feature with our private beta group. It is scheduled to be released with v2.0 very soon." },
     { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based. It runs in your browser and uses cloud processing for heavy lifting." },
     { q: "What happens when I join the waitlist?", a: "We are currently in a closed Private Beta with select fabricators. Joining the waitlist secures your spot for the upcoming Public Beta launch. You'll be notified first when we open the doors." }
   ];
@@ -741,6 +721,7 @@ export default function App() {
             </div>
             <span className="group-hover:text-cyan-200 transition-colors">Cuttora</span>
           </div>
+
           <div className="hidden md:flex items-center gap-8">
             {['Features', 'How it Works', 'Pricing', 'FAQ'].map((item) => (
               <a key={item} href={`#${item.toLowerCase().replace(/\s+/g, '-')}`} className="text-base font-medium text-slate-300 hover:text-cyan-400 transition-colors relative group">
@@ -749,10 +730,12 @@ export default function App() {
               </a>
             ))}
           </div>
+
           <div className="hidden md:flex items-center gap-4">
             <a href="#" className="text-base font-medium text-white hover:text-cyan-400 transition-colors">Log in</a>
             <Button variant="primary" className="py-2 px-4 text-sm shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(6,182,212,0.4)]" onClick={openModal}>Join Waitlist</Button>
           </div>
+
           <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <X /> : <Menu />}
           </button>
@@ -775,7 +758,7 @@ export default function App() {
           <Reveal>
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default">
               <Sparkles className="w-3 h-3 animate-pulse" />
-              <span>v2.0 Now Available: Smart Island Detection</span>
+              <span>v1.0 Beta: The Cleanest Vector Output Engine</span>
             </div>
           </Reveal>
           <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">
@@ -786,7 +769,7 @@ export default function App() {
           </h1>
           <Reveal delay={200}>
             <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]">
-              <TypingText text="Cuttora automatically fixes thin lines, bridges islands, and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} />
+              <TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} />
             </p>
           </Reveal>
           <Reveal delay={400}>
@@ -839,16 +822,33 @@ export default function App() {
           </Reveal>
           <div className="grid md:grid-cols-2 gap-8">
             <Reveal delay={100} className="h-full">
-              <FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output. Generates clean, closed paths with minimal nodes—not messy auto-trace spaghetti." />
+              <FeatureCard 
+                icon={Cpu} 
+                title="Smart Vector Engine" 
+                description="Proprietary AI tracing algorithms designed specifically for physical output. Generates clean, closed paths with minimal nodes—not messy auto-trace spaghetti." 
+              />
             </Reveal>
             <Reveal delay={200} className="h-full">
-              <FeatureCard icon={Maximize} title="Thin Line Protection" description="Never fail a cut again due to fragile geometry. Cuttora automatically detects and thickens lines that fall below your machine's kerf or material tolerance." />
+              <FeatureCard 
+                icon={Maximize} 
+                title="Cut-Safe Analysis" 
+                description="Never fail a cut again. Cuttora automatically analyzes lines that fall below your machine's tolerance and highlights risks." 
+              />
             </Reveal>
             <Reveal delay={300} className="h-full">
-              <FeatureCard icon={Layers} title="Island Detection & Bridging" description="Don't lose the center of your 'O's. Our engine identifies floating shapes (islands) and automatically generates aesthetic bridges to keep them connected." />
+              <FeatureCard 
+                icon={Layers} 
+                title="Smart Auto-Bridging" 
+                description="Automatically connect floating islands (like the inside of 'O') to prevent lost parts. Currently in testing." 
+                badge="Coming Soon" 
+              />
             </Reveal>
             <Reveal delay={400} className="h-full">
-              <FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines, removes zero-length segments, and fixes overlaps for the smoothest torch/laser movement." />
+              <FeatureCard 
+                icon={Zap} 
+                title="DXF Optimization" 
+                description="Native DXF export optimized for CNC software. Merges polylines, removes zero-length segments, and fixes overlaps for the smoothest torch/laser movement." 
+              />
             </Reveal>
           </div>
         </div>
@@ -860,7 +860,7 @@ export default function App() {
           <div className="grid md:grid-cols-4 gap-12 relative">
             <Step number="1" title="Upload" description="Drag & drop any PNG, JPG, or SVG sketch. Even low-res images work." />
             <Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." />
-            <Step number="3" title="Optimize" description="Lines are thickened, bridges added, and paths smoothed automatically." />
+            <Step number="3" title="Optimize" description="Paths are smoothed, nodes reduced, and errors highlighted." />
             <Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} />
           </div>
         </div>
@@ -869,72 +869,19 @@ export default function App() {
       <section className="py-32 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="relative">
-              <div className="absolute -left-20 -top-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-[80px]"></div>
-              <Reveal>
-                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Who uses Cuttora?</h2>
-                <p className="text-slate-300 text-xl mb-10 relative z-10 leading-relaxed font-medium">Whether you're running a massive fiber laser or a desktop vinyl cutter, clean vectors are the difference between profit and wasted material.</p>
-                <div className="space-y-6 relative z-10">
-                  {["Laser Cutting Services needing fast file prep", "CNC Metal & Wood Workshops", "Cricut & Silhouette Enthusiasts", "Etsy Sellers selling digital cut files", "Metal Wall Art Designers"].map((item, i) => (
-                    <div key={i} className="flex items-center gap-4 text-slate-300 group hover:text-white transition-colors cursor-default">
-                      <div className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500 group-hover:scale-110 transition-all shadow-lg">
-                        <Check className="w-4 h-4 text-cyan-400" />
-                      </div>
-                      <span className="text-xl font-medium">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </Reveal>
-            </div>
+            <div className="relative"><div className="absolute -left-20 -top-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-[80px]"></div><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Who uses Cuttora?</h2><p className="text-slate-300 text-xl mb-10 relative z-10 leading-relaxed font-medium">Whether you're running a massive fiber laser or a desktop vinyl cutter, clean vectors are the difference between profit and wasted material.</p><div className="space-y-6 relative z-10">{["Laser Cutting Services needing fast file prep", "CNC Metal & Wood Workshops", "Cricut & Silhouette Enthusiasts", "Etsy Sellers selling digital cut files", "Metal Wall Art Designers"].map((item, i) => (<div key={i} className="flex items-center gap-4 text-slate-300 group hover:text-white transition-colors cursor-default"><div className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500 group-hover:scale-110 transition-all shadow-lg"><Check className="w-4 h-4 text-cyan-400" /></div><span className="text-xl font-medium">{item}</span></div>))}</div></Reveal></div>
             <div className="grid grid-cols-2 gap-6 relative">
-               <div className="animate-float">
-                 <TiltCard>
-                   <div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all h-full">
-                     <div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-blue-500/50"><Zap className="text-blue-400 w-6 h-6"/></div>
-                     <h4 className="font-bold text-white text-xl">Laser Ops</h4>
-                     <p className="text-base text-slate-400 mt-2 font-medium">Save 5hrs/week</p>
-                   </div>
-                 </TiltCard>
-               </div>
-               <div className="translate-y-12 animate-float-delayed">
-                 <TiltCard>
-                   <div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all h-full">
-                     <div className="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-cyan-500/50"><Scissors className="text-cyan-400 w-6 h-6"/></div>
-                     <h4 className="font-bold text-white text-xl">Crafters</h4>
-                     <p className="text-base text-slate-400 mt-2 font-medium">Perfect cuts</p>
-                   </div>
-                 </TiltCard>
-               </div>
-               <div className="animate-float-delayed">
-                 <TiltCard>
-                   <div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-indigo-500 hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] transition-all h-full">
-                     <div className="w-14 h-14 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-indigo-500/50"><Layers className="text-indigo-400 w-6 h-6"/></div>
-                     <h4 className="font-bold text-white text-xl">CNC Shops</h4>
-                     <p className="text-base text-slate-400 mt-2 font-medium">Safe toolpaths</p>
-                   </div>
-                 </TiltCard>
-               </div>
-               <div className="translate-y-12 animate-float">
-                 <TiltCard>
-                   <div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all h-full">
-                     <div className="w-14 h-14 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-emerald-500/50"><Download className="text-emerald-400 w-6 h-6"/></div>
-                     <h4 className="font-bold text-white text-xl">Designers</h4>
-                     <p className="text-base text-slate-400 mt-2 font-medium">Premium files</p>
-                   </div>
-                 </TiltCard>
-               </div>
+               <div className="animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all h-full"><div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-blue-500/50"><Zap className="text-blue-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Laser Ops</h4><p className="text-base text-slate-400 mt-2 font-medium">Save 5hrs/week</p></div></TiltCard></div>
+               <div className="translate-y-12 animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all h-full"><div className="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-cyan-500/50"><Scissors className="text-cyan-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Crafters</h4><p className="text-base text-slate-400 mt-2 font-medium">Perfect cuts</p></div></TiltCard></div>
+               <div className="animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-indigo-500 hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] transition-all h-full"><div className="w-14 h-14 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-indigo-500/50"><Layers className="text-indigo-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">CNC Shops</h4><p className="text-base text-slate-400 mt-2 font-medium">Safe toolpaths</p></div></TiltCard></div>
+               <div className="translate-y-12 animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all h-full"><div className="w-14 h-14 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-emerald-500/50"><Download className="text-emerald-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Designers</h4><p className="text-base text-slate-400 mt-2 font-medium">Premium files</p></div></TiltCard></div>
             </div>
           </div>
         </div>
       </section>
 
       <section className="py-32 bg-slate-900/20 relative z-10 border-y border-slate-800/50 backdrop-blur-sm overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-          <Reveal>
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Feedback from our <span className="text-cyan-400">Private Beta</span></h2>
-            <p className="text-slate-300 text-xl font-medium">Real results from fabricators testing Cuttora in production environments.</p>
-          </Reveal>
-        </div>
+        <div className="max-w-7xl mx-auto px-6 mb-16 text-center"><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Feedback from our <span className="text-cyan-400">Private Beta</span></h2><p className="text-slate-300 text-xl font-medium">Real results from fabricators testing Cuttora in production environments.</p></Reveal></div>
         <div className="flex overflow-hidden w-full relative">
           <div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8 pl-6">
             {doubledTestimonials.map((t, i) => (
@@ -955,39 +902,10 @@ export default function App() {
             </div>
           </Reveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
-            <Reveal delay={100} className="h-full">
-              <PricingCard 
-                plan="Starter" 
-                description="Essential tools for hobbyists" 
-                features={["5 conversions / month", "Standard SVG export", "Basic Island detection", "Automatic Smoothing", "Single Layer Export", "Community Support"]} 
-                onJoin={openModal} 
-              />
-            </Reveal>
-            <Reveal delay={200} className="h-full">
-              <PricingCard 
-                plan="Pro" 
-                description="Advanced features for professionals" 
-                recommended={true} 
-                features={["Unlimited conversions", "Advanced SVG & DXF", "Auto-Bridging tools", "Thin line correction (Kerf Compensation)", "Priority processing", "Node Reduction Algorithm", "Multi-Layer Separation", "Email Support"]} 
-                onJoin={openModal} 
-              />
-            </Reveal>
-            <Reveal delay={300} className="h-full">
-              <PricingCard 
-                plan="Studio" 
-                description="For high-volume production teams" 
-                features={["Everything in Pro", "Multi-user seats (Up to 5)", "Custom tolerance profiles", "Dedicated account manager", "Batch Processing (Bulk Upload)", "Nesting Optimization (Coming Soon)", "White-label Export Options"]} 
-                onJoin={openModal} 
-              />
-            </Reveal>
-            <Reveal delay={400} className="h-full">
-              <PricingCard 
-                plan="Enterprise" 
-                description="For large scale manufacturing" 
-                features={["Unlimited Everything", "Custom API Integration", "On-Premise Deployment", "SSO & Advanced Security", "24/7 SLA Support", "Dedicated Account Manager"]} 
-                onJoin={openModal} 
-              />
-            </Reveal>
+            <Reveal delay={100} className="h-full"><PricingCard plan="Starter" description="Essential tools for hobbyists" features={["5 conversions / month", "Standard SVG export", "Basic Optimization", "Automatic Smoothing", "Single Layer Export", "Community Support"]} onJoin={openModal} /></Reveal>
+            <Reveal delay={200} className="h-full"><PricingCard plan="Pro" description="Advanced features for professionals" recommended={true} features={["Unlimited conversions", "Advanced SVG & DXF", "Advanced Path Smoothing", "Cut-Safe Analysis", "Priority processing", "Node Reduction Algorithm", "Multi-Layer Separation", "Email Support"]} onJoin={openModal} /></Reveal>
+            <Reveal delay={300} className="h-full"><PricingCard plan="Studio" description="For high-volume production teams" features={["Everything in Pro", "Multi-user seats (Up to 5)", "Custom tolerance profiles", "Dedicated account manager", "Batch Processing (Bulk Upload)", "Nesting Optimization (Coming Soon)", "White-label Export Options"]} onJoin={openModal} /></Reveal>
+            <Reveal delay={400} className="h-full"><PricingCard plan="Enterprise" description="For large scale manufacturing" features={["Unlimited Everything", "Custom API Integration", "On-Premise Deployment", "SSO & Advanced Security", "24/7 SLA Support", "Dedicated Account Manager"]} onJoin={openModal} /></Reveal>
           </div>
         </div>
       </section>
