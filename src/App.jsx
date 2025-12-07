@@ -294,7 +294,6 @@ const TypingText = ({ text, speed = 50, delay = 0 }) => {
 };
 
 const TechBackground = () => {
-  // Arka plan SADELEŞTİRİLDİ: Yıldızlar (Sparkles) kaldırıldı.
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#020617] overflow-hidden">
       {/* 1. Static Grid */}
@@ -376,7 +375,7 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
 };
 
 // --- Waitlist Modal Component (REAL MAILERLITE INTEGRATION) ---
-
+// Yüklediğin dosyadan aynen alınan çalışan fonksiyon
 const WaitlistModal = ({ isOpen, onClose }) => {
   const [status, setStatus] = useState('idle');
   const [email, setEmail] = useState("");
@@ -394,7 +393,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
     e.preventDefault(); 
     setStatus('submitting'); 
     
-    // --- REAL MAILERLITE API ENDPOINT (DO NOT CHANGE) ---
+    // --- REAL MAILERLITE API ENDPOINT ---
     const ACTION_URL = "https://assets.mailerlite.com/jsonp/1967306/forms/173063613581362993/subscribe";
 
     try {
@@ -415,7 +414,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
       
     } catch (error) {
       console.error(error);
-      setStatus('success'); // Assume success for UX
+      setStatus('success');
       setTimeout(() => onClose(), 2500);
     }
   };
@@ -507,10 +506,7 @@ const FeatureCard = ({ icon: Icon, title, description, badge }) => (
     <div className="h-full p-8 rounded-2xl bg-slate-900/80 border border-slate-700 hover:border-cyan-500 transition-colors duration-500 group relative overflow-hidden backdrop-blur-md shadow-lg">
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       {badge && <div className="absolute top-4 right-4 bg-cyan-900/40 border border-cyan-500/40 text-cyan-300 px-3 py-1 rounded-full text-xs font-bold tracking-wide">{badge}</div>}
-      <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-slate-600 group-hover:border-cyan-500 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-        <Icon className="w-6 h-6 text-cyan-400 group-hover:text-white transition-colors" />
-      </div>
-      
+      <div className="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 border border-slate-600 group-hover:border-cyan-500 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.4)]"><Icon className="w-6 h-6 text-cyan-400 group-hover:text-white transition-colors" /></div>
       <h3 className="text-xl font-bold text-slate-100 mb-3 group-hover:text-cyan-300 transition-colors">{title}</h3>
       <p className="text-slate-300 leading-relaxed font-medium">{description}</p>
     </div>
@@ -702,7 +698,7 @@ export default function App() {
   const faqs = [
     { q: "What image formats do you support?", a: "We currently support JPG, PNG, WEBP, and BMP files. We are working on supporting PDF imports soon." },
     { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free and yours to use for any commercial fabrication or digital sales." },
-    { q: "When will Smart Auto-Bridging be available?", a: "We are currently testing the Smart Auto-Bridging feature with our private beta group. It is scheduled to be released with v2.0 very soon." },
+    { q: "When will Smart Auto-Bridging be available?", a: "We are currently testing the Smart Auto-Bridging feature with our private beta group. It is scheduled to be released with a future update very soon." },
     { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based. It runs in your browser and uses cloud processing for heavy lifting." },
     { q: "What happens when I join the waitlist?", a: "We are currently in a closed Private Beta with select fabricators. Joining the waitlist secures your spot for the upcoming Public Beta launch. You'll be notified first when we open the doors." }
   ];
@@ -902,10 +898,39 @@ export default function App() {
             </div>
           </Reveal>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
-            <Reveal delay={100} className="h-full"><PricingCard plan="Starter" description="Essential tools for hobbyists" features={["5 conversions / month", "Standard SVG export", "Basic Optimization", "Automatic Smoothing", "Single Layer Export", "Community Support"]} onJoin={openModal} /></Reveal>
-            <Reveal delay={200} className="h-full"><PricingCard plan="Pro" description="Advanced features for professionals" recommended={true} features={["Unlimited conversions", "Advanced SVG & DXF", "Advanced Path Smoothing", "Cut-Safe Analysis", "Priority processing", "Node Reduction Algorithm", "Multi-Layer Separation", "Email Support"]} onJoin={openModal} /></Reveal>
-            <Reveal delay={300} className="h-full"><PricingCard plan="Studio" description="For high-volume production teams" features={["Everything in Pro", "Multi-user seats (Up to 5)", "Custom tolerance profiles", "Dedicated account manager", "Batch Processing (Bulk Upload)", "Nesting Optimization (Coming Soon)", "White-label Export Options"]} onJoin={openModal} /></Reveal>
-            <Reveal delay={400} className="h-full"><PricingCard plan="Enterprise" description="For large scale manufacturing" features={["Unlimited Everything", "Custom API Integration", "On-Premise Deployment", "SSO & Advanced Security", "24/7 SLA Support", "Dedicated Account Manager"]} onJoin={openModal} /></Reveal>
+            <Reveal delay={100} className="h-full">
+              <PricingCard 
+                plan="Starter" 
+                description="Essential tools for hobbyists" 
+                features={["5 conversions / month", "Standard SVG export", "Basic Optimization", "Automatic Smoothing", "Single Layer Export", "Community Support"]} 
+                onJoin={openModal} 
+              />
+            </Reveal>
+            <Reveal delay={200} className="h-full">
+              <PricingCard 
+                plan="Pro" 
+                description="Advanced features for professionals" 
+                recommended={true} 
+                features={["Unlimited conversions", "Advanced SVG & DXF", "Advanced Path Smoothing", "Cut-Safe Analysis", "Priority processing", "Node Reduction Algorithm", "Multi-Layer Separation", "Email Support"]} 
+                onJoin={openModal} 
+              />
+            </Reveal>
+            <Reveal delay={300} className="h-full">
+              <PricingCard 
+                plan="Studio" 
+                description="For high-volume production teams" 
+                features={["Everything in Pro", "Multi-user seats (Up to 5)", "Custom tolerance profiles", "Dedicated account manager", "Batch Processing (Bulk Upload)", "Nesting Optimization (Coming Soon)", "White-label Export Options"]} 
+                onJoin={openModal} 
+              />
+            </Reveal>
+            <Reveal delay={400} className="h-full">
+              <PricingCard 
+                plan="Enterprise" 
+                description="For large scale manufacturing" 
+                features={["Unlimited Everything", "Custom API Integration", "On-Premise Deployment", "SSO & Advanced Security", "24/7 SLA Support", "Dedicated Account Manager"]} 
+                onJoin={openModal} 
+              />
+            </Reveal>
           </div>
         </div>
       </section>
