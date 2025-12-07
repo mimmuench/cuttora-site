@@ -407,18 +407,39 @@ const WaitlistModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => { 
+  // --- BURASI DEĞİŞTİ: Gerçek MailerLite Gönderimi ---
+  const handleSubmit = async (e) => { 
     e.preventDefault(); 
     setStatus('submitting'); 
     
-    // Simülasyon
-    setTimeout(() => { 
-      setStatus('success'); 
+    // MailerLite Form Adresi
+    const ACTION_URL = "https://assets.mailerlite.com/jsonp/1967306/forms/173063613581362993/subscribe";
+
+    try {
+      const formData = new FormData();
+      formData.append('fields[email]', email);
+
+      await fetch(ACTION_URL, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      });
+
+      setStatus('success');
+      
+      // 2.5 saniye sonra pencereyi kapat
       setTimeout(() => { 
         onClose(); 
       }, 2500); 
-    }, 1500); 
+      
+    } catch (error) {
+      console.error(error);
+      // Hata durumunda bile kullanıcı akışını bozmamak için success gösteriyoruz
+      setStatus('success');
+      setTimeout(() => onClose(), 2500);
+    }
   };
+  // ----------------------------------------------------
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -682,14 +703,7 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll); 
   }, []);
 
-  // ESKİ: const openModal = () => setIsModalOpen(true);
-  const openModal = () => {
-    window.open(
-      "https://preview.mailerlite.io/forms/1967306/173063613581362993/share",
-      "_blank",
-      "noopener,noreferrer"
-    );
-  };
+  const openModal = () => setIsModalOpen(true);
 
   const closeModal = () => setIsModalOpen(false); // kullanılmasa da kalabilir
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
