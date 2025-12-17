@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- ICONS (Full Rich Set) ---
+// --- ICONS ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -26,6 +26,7 @@ const ArrowLeft = (props) => (<IconWrapper {...props}><line x1="19" y1="12" x2="
 const Lock = (props) => (<IconWrapper {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></IconWrapper>);
 const Server = (props) => (<IconWrapper {...props}><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></IconWrapper>);
 const AlertCircle = (props) => (<IconWrapper {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconWrapper>);
+const FileText = (props) => (<IconWrapper {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></IconWrapper>);
 
 // --- Styles & Animations ---
 const GlobalStyles = () => (
@@ -122,6 +123,29 @@ const AnnouncementBar = () => (
   </div>
 );
 
+// --- LEGAL MODALS (NEW) ---
+const LegalModal = ({ isOpen, onClose, title, content }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={onClose} />
+            <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl animate-float">
+                <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
+                <div className="text-center mb-6">
+                    <div className="w-12 h-12 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-600"><FileText className="w-6 h-6 text-slate-300" /></div>
+                    <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
+                </div>
+                <div className="text-slate-300 space-y-4 text-sm leading-relaxed whitespace-pre-line">
+                    {content}
+                </div>
+                <div className="mt-8 pt-4 border-t border-slate-800 text-center">
+                    <Button variant="outline" className="justify-center w-full" onClick={onClose}>Close</Button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- PAYMENT MODAL ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
@@ -131,7 +155,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
         e.preventDefault();
         setIsSubmitting(true);
         await onSubmit(email, plan);
-        setIsSubmitting(false); // Only set to false here if successful/failed in parent
+        // Keep submitting true to show loading state if backend is waking up
     };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -191,23 +215,15 @@ const WaitlistModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- PRICING CARDS (LAUNCH SALE EDITION) ---
+// --- BIG PRICING CARDS ---
 const PricingCard = ({ plan, price, originalPrice, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-10 rounded-3xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
-      {/* 50% OFF TAG */}
       <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.6)] animate-pulse border border-green-400">50% OFF LAUNCH OFFER</div>
-      
       {recommended && <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-xl rounded-tr-xl font-bold">POPULAR</div>}
-
       <h3 className="text-3xl font-bold text-slate-200 mb-2">{plan}</h3>
-      
-      <div className="flex items-baseline gap-3 mb-4">
-          <div className="text-6xl font-bold text-white">{price}</div>
-          <div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div>
-      </div>
-      
-      <p className="text-slate-400 text-sm mb-8 uppercase tracking-wider font-semibold">{description}</p>
+      <div className="flex items-baseline gap-3 mb-4"><div className="text-6xl font-bold text-white">{price}</div><div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div></div>
+      <p className="text-slate-400 text-base mb-8 uppercase tracking-wider font-semibold">{description}</p>
       <ul className="space-y-5 mb-10">{features.map((feat, idx) => (<li key={idx} className="flex items-start gap-3 text-slate-300 text-lg"><Check className="w-6 h-6 text-cyan-400 shrink-0" />{feat}</li>))}</ul>
       <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center py-4 text-lg mt-auto" onClick={onJoin}>Buy Now</Button>
     </div>
@@ -254,11 +270,11 @@ const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border-b border-slate-800 last:border-0">
-      <button className="w-full py-6 flex items-center justify-between text-left group" onClick={() => setIsOpen(!isOpen)}>
-        <span className="text-lg font-medium text-slate-200 group-hover:text-cyan-400 transition-colors">{question}</span>
-        {isOpen ? <Minus className="w-5 h-5 text-cyan-400" /> : <Plus className="w-5 h-5 text-slate-500 group-hover:text-cyan-400" />}
+      <button className="w-full py-8 flex items-center justify-between text-left group" onClick={() => setIsOpen(!isOpen)}>
+        <span className="text-xl font-medium text-slate-200 group-hover:text-cyan-400 transition-colors">{question}</span>
+        {isOpen ? <Minus className="w-6 h-6 text-cyan-400" /> : <Plus className="w-6 h-6 text-slate-500 group-hover:text-cyan-400" />}
       </button>
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}><p className="text-slate-400 leading-relaxed">{answer}</p></div>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-8' : 'max-h-0 opacity-0'}`}><p className="text-slate-400 leading-relaxed text-lg">{answer}</p></div>
     </div>
   );
 };
@@ -295,6 +311,10 @@ export default function App() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState({ name: '', price: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
+  
+  // LEGAL MODALS
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const [termsOpen, setTermsOpen] = useState(false);
   
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('cuttora_key') || '');
   const [credits, setCredits] = useState(0);
@@ -348,18 +368,21 @@ export default function App() {
         const fd = new FormData();
         fd.append("email", email);
         fd.append("package_type", plan.toLowerCase()); 
+        
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
         
         if(!res.ok) { 
-            // Don't close modal, show waking up state
-            alert("The payment server is currently waking up from sleep mode (this happens on the free plan). Please click 'Proceed to Payment' again in 30 seconds."); 
+            // Don't close modal, keep spinner active
+            alert("The secure payment server is currently waking up (Standard on free tier). Please wait 45-60 seconds and try again!"); 
             return; 
         }
         
         const data = await res.json();
         if(data.url) window.location.href = data.url; 
         else alert("Error: " + data.error);
-    } catch(e) { alert("Connection Error. Server is waking up..."); }
+    } catch(e) { 
+        alert("The secure server is waking up. Please count to 45 and click Proceed again. It will work!"); 
+    }
   };
 
   const handleUpload = async (e) => {
@@ -412,10 +435,24 @@ export default function App() {
     <div className="min-h-screen text-slate-100 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden relative">
       <GlobalStyles />
       <TechBackground />
-      <AnnouncementBar /> {/* ADDED TOP BAR */}
+      <AnnouncementBar />
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
+      {/* LEGAL MODALS */}
+      <LegalModal 
+        isOpen={privacyOpen} 
+        onClose={() => setPrivacyOpen(false)} 
+        title="Privacy Policy" 
+        content={`Last Updated: December 2025\n\n1. Information We Collect\nWe collect your email address for account management and payment processing. We do not store your credit card information; it is handled securely by Stripe.\n\n2. Image Data\nImages uploaded to Cuttora are processed temporarily to generate vector files. We do not claim ownership of your designs. Processed files are deleted from our servers after 24 hours.\n\n3. Data Security\nWe implement industry-standard security measures to protect your data. However, no method of transmission over the Internet is 100% secure.`} 
+      />
+      <LegalModal 
+        isOpen={termsOpen} 
+        onClose={() => setTermsOpen(false)} 
+        title="Terms of Service" 
+        content={`Last Updated: December 2025\n\n1. Acceptance of Terms\nBy accessing Cuttora, you agree to be bound by these Terms of Service.\n\n2. License\nCuttora grants you a non-exclusive, non-transferable right to use our service to convert images to vector formats. The output files are royalty-free for your commercial use.\n\n3. Refunds\nDue to the digital nature of the service (API credits), refunds are generally not provided once credits are used. Contact support for exceptional cases.`} 
+      />
+
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-white group cursor-pointer">
@@ -454,13 +491,11 @@ export default function App() {
         <section className="pt-12 pb-24 px-6 min-h-screen relative">
             <div className="absolute top-4 left-6 md:left-20 z-50"><button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500"><ArrowLeft className="w-4 h-4"/> Back to Home / Logout</button></div>
              <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8 mt-12">
-                 {/* LEFT: UPLOAD AREA */}
                  <div className="lg:col-span-2">
                     <Reveal>
                         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl relative overflow-hidden group">
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                             <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3"><Zap className="text-cyan-400"/> Cuttora Workshop</h2>
-                            
                             {!result ? (
                                 <div className="min-h-[400px] border-2 border-dashed border-slate-700 rounded-xl hover:border-cyan-500 hover:bg-slate-800/50 transition-all flex flex-col items-center justify-center relative cursor-pointer group-hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]">
                                     <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
@@ -475,11 +510,7 @@ export default function App() {
                                             <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg"><Upload className="w-10 h-10 text-cyan-400" /></div>
                                             <h3 className="text-2xl font-bold text-white mb-2">Upload Image</h3>
                                             <p className="text-slate-400 mb-6">Drag & drop or click to browse</p>
-                                            <div className="flex gap-2 justify-center">
-                                                <span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">JPG</span>
-                                                <span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">PNG</span>
-                                                <span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">WEBP</span>
-                                            </div>
+                                            <div className="flex gap-2 justify-center"><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">JPG</span><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">PNG</span><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">WEBP</span></div>
                                         </div>
                                     )}
                                 </div>
@@ -500,32 +531,21 @@ export default function App() {
                         </div>
                     </Reveal>
                  </div>
-
-                 {/* RIGHT: INFO PANEL */}
                  <div className="space-y-6">
                     <TiltCard>
                         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-6">
                             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Server className="text-cyan-400 w-5 h-5"/> System Status</h3>
                             <div className="flex items-center justify-between bg-slate-950 p-4 rounded-lg border border-slate-800">
                                 <span className="text-slate-400 text-sm">Server</span>
-                                {serverStatus === 'awake' ? (
-                                    <span className="flex items-center gap-2 text-green-400 text-sm font-bold"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div> Online</span>
-                                ) : (
-                                    <span className="flex items-center gap-2 text-yellow-400 text-sm font-bold"><div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div> Waking Up...</span>
-                                )}
+                                {serverStatus === 'awake' ? ( <span className="flex items-center gap-2 text-green-400 text-sm font-bold"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div> Online</span> ) : ( <span className="flex items-center gap-2 text-yellow-400 text-sm font-bold"><div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div> Waking Up...</span> )}
                             </div>
                             <p className="text-xs text-slate-500 mt-3 leading-relaxed">If the status is yellow, your first upload might take ~50 seconds. Subsequent uploads will be instant.</p>
                         </div>
                     </TiltCard>
-
                     <TiltCard>
                         <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-6">
                             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><AlertCircle className="text-blue-400 w-5 h-5"/> Quick Tips</h3>
-                            <ul className="space-y-3 text-sm text-slate-300">
-                                <li className="flex gap-2"><span className="text-cyan-400">•</span> High contrast images work best.</li>
-                                <li className="flex gap-2"><span className="text-cyan-400">•</span> Silhouettes give cleanest cuts.</li>
-                                <li className="flex gap-2"><span className="text-cyan-400">•</span> Avoid photos with shadows.</li>
-                            </ul>
+                            <ul className="space-y-3 text-sm text-slate-300"><li className="flex gap-2"><span className="text-cyan-400">•</span> High contrast images work best.</li><li className="flex gap-2"><span className="text-cyan-400">•</span> Silhouettes give cleanest cuts.</li><li className="flex gap-2"><span className="text-cyan-400">•</span> Avoid photos with shadows.</li></ul>
                         </div>
                     </TiltCard>
                  </div>
@@ -566,7 +586,6 @@ export default function App() {
                 </div>
             </section>
             
-            {/* --- "WHO USES CUTTORA" GRID --- */}
             <section className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -588,7 +607,7 @@ export default function App() {
 
             <section id="pricing" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p></div></Reveal>
+                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once. Credits never expire.</p></div></Reveal>
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                     <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
                     <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
@@ -599,8 +618,8 @@ export default function App() {
             </section>
             
             <section id="faq" className="py-32 relative z-10">
-                <div className="max-w-3xl mx-auto px-6">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 text-center">FAQ</h2>
+                <div className="max-w-4xl mx-auto px-6">
+                <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
                 <div className="space-y-4">{faqs.map((item, i) => (<Reveal key={i} delay={i * 100}><FAQItem question={item.q} answer={item.a} /></Reveal>))}</div>
                 </div>
             </section>
@@ -627,7 +646,7 @@ export default function App() {
             <div className="col-span-1 md:col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6"><div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center"><Scissors className="w-4 h-4 text-white" /></div>Cuttora</div><p className="text-slate-300 leading-relaxed text-lg">The AI-powered vector engine for makers, fabricators, and designers.</p></div>
             <div><h4 className="font-bold text-white mb-6 text-xl">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li><li>API</li><li>Showcase</li></ul></div>
             <div><h4 className="font-bold text-white mb-6 text-xl">Resources</h4><ul className="space-y-4 text-slate-300"><li>Documentation</li><li>Laser Cutting Guide</li><li>Blog</li><li>Community</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li>Privacy Policy</li><li>Terms of Service</li><li>Cookie Policy</li></ul></div>
+            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li>Cookie Policy</li></ul></div>
           </div>
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
             <p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
