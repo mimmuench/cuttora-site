@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- ICONS (Full Set) ---
+// --- ICONS (Full Rich Set) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -27,7 +27,7 @@ const Lock = (props) => (<IconWrapper {...props}><rect x="3" y="11" width="18" h
 const Server = (props) => (<IconWrapper {...props}><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></IconWrapper>);
 const AlertCircle = (props) => (<IconWrapper {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconWrapper>);
 
-// --- Styles ---
+// --- Styles & Animations ---
 const GlobalStyles = () => (
   <style>{`
     @keyframes laser-scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
@@ -87,6 +87,7 @@ const TypingText = ({ text, speed = 50, delay = 0 }) => {
   return <span className="typing-cursor">{displayedText}</span>;
 };
 
+// --- TECH BACKGROUND (Stars) ---
 const TechBackground = () => {
   const [stars, setStars] = useState([]);
   useEffect(() => {
@@ -114,47 +115,41 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} onClick={onClick} {...props}><span className="relative z-10 flex items-center gap-2">{children}</span></button>;
 };
 
-// --- PAYMENT MODAL (Güçlendirilmiş) ---
+// --- ANNOUNCEMENT BAR ---
+const AnnouncementBar = () => (
+  <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-white py-2 text-center text-sm font-bold tracking-wider animate-text-shimmer bg-[length:200%_auto] relative z-[60]">
+    🚀 WE ARE LIVE! <span className="hidden md:inline">- </span> <span className="text-yellow-300">50% OFF</span> LAUNCH SALE FOR THE FIRST 500 USERS
+  </div>
+);
+
+// --- PAYMENT MODAL ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
     if (!isOpen) return null;
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        await onSubmit(email, plan); // Submit handler will handle errors
-        // Note: setSubmitting(false) is handled in parent if error occurs
+        await onSubmit(email, plan);
+        setIsSubmitting(false); // Only set to false here if successful/failed in parent
     };
-
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" onClick={!isSubmitting ? onClose : undefined} />
             <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(6,182,212,0.2)] animate-float">
                 {!isSubmitting && <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>}
-                
                 <div className="text-center mb-6">
                     <div className="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/30"><Lock className="w-6 h-6 text-blue-400" /></div>
                     <h3 className="text-2xl font-bold text-white mb-1">Secure Checkout</h3>
                     <p className="text-slate-400">You are choosing the <span className="text-cyan-400 font-bold">{plan}</span> plan for <span className="text-white font-bold">${price}</span>.</p>
                 </div>
-                
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-1">Email Address for Receipt</label>
-                        <input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isSubmitting} />
-                    </div>
-                    
+                    <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Address for Receipt</label><input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isSubmitting} /></div>
                     {isSubmitting ? (
-                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait">
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            Waking up secure server...
-                        </div>
+                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait border border-slate-600"><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Waking up secure server...</div>
                     ) : (
                         <Button variant="gradient" className="w-full justify-center">Proceed to Payment</Button>
                     )}
-                    
                     <p className="text-xs text-center text-slate-500 mt-4">Payments processed securely by Stripe.</p>
                 </form>
             </div>
@@ -196,14 +191,23 @@ const WaitlistModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- BIG PRICING CARDS ---
-const PricingCard = ({ plan, price, description, features, recommended = false, onJoin }) => (
+// --- PRICING CARDS (LAUNCH SALE EDITION) ---
+const PricingCard = ({ plan, price, originalPrice, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-10 rounded-3xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
-      {recommended && <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-2 rounded-full text-sm font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(6,182,212,0.6)] animate-pulse">Most Popular</div>}
+      {/* 50% OFF TAG */}
+      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.6)] animate-pulse border border-green-400">50% OFF LAUNCH OFFER</div>
+      
+      {recommended && <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-xl rounded-tr-xl font-bold">POPULAR</div>}
+
       <h3 className="text-3xl font-bold text-slate-200 mb-2">{plan}</h3>
-      <div className="text-6xl font-bold text-white mb-4">{price}</div>
-      <p className="text-slate-400 text-base mb-8 uppercase tracking-wider font-semibold">{description}</p>
+      
+      <div className="flex items-baseline gap-3 mb-4">
+          <div className="text-6xl font-bold text-white">{price}</div>
+          <div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div>
+      </div>
+      
+      <p className="text-slate-400 text-sm mb-8 uppercase tracking-wider font-semibold">{description}</p>
       <ul className="space-y-5 mb-10">{features.map((feat, idx) => (<li key={idx} className="flex items-start gap-3 text-slate-300 text-lg"><Check className="w-6 h-6 text-cyan-400 shrink-0" />{feat}</li>))}</ul>
       <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center py-4 text-lg mt-auto" onClick={onJoin}>Buy Now</Button>
     </div>
@@ -344,24 +348,18 @@ export default function App() {
         const fd = new FormData();
         fd.append("email", email);
         fd.append("package_type", plan.toLowerCase()); 
-        
-        // SUNUCU UYANIYORSA BEKLEMEK İÇİN
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
         
         if(!res.ok) { 
-            // Eğer sunucu uyanıyorsa 502/503 verir
-            setPaymentModalOpen(false); 
-            alert("The secure payment server is waking up from sleep mode. Please try again in 45 seconds."); 
+            // Don't close modal, show waking up state
+            alert("The payment server is currently waking up from sleep mode (this happens on the free plan). Please click 'Proceed to Payment' again in 30 seconds."); 
             return; 
         }
         
         const data = await res.json();
         if(data.url) window.location.href = data.url; 
         else alert("Error: " + data.error);
-    } catch(e) { 
-        setPaymentModalOpen(false);
-        alert("The secure server is waking up. Please count to 45 and try again. It will work!"); 
-    }
+    } catch(e) { alert("Connection Error. Server is waking up..."); }
   };
 
   const handleUpload = async (e) => {
@@ -414,10 +412,11 @@ export default function App() {
     <div className="min-h-screen text-slate-100 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden relative">
       <GlobalStyles />
       <TechBackground />
+      <AnnouncementBar /> {/* ADDED TOP BAR */}
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'bg-transparent border-transparent py-6'}`}>
+      <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-white group cursor-pointer">
             <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.5)]"><Scissors className="w-5 h-5 text-white" /></div>
@@ -452,9 +451,9 @@ export default function App() {
 
       {apiKey ? (
         // --- WORKSPACE (COCKPIT MODE) ---
-        <section className="pt-44 pb-24 px-6 min-h-screen relative">
-            <div className="absolute top-24 left-6 md:left-20 z-50"><button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500"><ArrowLeft className="w-4 h-4"/> Back to Home / Logout</button></div>
-             <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8">
+        <section className="pt-12 pb-24 px-6 min-h-screen relative">
+            <div className="absolute top-4 left-6 md:left-20 z-50"><button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500"><ArrowLeft className="w-4 h-4"/> Back to Home / Logout</button></div>
+             <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8 mt-12">
                  {/* LEFT: UPLOAD AREA */}
                  <div className="lg:col-span-2">
                     <Reveal>
@@ -535,7 +534,7 @@ export default function App() {
       ) : (
         // --- LANDING PAGE (LOGGED OUT) ---
         <>
-            <section className="relative z-10 pt-44 pb-24 px-6">
+            <section className="relative z-10 pt-32 pb-24 px-6">
                 <div className="max-w-7xl mx-auto text-center">
                 <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v2.0 Available: Smart Island Detection</span></div></Reveal>
                 <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
@@ -567,7 +566,7 @@ export default function App() {
                 </div>
             </section>
             
-            {/* --- RESTORED "WHO USES CUTTORA" GRID --- */}
+            {/* --- "WHO USES CUTTORA" GRID --- */}
             <section className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -589,11 +588,11 @@ export default function App() {
 
             <section id="pricing" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once. Credits never expire.</p></div></Reveal>
+                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p></div></Reveal>
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
-                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
-                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
-                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} /></Reveal>
+                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
+                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
+                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" originalPrice="$180" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} /></Reveal>
                 </div>
                 <div className="text-center mt-12"><p className="text-slate-400 text-lg">Have custom requirements or high volume needs? <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}>Contact us</a> for enterprise solutions.</p></div>
                 </div>
@@ -622,7 +621,6 @@ export default function App() {
         </>
       )}
 
-      {/* RICH FOOTER RESTORED */}
       <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
