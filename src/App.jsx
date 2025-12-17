@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- ICONS ---
+// --- ICONS (Full Rich Set) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -21,13 +21,13 @@ const X = (props) => (<IconWrapper {...props}><line x1="18" y1="6" x2="6" y2="18
 const Sparkles = (props) => (<IconWrapper {...props}><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L12 3Z" /></IconWrapper>);
 const Quote = (props) => (<IconWrapper {...props}><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" /><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" /></IconWrapper>);
 const Plus = (props) => (<IconWrapper {...props}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
-const Minus = (props) => (<IconWrapper {...props}><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
+const Minus = (props) => (<IconWrapper {...props}><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></IconWrapper>);
 const ArrowLeft = (props) => (<IconWrapper {...props}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></IconWrapper>);
 const Lock = (props) => (<IconWrapper {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></IconWrapper>);
 const Server = (props) => (<IconWrapper {...props}><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></IconWrapper>);
 const AlertCircle = (props) => (<IconWrapper {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconWrapper>);
 
-// --- Styles & Animations ---
+// --- Styles & Animations (Fully Restored) ---
 const GlobalStyles = () => (
   <style>{`
     @keyframes laser-scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
@@ -40,6 +40,7 @@ const GlobalStyles = () => (
     .animate-text-shimmer { background-size: 200% auto; animation: text-shimmer 3s linear infinite; }
     .animate-float { animation: float 6s ease-in-out infinite; }
     .animate-pulse-green { animation: pulse-green 2s infinite; }
+    .animate-float-delayed { animation: float 6s ease-in-out 3s infinite; }
     .laser-line { box-shadow: 0 0 15px #06b6d4, 0 0 30px #3b82f6; }
     .animate-scroll { animation: scroll-left 60s linear infinite; }
     .animate-scroll:hover { animation-play-state: paused; }
@@ -53,7 +54,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setIsVisible(true); }, { threshold: 0.1 });
+    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) setIsVisible(true); }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
     if (ref.current) observer.observe(ref.current);
     return () => ref.current && observer.disconnect();
   }, []);
@@ -86,6 +87,7 @@ const TypingText = ({ text, speed = 50, delay = 0 }) => {
   return <span className="typing-cursor">{displayedText}</span>;
 };
 
+// --- RESTORED TECH BACKGROUND ---
 const TechBackground = () => {
   const [stars, setStars] = useState([]);
   useEffect(() => {
@@ -281,7 +283,6 @@ export default function App() {
 
   // --- AUTO WAKE UP & ADMIN KEY CHECK ---
   useEffect(() => {
-    // 1. Sunucu Durumu Kontrolü
     const checkServer = async () => {
         try {
             const res = await fetch(API_URL);
@@ -303,13 +304,10 @@ export default function App() {
       window.history.replaceState({}, '', window.location.pathname);
     }
     
-    // --- ADMIN KEY + NORMAL CREDITS CHECK ---
     if(apiKey) {
        if (apiKey === "cuttora_admin_master") {
-           // ADMIN: SONSUZ KREDİ
            setCredits(999999);
        } else {
-           // NORMAL KULLANICI
            fetch(`${API_URL}/api/credits/${apiKey}`)
             .then(r => { if(!r.ok) throw new Error("Server sleeping"); return r.json(); })
             .then(d=>setCredits(d.credits))
@@ -329,7 +327,6 @@ export default function App() {
         const fd = new FormData();
         fd.append("email", email);
         fd.append("package_type", plan.toLowerCase()); 
-        
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
         if(!res.ok) { alert("Server is waking up. Please try again in 30 seconds."); return; }
         const data = await res.json();
@@ -342,19 +339,16 @@ export default function App() {
       const file = e.target.files[0];
       if(!file) return;
       if(!apiKey) { alert("Please buy a package first."); return; }
-      
       setIsProcessing(true);
       const fd = new FormData();
       fd.append("file", file);
       fd.append("api_key", apiKey);
-
       try {
           const res = await fetch(`${API_URL}/process`, { method: "POST", body: fd });
           if(res.ok) {
               const data = await res.json();
               if(data.status === "success") {
                   setResult(data);
-                  // Admin değilse kredi düşür
                   if (apiKey !== "cuttora_admin_master") {
                       fetch(`${API_URL}/api/credits/${apiKey}`).then(r=>r.json()).then(d=>setCredits(d.credits));
                   }
@@ -510,11 +504,11 @@ export default function App() {
              </div>
         </section>
       ) : (
-        // --- LANDING PAGE ---
+        // --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-44 pb-24 px-6">
                 <div className="max-w-7xl mx-auto text-center">
-                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Live: AI Vector Engine</span></div></Reveal>
+                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v2.0 Available: Smart Island Detection</span></div></Reveal>
                 <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
                 <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
                 <Reveal delay={400}><div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"><Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button></div></Reveal>
@@ -541,6 +535,21 @@ export default function App() {
                 <div className="max-w-7xl mx-auto px-6">
                 <Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-24 text-center">From Pixel to Part</h2></Reveal>
                 <div className="grid md:grid-cols-4 gap-12 relative"><Step number="1" title="Upload" description="Drag & drop any PNG, JPG, or SVG sketch. Even low-res images work." /><Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." /><Step number="3" title="Optimize" description="Lines are thickened, bridges added, and paths smoothed automatically." /><Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} /></div>
+                </div>
+            </section>
+            
+            {/* --- RESTORED "WHO USES CUTTORA" GRID --- */}
+            <section className="py-32 relative z-10">
+                <div className="max-w-7xl mx-auto px-6">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="relative"><div className="absolute -left-20 -top-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-[80px]"></div><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Who uses Cuttora?</h2><p className="text-slate-300 text-xl mb-10 relative z-10 leading-relaxed font-medium">Whether you're running a massive fiber laser or a desktop vinyl cutter, clean vectors are the difference between profit and wasted material.</p><div className="space-y-6 relative z-10">{["Laser Cutting Services needing fast file prep", "CNC Metal & Wood Workshops", "Cricut & Silhouette Enthusiasts", "Etsy Sellers selling digital cut files"].map((item, i) => (<div key={i} className="flex items-center gap-4 text-slate-300 group hover:text-white transition-colors cursor-default"><div className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500 group-hover:scale-110 transition-all shadow-lg"><Check className="w-4 h-4 text-cyan-400" /></div><span className="text-xl font-medium">{item}</span></div>))}</div></Reveal></div>
+                    <div className="grid grid-cols-2 gap-6 relative">
+                    <div className="animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all h-full"><div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-blue-500/50"><Zap className="text-blue-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Laser Ops</h4><p className="text-base text-slate-400 mt-2 font-medium">Save 5hrs/week</p></div></TiltCard></div>
+                    <div className="translate-y-12 animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all h-full"><div className="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-cyan-500/50"><Scissors className="text-cyan-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Crafters</h4><p className="text-base text-slate-400 mt-2 font-medium">Perfect cuts</p></div></TiltCard></div>
+                    <div className="animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-indigo-500 hover:shadow-[0_0_30px_rgba(99,102,241,0.2)] transition-all h-full"><div className="w-14 h-14 bg-indigo-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-indigo-500/50"><Layers className="text-indigo-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">CNC Shops</h4><p className="text-base text-slate-400 mt-2 font-medium">Safe toolpaths</p></div></TiltCard></div>
+                    <div className="translate-y-12 animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-emerald-500 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all h-full"><div className="w-14 h-14 bg-emerald-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-emerald-500/50"><Download className="text-emerald-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Designers</h4><p className="text-base text-slate-400 mt-2 font-medium">Premium files</p></div></TiltCard></div>
+                    </div>
+                </div>
                 </div>
             </section>
             
@@ -584,6 +593,7 @@ export default function App() {
         </>
       )}
 
+      {/* RICH FOOTER RESTORED */}
       <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
