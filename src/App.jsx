@@ -25,7 +25,7 @@ const Minus = (props) => (<IconWrapper {...props}><line x1="5" y1="12" x2="19" y
 const ArrowLeft = (props) => (<IconWrapper {...props}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></IconWrapper>);
 const Lock = (props) => (<IconWrapper {...props}><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></IconWrapper>);
 
-// --- Styles & Animations (Fully Restored with Stars) ---
+// --- Styles & Animations ---
 const GlobalStyles = () => (
   <style>{`
     @keyframes laser-scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
@@ -45,7 +45,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-// --- Components (Visuals from Original) ---
+// --- Helpers ---
 const Reveal = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
@@ -83,7 +83,7 @@ const TypingText = ({ text, speed = 50, delay = 0 }) => {
   return <span className="typing-cursor">{displayedText}</span>;
 };
 
-// --- RESTORED TECH BACKGROUND (With Stars & Animations) ---
+// --- RESTORED TECH BACKGROUND ---
 const TechBackground = () => {
   const [stars, setStars] = useState([]);
   useEffect(() => {
@@ -95,10 +95,7 @@ const TechBackground = () => {
   return (
     <div className="fixed inset-0 z-0 pointer-events-none bg-[#020617] overflow-hidden">
       <div className="absolute inset-0" style={{ backgroundImage: `linear-gradient(to right, rgba(51, 65, 85, 0.4) 1px, transparent 1px), linear-gradient(to bottom, rgba(51, 65, 85, 0.4) 1px, transparent 1px)`, backgroundSize: '100px 100px', maskImage: 'radial-gradient(circle at 50% 50%, black 40%, transparent 100%)' }} />
-      {/* Restored Stars */}
-      {stars.map((star) => (
-        <div key={star.id} className="absolute bg-white rounded-full animate-[twinkle_3s_infinite]" style={{ left: star.left, top: star.top, width: `${star.size}px`, height: `${star.size}px`, animationDelay: `${star.delay}s`, animationDuration: `${star.duration}s` }} />
-      ))}
+      {stars.map((star) => (<div key={star.id} className="absolute bg-white rounded-full animate-[twinkle_3s_infinite]" style={{ left: star.left, top: star.top, width: `${star.size}px`, height: `${star.size}px`, animationDelay: `${star.delay}s`, animationDuration: `${star.duration}s` }} />))}
       <div className="absolute top-[15%] left-[10%] text-cyan-500/40 font-mono text-xs flex items-center gap-2 animate-[blink-slow_4s_infinite]"><div className="w-4 h-4 border-l border-t border-cyan-500/60 relative"><div className="absolute -top-[1px] -left-[1px] w-1 h-1 bg-cyan-400"></div></div><span>X: 1024.05</span></div>
       <div className="absolute bottom-[10%] right-[5%] text-cyan-500/40 font-mono text-xs flex items-center gap-2 animate-[blink-slow_7s_infinite]"><span>SCALE: 1:1</span></div>
       {[...Array(8)].map((_, i) => (<div key={i} className="absolute text-slate-700/50 text-xl select-none" style={{ top: `${Math.random() * 90 + 5}%`, left: `${Math.random() * 90 + 5}%`, }}>+</div>))}
@@ -117,7 +114,7 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} onClick={onClick} {...props}><span className="relative z-10 flex items-center gap-2">{children}</span></button>;
 };
 
-// --- NEW PAYMENT MODAL (Functional) ---
+// --- PAYMENT MODAL ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -148,7 +145,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     );
 };
 
-// --- WAITLIST MODAL (For Enterprise) ---
+// --- WAITLIST MODAL (Contact) ---
 const WaitlistModal = ({ isOpen, onClose }) => {
   const [status, setStatus] = useState('idle');
   const [email, setEmail] = useState("");
@@ -167,13 +164,13 @@ const WaitlistModal = ({ isOpen, onClose }) => {
       <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(6,182,212,0.2)]">
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
         {status === 'success' ? (
-            <div className="text-center py-8"><div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30"><Check className="w-8 h-8 text-green-400" /></div><h3 className="text-2xl font-bold text-white mb-2">You're on the list!</h3></div>
+            <div className="text-center py-8"><div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30"><Check className="w-8 h-8 text-green-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3></div>
         ) : (
             <>
-              <div className="text-center mb-6"><div className="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-500/30"><Sparkles className="w-6 h-6 text-cyan-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Join the Waitlist</h3></div>
+              <div className="text-center mb-6"><div className="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-500/30"><Sparkles className="w-6 h-6 text-cyan-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Contact Sales</h3></div>
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === 'submitting'} /></div>
-                <Button variant="gradient" className="w-full justify-center" disabled={status === 'submitting'}>{status === 'submitting' ? 'Get Early Access' : 'Get Early Access'}</Button>
+                <Button variant="gradient" className="w-full justify-center" disabled={status === 'submitting'}>{status === 'submitting' ? 'Send Request' : 'Send Request'}</Button>
               </form>
             </>
         )}
@@ -182,7 +179,7 @@ const WaitlistModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- DÜZELTİLDİ: Pricing Cards (3 Columns) ---
+// --- PRICING CARDS ---
 const PricingCard = ({ plan, price, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-8 rounded-2xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
@@ -208,17 +205,6 @@ const FeatureCard = ({ icon: Icon, title, description, badge }) => (
   </TiltCard>
 );
 
-const Step = ({ number, title, description, isLast }) => (
-  <Reveal delay={number * 150} className="h-full">
-    <div className="flex flex-col items-center text-center relative z-10 max-w-xs mx-auto group h-full">
-      <div className="w-14 h-14 rounded-full bg-slate-900 border border-slate-600 flex items-center justify-center text-xl font-bold text-white mb-6 shadow-xl relative transition-all duration-500 group-hover:border-cyan-500 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] z-20"><span className="absolute inset-0 rounded-full bg-cyan-500/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />{number}</div>
-      <h4 className="text-lg font-bold text-slate-100 mb-2 group-hover:text-cyan-300 transition-colors">{title}</h4>
-      <p className="text-base text-slate-300 font-medium">{description}</p>
-      {!isLast && <div className="hidden md:block absolute top-7 left-[50%] w-full h-[2px] bg-gradient-to-r from-slate-700 to-slate-800/0 group-hover:from-cyan-900 transition-colors duration-500 -z-10" />}
-    </div>
-  </Reveal>
-);
-
 const TestimonialCard = ({ quote, author, role }) => (
   <TiltCard className="h-full w-[400px] flex-shrink-0">
     <div className="h-full p-8 rounded-2xl bg-slate-900/60 border border-slate-700 hover:border-cyan-500/50 transition-colors duration-500 relative backdrop-blur-sm flex flex-col whitespace-normal">
@@ -230,6 +216,17 @@ const TestimonialCard = ({ quote, author, role }) => (
       </div>
     </div>
   </TiltCard>
+);
+
+const Step = ({ number, title, description, isLast }) => (
+  <Reveal delay={number * 150} className="h-full">
+    <div className="flex flex-col items-center text-center relative z-10 max-w-xs mx-auto group h-full">
+      <div className="w-14 h-14 rounded-full bg-slate-900 border border-slate-600 flex items-center justify-center text-xl font-bold text-white mb-6 shadow-xl relative transition-all duration-500 group-hover:border-cyan-500 group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(6,182,212,0.4)] z-20"><span className="absolute inset-0 rounded-full bg-cyan-500/20 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />{number}</div>
+      <h4 className="text-lg font-bold text-slate-100 mb-2 group-hover:text-cyan-300 transition-colors">{title}</h4>
+      <p className="text-base text-slate-300 font-medium">{description}</p>
+      {!isLast && <div className="hidden md:block absolute top-7 left-[50%] w-full h-[2px] bg-gradient-to-r from-slate-700 to-slate-800/0 group-hover:from-cyan-900 transition-colors duration-500 -z-10" />}
+    </div>
+  </Reveal>
 );
 
 const FAQItem = ({ question, answer }) => {
@@ -245,7 +242,7 @@ const FAQItem = ({ question, answer }) => {
   );
 };
 
-// --- RESTORED VISUAL (Animated SVG from Original) ---
+// --- VISUAL (Animated SVG) ---
 const BeforeAfterVisual = () => {
     const [activeTab, setActiveTab] = useState('after');
     return (
@@ -257,7 +254,7 @@ const BeforeAfterVisual = () => {
           <button onClick={() => setActiveTab('before')} className={`flex-1 py-4 text-sm font-bold transition-colors ${activeTab === 'before' ? 'bg-slate-800 text-white shadow-[inset_0_-2px_0_#94a3b8]' : 'text-slate-400 hover:text-white'}`}>Original Upload (Raster)</button>
           <button onClick={() => setActiveTab('after')} className={`flex-1 py-4 text-sm font-bold transition-colors ${activeTab === 'after' ? 'bg-cyan-500/10 text-cyan-400 shadow-[inset_0_-2px_0_#06b6d4]' : 'text-slate-400 hover:text-white'}`}>Cuttora Output (Vector)</button>
         </div>
-        <div className="p-8 md:p-12 min-h-[400px] flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] transition-all duration-500">
+        <div className="p-8 md:p-12 min-h-[400px] flex items-center justify-center relative bg-slate-950 transition-all duration-500">
           <div className="absolute inset-0 bg-slate-950/90" />
           <div className="absolute inset-0 transition-opacity duration-1000" style={{ backgroundImage: activeTab === 'after' ? 'radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 60%)' : 'none' }} />
           {activeTab === 'before' ? (
@@ -363,11 +360,11 @@ export default function App() {
   
   const logout = () => { localStorage.removeItem('cuttora_key'); setApiKey(''); setResult(null); window.location.reload(); };
 
-  // --- FULL TEXT RESTORED ---
+  // --- FULL RICH TEXT ---
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
   const testimonials = [
-    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once during a 4-hour job. The node reduction is insane.", author: "Mike T.", role: "CNC Plasma Operator" },
+    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once during a 4-hour job. The node reduction is insane.", author: "Mike T.", role: "CNC Operator" },
     { quote: "Auto-bridging for floating parts is a game changer. No more lost inner shapes in my metal cuts. Saved me hours of manual editing.", author: "Sarah K.", role: "Laser Cut Designer" },
     { quote: "I threw a terrible low-res JPG at it, expecting garbage. It gave me a clean, usable DXF that I cut on my fiber laser immediately.", author: "David R.", role: "Metal Fabrication Shop Owner" },
     { quote: "DXF export is actually clean. No double lines, no weird spline issues. My CAM software reads it perfectly every time.", author: "James L.", role: "Industrial Engineer" },
@@ -380,7 +377,7 @@ export default function App() {
     { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free and yours to use for any commercial fabrication or digital sales." },
     { q: "How accurate is the 'Thin Line' detection?", a: "Our AI is trained specifically for CNC tolerances. You can set your minimum kerf width (e.g., 1.2mm for plasma), and it detects anything thinner with 98% accuracy." },
     { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based. It runs in your browser and uses cloud processing for heavy lifting." },
-    { q: "What happens when I join the waitlist?", a: "We are currently in a closed Private Beta with select fabricators. Joining the waitlist secures your spot for the upcoming Public Beta launch. You'll be notified first when we open the doors." }
+    { q: "What is coming in Version 2.0?", a: "We are building the future of fabrication! V2 will include Smart Island Detection, Automatic Bridging, Line Thickening tools, and detailed Risk Analysis Reports to ensure perfect cuts every time." }
   ];
 
   return (
@@ -460,7 +457,7 @@ export default function App() {
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
                     <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output. Generates clean, closed paths with minimal nodes—not messy auto-trace spaghetti." /></Reveal>
-                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora automatically detects and thickens lines that fall below your machine's kerf or material tolerance." /></Reveal>
+                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora automatically analyzes lines that fall below your machine's tolerance. Detects and thickens lines that fall below your machine's kerf or material tolerance." /></Reveal>
                     <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Automatically connect floating islands to prevent lost parts. Don't lose the center of your 'O's." badge="Beta" /></Reveal>
                     <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines and removes zero-length segments for smoothest movement." /></Reveal>
                 </div>
@@ -474,6 +471,18 @@ export default function App() {
                 </div>
             </section>
             
+            <section className="py-32 relative z-10">
+                <div className="max-w-7xl mx-auto px-6">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="relative"><div className="absolute -left-20 -top-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-[80px]"></div><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Who uses Cuttora?</h2><p className="text-slate-300 text-xl mb-10 relative z-10 leading-relaxed font-medium">Whether you're running a massive fiber laser or a desktop vinyl cutter, clean vectors are the difference between profit and wasted material.</p><div className="space-y-6 relative z-10">{["Laser Cutting Services", "CNC Metal & Wood Workshops", "Cricut & Silhouette Enthusiasts", "Etsy Sellers"].map((item, i) => (<div key={i} className="flex items-center gap-4 text-slate-300 group hover:text-white transition-colors cursor-default"><div className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500 group-hover:scale-110 transition-all shadow-lg"><Check className="w-4 h-4 text-cyan-400" /></div><span className="text-xl font-medium">{item}</span></div>))}</div></Reveal></div>
+                    <div className="grid grid-cols-2 gap-6 relative">
+                    <div className="animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all h-full"><div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-blue-500/50"><Zap className="text-blue-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Laser Ops</h4></div></TiltCard></div>
+                    <div className="translate-y-12 animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all h-full"><div className="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-cyan-500/50"><Scissors className="text-cyan-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Crafters</h4></div></TiltCard></div>
+                    </div>
+                </div>
+                </div>
+            </section>
+            
             <section className="py-32 bg-slate-900/20 relative z-10 border-y border-slate-800/50 backdrop-blur-sm overflow-hidden">
                 <div className="max-w-7xl mx-auto px-6 mb-16 text-center"><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Feedback from our <span className="text-cyan-400">Private Beta</span></h2></Reveal></div>
                 <div className="flex overflow-hidden w-full relative"><div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8 pl-6">{doubledTestimonials.map((t, i) => (<div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300"><TestimonialCard quote={t.quote} author={t.author} role={t.role} /></div>))}</div></div>
@@ -484,9 +493,9 @@ export default function App() {
                 <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once. Credits never expire.</p></div></Reveal>
                 {/* 3 COLUMNS, NO ENTERPRISE CARD */}
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
-                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
-                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
-                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} /></Reveal>
+                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
+                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
+                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools"]} onJoin={() => openPaymentModal('agency', 90)} /></Reveal>
                 </div>
                 <div className="text-center mt-12"><p className="text-slate-400 text-lg">Have custom requirements or high volume needs? <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={() => setIsWaitlistOpen(true)}>Contact us</a> for enterprise solutions.</p></div>
                 </div>
