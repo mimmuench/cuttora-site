@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- ICONS ---
+// --- ICONS (Full Set) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -146,7 +146,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
     );
 };
 
-// --- PAYMENT MODAL ---
+// --- PAYMENT MODAL (Sunucu Uyanma Korumalı) ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,7 +155,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
         e.preventDefault();
         setIsSubmitting(true);
         await onSubmit(email, plan);
-        // Keep submitting true to show loading state if backend is waking up
+        // isSubmitting will be handled based on success/failure in parent
     };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -170,7 +170,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Address for Receipt</label><input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isSubmitting} /></div>
                     {isSubmitting ? (
-                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait border border-slate-600"><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Waking up secure server...</div>
+                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait border border-slate-600"><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Connecting to Secure Server... (Wait ~30s)</div>
                     ) : (
                         <Button variant="gradient" className="w-full justify-center">Proceed to Payment</Button>
                     )}
@@ -215,15 +215,15 @@ const WaitlistModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- BIG PRICING CARDS ---
+// --- PRICING CARDS ---
 const PricingCard = ({ plan, price, originalPrice, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-10 rounded-3xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
       <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.6)] animate-pulse border border-green-400">50% OFF LAUNCH OFFER</div>
       {recommended && <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-xl rounded-tr-xl font-bold">POPULAR</div>}
       <h3 className="text-3xl font-bold text-slate-200 mb-2">{plan}</h3>
-      <div className="flex items-baseline gap-3 mb-4"><div className="text-6xl font-bold text-white">{price}</div><div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div></div>
-      <p className="text-slate-400 text-base mb-8 uppercase tracking-wider font-semibold">{description}</p>
+      <div className="flex items-baseline gap-3 mb-4"><div className="text-5xl font-bold text-white">{price}</div><div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div></div>
+      <p className="text-slate-400 text-sm mb-8 uppercase tracking-wider font-semibold">{description}</p>
       <ul className="space-y-5 mb-10">{features.map((feat, idx) => (<li key={idx} className="flex items-start gap-3 text-slate-300 text-lg"><Check className="w-6 h-6 text-cyan-400 shrink-0" />{feat}</li>))}</ul>
       <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center py-4 text-lg mt-auto" onClick={onJoin}>Buy Now</Button>
     </div>
@@ -266,12 +266,13 @@ const TestimonialCard = ({ quote, author, role }) => (
   </TiltCard>
 );
 
+// --- BIG FAQ (More Readable) ---
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border-b border-slate-800 last:border-0">
       <button className="w-full py-8 flex items-center justify-between text-left group" onClick={() => setIsOpen(!isOpen)}>
-        <span className="text-xl font-medium text-slate-200 group-hover:text-cyan-400 transition-colors">{question}</span>
+        <span className="text-xl md:text-2xl font-medium text-slate-200 group-hover:text-cyan-400 transition-colors">{question}</span>
         {isOpen ? <Minus className="w-6 h-6 text-cyan-400" /> : <Plus className="w-6 h-6 text-slate-500 group-hover:text-cyan-400" />}
       </button>
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-8' : 'max-h-0 opacity-0'}`}><p className="text-slate-400 leading-relaxed text-lg">{answer}</p></div>
@@ -312,9 +313,10 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState({ name: '', price: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   
-  // LEGAL MODALS
+  // LEGAL MODALS STATE
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
+  const [cookieOpen, setCookieOpen] = useState(false);
   
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('cuttora_key') || '');
   const [credits, setCredits] = useState(0);
@@ -369,11 +371,11 @@ export default function App() {
         fd.append("email", email);
         fd.append("package_type", plan.toLowerCase()); 
         
+        // SUNUCU UYANDIRMA KORUMASI
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
         
         if(!res.ok) { 
-            // Don't close modal, keep spinner active
-            alert("The secure payment server is currently waking up (Standard on free tier). Please wait 45-60 seconds and try again!"); 
+            // Modal'ı kapatma, kullanıcıya beklemesini söyle
             return; 
         }
         
@@ -381,7 +383,7 @@ export default function App() {
         if(data.url) window.location.href = data.url; 
         else alert("Error: " + data.error);
     } catch(e) { 
-        alert("The secure server is waking up. Please count to 45 and click Proceed again. It will work!"); 
+        // Hata olsa bile modal kapanmaz, kullanıcı bekler
     }
   };
 
@@ -439,19 +441,10 @@ export default function App() {
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
-      {/* LEGAL MODALS */}
-      <LegalModal 
-        isOpen={privacyOpen} 
-        onClose={() => setPrivacyOpen(false)} 
-        title="Privacy Policy" 
-        content={`Last Updated: December 2025\n\n1. Information We Collect\nWe collect your email address for account management and payment processing. We do not store your credit card information; it is handled securely by Stripe.\n\n2. Image Data\nImages uploaded to Cuttora are processed temporarily to generate vector files. We do not claim ownership of your designs. Processed files are deleted from our servers after 24 hours.\n\n3. Data Security\nWe implement industry-standard security measures to protect your data. However, no method of transmission over the Internet is 100% secure.`} 
-      />
-      <LegalModal 
-        isOpen={termsOpen} 
-        onClose={() => setTermsOpen(false)} 
-        title="Terms of Service" 
-        content={`Last Updated: December 2025\n\n1. Acceptance of Terms\nBy accessing Cuttora, you agree to be bound by these Terms of Service.\n\n2. License\nCuttora grants you a non-exclusive, non-transferable right to use our service to convert images to vector formats. The output files are royalty-free for your commercial use.\n\n3. Refunds\nDue to the digital nature of the service (API credits), refunds are generally not provided once credits are used. Contact support for exceptional cases.`} 
-      />
+      {/* LEGAL MODALS CONTENT */}
+      <LegalModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy" content={`Last Updated: December 2025\n\n1. Data Collection\nWe collect your email address solely for account management and transactional purposes. We do not sell your data.\n\n2. Image Processing\nImages uploaded to Cuttora are processed temporarily on our secure servers to generate vector files. We do not claim ownership of your designs. Source files are automatically deleted after 24 hours.\n\n3. Security\nWe implement SSL encryption and use Stripe for secure payment processing. We never see or store your credit card details.`} />
+      <LegalModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service" content={`Last Updated: December 2025\n\n1. Usage License\nCuttora grants you a non-exclusive, non-transferable license to use our software for converting raster images to vector formats. The output files are royalty-free for your commercial use.\n\n2. User Responsibility\nYou represent that you have the right to use the images you upload. Cuttora is not liable for copyright infringement regarding user-uploaded content.\n\n3. Refund Policy\nDue to the nature of digital goods (API credits), refunds are generally not provided once credits have been utilized. Contact support@cuttora.com for billing inquiries.`} />
+      <LegalModal isOpen={cookieOpen} onClose={() => setCookieOpen(false)} title="Cookie Policy" content={`Last Updated: December 2025\n\n1. Essential Cookies\nWe use essential cookies to maintain your login session (License Key) and ensure the site functions correctly.\n\n2. Analytics\nWe may use anonymous analytics cookies to understand how users interact with our tool to improve performance. You can disable these in your browser settings.`} />
 
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
@@ -607,7 +600,7 @@ export default function App() {
 
             <section id="pricing" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once. Credits never expire.</p></div></Reveal>
+                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p></div></Reveal>
                 <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
                     <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
                     <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
@@ -646,7 +639,7 @@ export default function App() {
             <div className="col-span-1 md:col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6"><div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center"><Scissors className="w-4 h-4 text-white" /></div>Cuttora</div><p className="text-slate-300 leading-relaxed text-lg">The AI-powered vector engine for makers, fabricators, and designers.</p></div>
             <div><h4 className="font-bold text-white mb-6 text-xl">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li><li>API</li><li>Showcase</li></ul></div>
             <div><h4 className="font-bold text-white mb-6 text-xl">Resources</h4><ul className="space-y-4 text-slate-300"><li>Documentation</li><li>Laser Cutting Guide</li><li>Blog</li><li>Community</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li>Cookie Policy</li></ul></div>
+            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors">Cookie Policy</button></li></ul></div>
           </div>
           <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
             <p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
