@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Render Backend Adresi
+// Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- İKONLAR ---
+// --- ICONS ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -24,7 +24,7 @@ const Plus = (props) => (<IconWrapper {...props}><line x1="12" y1="5" x2="12" y2
 const Minus = (props) => (<IconWrapper {...props}><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
 const ArrowLeft = (props) => (<IconWrapper {...props}><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></IconWrapper>);
 
-// --- Stil ve Animasyonlar ---
+// --- Styles & Animations ---
 const GlobalStyles = () => (
   <style>{`
     @keyframes laser-scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
@@ -43,7 +43,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-// --- Yardımcı Bileşenler ---
+// --- Helper Components ---
 const Reveal = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
@@ -100,7 +100,7 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} onClick={onClick} {...props}><span className="relative z-10 flex items-center gap-2">{children}</span></button>;
 };
 
-// --- Modallar ve İçerik ---
+// --- Modals & Content ---
 const WaitlistModal = ({ isOpen, onClose }) => {
   const [status, setStatus] = useState('idle');
   const [email, setEmail] = useState("");
@@ -120,13 +120,13 @@ const WaitlistModal = ({ isOpen, onClose }) => {
       <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(6,182,212,0.2)]">
         <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-white"><X className="w-6 h-6" /></button>
         {status === 'success' ? (
-            <div className="text-center py-8"><div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30"><Check className="w-8 h-8 text-green-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Listeye Eklendin!</h3></div>
+            <div className="text-center py-8"><div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30"><Check className="w-8 h-8 text-green-400" /></div><h3 className="text-2xl font-bold text-white mb-2">You're on the list!</h3></div>
         ) : (
             <>
-              <div className="text-center mb-6"><div className="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-500/30"><Sparkles className="w-6 h-6 text-cyan-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Bekleme Listesine Katıl</h3></div>
+              <div className="text-center mb-6"><div className="w-12 h-12 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-cyan-500/30"><Sparkles className="w-6 h-6 text-cyan-400" /></div><h3 className="text-2xl font-bold text-white mb-2">Join the Waitlist</h3></div>
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Adresin</label><input type="email" placeholder="ornek@sirket.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === 'submitting'} /></div>
-                <Button variant="gradient" className="w-full justify-center" disabled={status === 'submitting'}>{status === 'submitting' ? 'Ekleniyor...' : 'Erken Erişim İste'}</Button>
+                <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={status === 'submitting'} /></div>
+                <Button variant="gradient" className="w-full justify-center" disabled={status === 'submitting'}>{status === 'submitting' ? 'Joining...' : 'Get Early Access'}</Button>
               </form>
             </>
         )}
@@ -173,16 +173,16 @@ const TestimonialCard = ({ quote, author, role }) => (
   </TiltCard>
 );
 
-// --- DÜZELTİLDİ: Fiyat Kartları ($10, $40, $90 Güncellemesi) ---
+// --- PRICING CARDS (ENGLISH & FIXED PRICES: $10, $40, $90) ---
 const PricingCard = ({ plan, price, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-8 rounded-2xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
-      {recommended && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(6,182,212,0.6)] animate-pulse">En Popüler</div>}
+      {recommended && <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(6,182,212,0.6)] animate-pulse">Most Popular</div>}
       <h3 className="text-xl font-bold text-slate-200 mb-2">{plan}</h3>
       <div className="text-3xl font-bold text-white mb-2">{price}</div>
       <p className="text-slate-400 text-sm mb-6 uppercase">{description}</p>
       <ul className="space-y-4 mb-8">{features.map((feat, idx) => (<li key={idx} className="flex items-start gap-3 text-slate-300 text-base"><Check className="w-5 h-5 text-cyan-400 shrink-0" />{feat}</li>))}</ul>
-      <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center mt-auto" onClick={onJoin}>{plan === 'Enterprise' ? 'Contact Sales' : 'Satın Al'}</Button>
+      <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center mt-auto" onClick={onJoin}>{plan === 'Enterprise' ? 'Contact Sales' : 'Buy Now'}</Button>
     </div>
   </TiltCard>
 );
@@ -198,7 +198,7 @@ const Step = ({ number, title, description, isLast }) => (
   </Reveal>
 );
 
-// --- DÜZELTİLDİ: Görsel Karşılaştırma Bileşeni ---
+// --- VISUAL COMPARISON COMPONENT ---
 const BeforeAfterVisual = () => {
     const [activeTab, setActiveTab] = useState('after');
     return (
@@ -222,7 +222,7 @@ const BeforeAfterVisual = () => {
     );
 };
 
-// --- ANA UYGULAMA ---
+// --- MAIN APP ---
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -244,16 +244,16 @@ export default function App() {
       const newKey = p.get('key');
       localStorage.setItem('cuttora_key', newKey);
       setApiKey(newKey);
-      alert(`🎉 Ödeme Başarılı! \n\nLisans Anahtarın: ${newKey}\n\nLütfen bu anahtarı kaybetme!`);
+      alert(`🎉 Payment Successful! \n\nYour License Key: ${newKey}\n\nPlease save this key safely!`);
       window.history.replaceState({}, '', window.location.pathname);
     }
     
-    // Kredi sorgula (Server uyku modundaysa hata vermez)
+    // Fetch Credits (Error handling for sleeping server)
     if(apiKey) {
        fetch(`${API_URL}/api/credits/${apiKey}`)
         .then(r => { if(!r.ok) throw new Error("Server sleeping"); return r.json(); })
         .then(d=>setCredits(d.credits))
-        .catch(e => { console.log("Server uyanıyor olabilir:", e); });
+        .catch(e => { console.log("Server might be waking up:", e); });
     }
     return () => window.removeEventListener('scroll', handleScroll); 
   }, [apiKey]);
@@ -261,7 +261,7 @@ export default function App() {
   const handleBuy = async (packageType, price) => {
     if(packageType === 'Enterprise') { setIsModalOpen(true); return; }
     
-    const email = prompt(`Güvenli Ödeme: ${packageType} ($${price})\n\nÖdeme linkini almak için e-posta adresini gir:`);
+    const email = prompt(`Secure Payment for ${packageType} ($${price})\n\nPlease enter your email to receive the checkout link:`);
     if(!email) return;
     
     const fd = new FormData();
@@ -270,17 +270,17 @@ export default function App() {
     
     try {
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
-        if(!res.ok) { alert("Sunucu uyanıyor (yaklaşık 1 dk). Lütfen tekrar dene."); return; }
+        if(!res.ok) { alert("Server is waking up (approx. 1 min). Please try again."); return; }
         const data = await res.json();
         if(data.url) window.location.href = data.url; 
-        else alert("Hata: " + data.error);
-    } catch(e) { alert("Sunucu uyku modundan uyanıyor. Lütfen 1 dakika bekleyip tekrar dene."); }
+        else alert("Error: " + data.error);
+    } catch(e) { alert("Server is waking up from sleep mode. Please wait 1 minute and try again."); }
   };
 
   const handleUpload = async (e) => {
       const file = e.target.files[0];
       if(!file) return;
-      if(!apiKey) { alert("Lütfen önce bir paket satın al."); return; }
+      if(!apiKey) { alert("Please buy a package first."); return; }
       
       setIsProcessing(true);
       const fd = new FormData();
@@ -294,18 +294,18 @@ export default function App() {
               if(data.status === "success") {
                   setResult(data);
                   fetch(`${API_URL}/api/credits/${apiKey}`).then(r=>r.json()).then(d=>setCredits(d.credits));
-              } else { alert("Hata: " + data.detail); }
-          } else { alert("Sunucu Hatası (Kredini veya Dosya Tipini Kontrol Et)."); }
-      } catch(e) { alert("Bağlantı Hatası. Sunucu uyku modunda olabilir."); }
+              } else { alert("Error: " + data.detail); }
+          } else { alert("Server Error (Check Credits or File Type)."); }
+      } catch(e) { alert("Connection Error. Server might be sleeping."); }
       setIsProcessing(false);
   };
 
   const manualLogin = () => {
-      const k = prompt("Lisans Anahtarını Gir:");
+      const k = prompt("Enter your License Key:");
       if(k) { localStorage.setItem('cuttora_key', k); setApiKey(k); window.location.reload(); }
   };
   
-  // DÜZELTİLDİ: Çıkış yapınca sayfayı yenile
+  // LOGOUT
   const logout = () => {
       localStorage.removeItem('cuttora_key');
       setApiKey('');
@@ -313,21 +313,21 @@ export default function App() {
       window.location.reload();
   };
 
-  // --- STATİK VERİLER ---
+  // --- STATIC DATA ---
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
   const testimonials = [
-    { quote: "Sonunda açık çizgileri otomatik kapatan bir araç. Plazma kesicim bir kere bile durmadı.", author: "Mike T.", role: "CNC Operatörü" },
-    { quote: "Node azaltma özelliği harika. Metal kesimlerimde artık çift çizgi sorunu yaşamıyorum.", author: "Sarah K.", role: "Lazer Tasarımcısı" },
-    { quote: "Kötü bir JPG yükledim, çöp bekliyordum ama tertemiz bir DXF verdi.", author: "David R.", role: "Atölye Sahibi" },
-    { quote: "DXF çıktısı gerçekten temiz. Spline sorunu yok.", author: "James L.", role: "Endüstri Mühendisi" }
+    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once.", author: "Mike T.", role: "CNC Plasma Operator" },
+    { quote: "The node reduction is a game changer. No more messy double lines in my metal cuts.", author: "Sarah K.", role: "Laser Cut Designer" },
+    { quote: "I threw a terrible low-res JPG at it, expecting garbage. It gave me a clean, usable DXF.", author: "David R.", role: "Shop Owner" },
+    { quote: "DXF export is actually clean. No double lines, no weird spline issues.", author: "James L.", role: "Industrial Engineer" }
   ];
   const doubledTestimonials = [...testimonials, ...testimonials];
   const faqs = [
-    { q: "Hangi formatları destekliyorsunuz?", a: "Şu anda JPG, PNG, WEBP ve BMP dosyalarını destekliyoruz." },
-    { q: "Çıktıları ticari işlerde kullanabilir miyim?", a: "Evet! Cuttora ile oluşturulan tüm dosyalar telifsizdir." },
-    { q: "Yazılım yüklemem gerekiyor mu?", a: "Hayır, Cuttora %100 web tabanlıdır." },
-    { q: "Krediler nasıl çalışır?", a: "Paket için bir kez ödeme yaparsınız. Kredilerin son kullanma tarihi yoktur." }
+    { q: "What image formats do you support?", a: "We currently support JPG, PNG, WEBP, and BMP files." },
+    { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free." },
+    { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based." },
+    { q: "How do credits work?", a: "You pay once for a package. Credits never expire. Use them whenever you want." }
   ];
 
   return (
@@ -345,8 +345,8 @@ export default function App() {
           <div className="hidden md:flex items-center gap-4">
              {apiKey ? (
                  <div className="flex items-center gap-4">
-                     <span className="text-cyan-400 font-mono font-bold border border-cyan-500/30 px-3 py-1 rounded bg-cyan-900/20">Kredi: {credits}</span>
-                     <Button variant="outline" className="py-2 px-4 text-sm bg-red-500/10 border-red-500/50 hover:bg-red-500 hover:text-white" onClick={logout}>Çıkış Yap</Button>
+                     <span className="text-cyan-400 font-mono font-bold border border-cyan-500/30 px-3 py-1 rounded bg-cyan-900/20">Credits: {credits}</span>
+                     <Button variant="outline" className="py-2 px-4 text-sm bg-red-500/10 border-red-500/50 hover:bg-red-500 hover:text-white" onClick={logout}>Log Out</Button>
                  </div>
              ) : (
                  <>
@@ -373,46 +373,46 @@ export default function App() {
       </nav>
 
       {apiKey ? (
-        // --- ÇALIŞMA ALANI (GİRİŞ YAPILMIŞ) ---
+        // --- WORKSPACE (LOGGED IN) ---
         <section className="pt-44 pb-24 px-6 min-h-screen relative">
-            {/* DÜZELTİLDİ: Geri Dön Butonu */}
+            {/* BACK TO HOME BUTTON */}
             <div className="absolute top-24 left-6 md:left-20 z-50">
                 <button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500">
-                    <ArrowLeft className="w-4 h-4"/> Ana Sayfaya Dön / Çıkış
+                    <ArrowLeft className="w-4 h-4"/> Back to Home / Logout
                 </button>
             </div>
 
              <div className="max-w-4xl mx-auto">
                  <Reveal>
                      <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
-                         <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3"><Zap className="text-cyan-400"/> Cuttora Atölye</h2>
+                         <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3"><Zap className="text-cyan-400"/> Cuttora Workshop</h2>
                          
                          <div className="mb-8 p-6 border-2 border-dashed border-slate-700 rounded-xl hover:border-cyan-500 hover:bg-slate-800/50 transition-all text-center group cursor-pointer relative">
                              <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
                              <Upload className="w-12 h-12 text-slate-500 mx-auto mb-4 group-hover:text-cyan-400 transition-colors" />
-                             <p className="text-xl font-bold text-slate-300">Resim Yüklemek İçin Tıkla</p>
-                             <p className="text-sm text-slate-500">JPG, PNG veya WEBP</p>
+                             <p className="text-xl font-bold text-slate-300">Click to Upload Image</p>
+                             <p className="text-sm text-slate-500">JPG, PNG or WEBP</p>
                          </div>
 
                          {isProcessing && (
                              <div className="text-center py-8 animate-pulse">
                                  <div className="w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                                 <p className="text-cyan-400 font-mono">Geometri İşleniyor...</p>
-                                 <p className="text-slate-500 text-xs mt-2">Vektör Motoruna Bağlanılıyor...</p>
+                                 <p className="text-cyan-400 font-mono">Processing Geometry...</p>
+                                 <p className="text-slate-500 text-xs mt-2">Connecting to Vector Engine...</p>
                              </div>
                          )}
 
                          {result && (
                              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 animate-fade-in">
-                                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Check className="text-green-400"/> Dönüştürme Tamamlandı!</h3>
+                                 <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Check className="text-green-400"/> Conversion Complete!</h3>
                                  <div className="grid md:grid-cols-2 gap-4">
-                                     <img src={`${API_URL}${result.preview_url}`} alt="Önizleme" className="rounded-lg border border-slate-700 bg-white" />
+                                     <img src={`${API_URL}${result.preview_url}`} alt="Preview" className="rounded-lg border border-slate-700 bg-white" />
                                      <div className="flex flex-col justify-center gap-4">
                                          <a href={`${API_URL}${result.files.zip}`} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                                             <Download className="w-5 h-5"/> ZIP İndir
+                                             <Download className="w-5 h-5"/> Download ZIP Bundle
                                          </a>
                                          <a href={`${API_URL}${result.files.svg}`} target="_blank" className="w-full border border-slate-600 hover:border-white text-slate-300 hover:text-white font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors">
-                                             SVG Önizle
+                                             View SVG
                                          </a>
                                      </div>
                                  </div>
@@ -423,14 +423,14 @@ export default function App() {
              </div>
         </section>
       ) : (
-        // --- LANDING PAGE (ÇIKIŞ YAPILMIŞ) ---
+        // --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-44 pb-24 px-6">
                 <div className="max-w-7xl mx-auto text-center">
-                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Yayında: AI Vektör Motoru</span></div></Reveal>
-                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Resimlerini Üretime Hazır <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Vektörlere Dönüştür</span></h1>
-                <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora, geometriyi otomatik analiz eder; lazer, CNC ve Cricut için yolları optimize eder." speed={30} delay={500} /></p></Reveal>
-                <Reveal delay={400}><div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"><Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Hemen Başla <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button></div></Reveal>
+                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Live: AI Vector Engine</span></div></Reveal>
+                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
+                <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
+                <Reveal delay={400}><div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"><Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button></div></Reveal>
                 <Reveal delay={600}><BeforeAfterVisual /></Reveal>
                 </div>
             </section>
@@ -438,7 +438,7 @@ export default function App() {
             <section className="py-16 border-y border-slate-800/50 bg-slate-950/40 backdrop-blur-sm relative z-10 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-transparent to-slate-950 z-20 pointer-events-none" />
                 <div className="w-full">
-                <p className="text-sm text-cyan-400 font-bold uppercase tracking-[0.2em] mb-10 text-center">10,000+ Üretici Tarafından Kullanılıyor</p>
+                <p className="text-sm text-cyan-400 font-bold uppercase tracking-[0.2em] mb-10 text-center">Trusted by 10,000+ Fabricators</p>
                 <div className="flex overflow-hidden relative w-full">
                     <div className="flex animate-scroll whitespace-nowrap gap-20 items-center">
                     {doubledBrands.map((brand, i) => (<span key={i} className="text-2xl font-bold font-mono text-slate-400 flex items-center gap-2 hover:text-cyan-400 transition-colors cursor-default transform duration-300 flex-shrink-0"><div className="w-6 h-6 bg-slate-800 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.1)]"><div className="w-2 h-2 bg-slate-400 rounded-full"></div></div>{brand}</span>))} 
@@ -450,34 +450,67 @@ export default function App() {
             <section id="features" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
-                    <Reveal delay={100}><FeatureCard icon={Cpu} title="Akıllı Vektör Motoru" description="Fiziksel çıktı için özel olarak tasarlanmış tescilli AI izleme algoritmaları." /></Reveal>
-                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Kesim-Güvenli Analiz" description="Bir daha asla hatalı kesim yapma. Cuttora, makine toleransının altındaki çizgileri otomatik analiz eder." /></Reveal>
-                    <Reveal delay={300}><FeatureCard icon={Layers} title="Akıllı Otomatik Köprüleme" description="Kayıp parçaları önlemek için yüzen adaları otomatik olarak bağlar." badge="Beta" /></Reveal>
-                    <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimizasyonu" description="CNC yazılımları için optimize edilmiş yerel DXF çıktısı." /></Reveal>
+                    <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output." /></Reveal>
+                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora automatically analyzes lines that fall below your machine's tolerance." /></Reveal>
+                    <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Automatically connect floating islands to prevent lost parts." badge="Beta" /></Reveal>
+                    <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines and removes zero-length segments." /></Reveal>
                 </div>
                 </div>
             </section>
             
+            <section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6">
+                <Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-24 text-center">From Pixel to Part</h2></Reveal>
+                <div className="grid md:grid-cols-4 gap-12 relative">
+                    <Step number="1" title="Upload" description="Drag & drop any PNG, JPG, or SVG sketch." />
+                    <Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." />
+                    <Step number="3" title="Optimize" description="Paths are smoothed, nodes reduced, and errors highlighted." />
+                    <Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} />
+                </div>
+                </div>
+            </section>
+            
+            <section className="py-32 relative z-10">
+                <div className="max-w-7xl mx-auto px-6">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="relative"><div className="absolute -left-20 -top-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-[80px]"></div><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Who uses Cuttora?</h2><p className="text-slate-300 text-xl mb-10 relative z-10 leading-relaxed font-medium">Whether you're running a massive fiber laser or a desktop vinyl cutter, clean vectors are the difference between profit and wasted material.</p><div className="space-y-6 relative z-10">{["Laser Cutting Services", "CNC Metal & Wood Workshops", "Cricut & Silhouette Enthusiasts", "Etsy Sellers"].map((item, i) => (<div key={i} className="flex items-center gap-4 text-slate-300 group hover:text-white transition-colors cursor-default"><div className="w-8 h-8 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center group-hover:border-cyan-500 group-hover:scale-110 transition-all shadow-lg"><Check className="w-4 h-4 text-cyan-400" /></div><span className="text-xl font-medium">{item}</span></div>))}</div></Reveal></div>
+                    <div className="grid grid-cols-2 gap-6 relative">
+                    <div className="animate-float"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-blue-500 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)] transition-all h-full"><div className="w-14 h-14 bg-blue-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-blue-500/50"><Zap className="text-blue-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Laser Ops</h4></div></TiltCard></div>
+                    <div className="translate-y-12 animate-float-delayed"><TiltCard><div className="bg-slate-900/60 p-8 rounded-2xl border border-slate-700 backdrop-blur-md flex flex-col items-center text-center hover:border-cyan-500 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all h-full"><div className="w-14 h-14 bg-cyan-500/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-cyan-500/50"><Scissors className="text-cyan-400 w-6 h-6"/></div><h4 className="font-bold text-white text-xl">Crafters</h4></div></TiltCard></div>
+                    </div>
+                </div>
+                </div>
+            </section>
+            
+            <section className="py-32 bg-slate-900/20 relative z-10 border-y border-slate-800/50 backdrop-blur-sm overflow-hidden">
+                <div className="max-w-7xl mx-auto px-6 mb-16 text-center"><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Feedback from our <span className="text-cyan-400">Private Beta</span></h2></Reveal></div>
+                <div className="flex overflow-hidden w-full relative">
+                <div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8 pl-6">
+                    {doubledTestimonials.map((t, i) => (<div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300"><TestimonialCard quote={t.quote} author={t.author} role={t.role} /></div>))}
+                </div>
+                </div>
+            </section>
+
             <section id="pricing" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Paketini Seç</h2><p className="text-slate-300 text-2xl font-light">Bir kez öde, kredilerini ömür boyu kullan.</p></div></Reveal>
+                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once, use forever credits.</p></div></Reveal>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
-                    {/* DÜZELTİLDİ: Fiyatlar 10-40-90 Olarak Güncellendi */}
-                    <Reveal delay={100} className="h-full"><PricingCard plan="Başlangıç" price="$10" description="5 Kredi" features={["5 Yüksek Çözünürlüklü Dönüşüm", "Standart SVG çıktısı", "Temel Optimizasyon"]} onJoin={() => handleBuy('starter', 10)} /></Reveal>
-                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Kredi" recommended={true} features={["50 Yüksek Çözünürlüklü Dönüşüm", "Gelişmiş DXF & SVG", "Öncelikli İşleme", "Node Azaltma"]} onJoin={() => handleBuy('pro', 40)} /></Reveal>
-                    <Reveal delay={300} className="h-full"><PricingCard plan="Ajans" price="$90" description="150 Kredi" features={["150 Yüksek Çözünürlüklü Dönüşüm", "Dosya Başına En Düşük Maliyet", "Ticari Lisans", "Toplu İşleme"]} onJoin={() => handleBuy('agency', 90)} /></Reveal>
-                    <Reveal delay={400} className="h-full"><PricingCard plan="Kurumsal" price="Özel" description="Özel Çözümler" features={["Sınırsız API Erişimi", "Özel Entegrasyon", "Atanmış Destek"]} onJoin={() => handleBuy('Enterprise', 'Custom')} /></Reveal>
+                    {/* FIXED PRICES: $10, $40, $90 */}
+                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["5 High-Res Conversions", "Standard SVG export", "Basic Optimization"]} onJoin={() => handleBuy('starter', 10)} /></Reveal>
+                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["50 High-Res Conversions", "Advanced DXF & SVG", "Priority Processing", "Node Reduction"]} onJoin={() => handleBuy('pro', 40)} /></Reveal>
+                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["150 High-Res Conversions", "Lowest Cost Per File", "Commercial License", "Bulk Processing Tools"]} onJoin={() => handleBuy('agency', 90)} /></Reveal>
+                    <Reveal delay={400} className="h-full"><PricingCard plan="Enterprise" price="Custom" description="Custom Solutions" features={["Unlimited API Access", "Custom Integration", "Dedicated Support"]} onJoin={() => handleBuy('Enterprise', 'Custom')} /></Reveal>
                 </div>
                 </div>
             </section>
             
             <section id="faq" className="py-32 relative z-10">
                 <div className="max-w-3xl mx-auto px-6">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 text-center">SSS</h2>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 text-center">FAQ</h2>
                 <div className="space-y-4">
-                    <FAQItem question="Krediler nasıl çalışır?" answer="1 Kredi = 1 Başarılı Dönüşüm. Eğer AI başarısız olursa ödeme yapmazsınız. Kredilerin son kullanma tarihi yoktur." />
-                    <FAQItem question="Hangi dosyaları alırım?" answer="CNC/Lazer için optimize edilmiş bir DXF ve tasarım yazılımları için temiz bir SVG içeren ZIP dosyası alırsınız." />
-                    <FAQItem question="Bunu ticari olarak kullanabilir miyim?" answer="Evet! Cuttora ile oluşturulan tüm dosyalar ürünleriniz için telifsizdir." />
+                    <FAQItem question="How do credits work?" answer="1 Credit = 1 Successful Conversion. If the AI fails, you don't pay. Credits never expire." />
+                    <FAQItem question="What files do I get?" answer="You get a ZIP file containing an optimized DXF for CNC/Laser and a clean SVG for design software." />
+                    <FAQItem question="Can I use this commercially?" answer="Yes! All files generated with Cuttora are royalty-free for your products." />
                 </div>
                 </div>
             </section>
@@ -486,7 +519,7 @@ export default function App() {
 
       <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
         <div className="max-w-7xl mx-auto px-6 text-center text-slate-400">
-            <p>© 2024 Cuttora Inc. Üreticiler için yapıldı.</p>
+            <p>© 2024 Cuttora Inc. Built for Makers.</p>
         </div>
       </footer>
     </div>
