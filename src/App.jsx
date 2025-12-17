@@ -173,7 +173,7 @@ const TestimonialCard = ({ quote, author, role }) => (
   </TiltCard>
 );
 
-// --- PRICING CARDS (ENGLISH & FIXED PRICES: $10, $40, $90) ---
+// --- PRICING CARDS (TEMİZLENDİ) ---
 const PricingCard = ({ plan, price, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
     <div className={`relative p-8 rounded-2xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
@@ -198,7 +198,7 @@ const Step = ({ number, title, description, isLast }) => (
   </Reveal>
 );
 
-// --- VISUAL COMPARISON COMPONENT ---
+// --- VISUAL COMPARISON ---
 const BeforeAfterVisual = () => {
     const [activeTab, setActiveTab] = useState('after');
     return (
@@ -493,12 +493,12 @@ export default function App() {
 
             <section id="pricing" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once, use forever credits.</p></div></Reveal>
+                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Pay once. Credits never expire.</p></div></Reveal>
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto items-stretch">
-                    {/* FIXED PRICES: $10, $40, $90 */}
-                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["5 High-Res Conversions", "Standard SVG export", "Basic Optimization"]} onJoin={() => handleBuy('starter', 10)} /></Reveal>
-                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["50 High-Res Conversions", "Advanced DXF & SVG", "Priority Processing", "Node Reduction"]} onJoin={() => handleBuy('pro', 40)} /></Reveal>
-                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["150 High-Res Conversions", "Lowest Cost Per File", "Commercial License", "Bulk Processing Tools"]} onJoin={() => handleBuy('agency', 90)} /></Reveal>
+                    {/* DÜZELTİLDİ: "5 High-Res" yerine daha net maddeler */}
+                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization"]} onJoin={() => handleBuy('starter', 10)} /></Reveal>
+                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction"]} onJoin={() => handleBuy('pro', 40)} /></Reveal>
+                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools"]} onJoin={() => handleBuy('agency', 90)} /></Reveal>
                     <Reveal delay={400} className="h-full"><PricingCard plan="Enterprise" price="Custom" description="Custom Solutions" features={["Unlimited API Access", "Custom Integration", "Dedicated Support"]} onJoin={() => handleBuy('Enterprise', 'Custom')} /></Reveal>
                 </div>
                 </div>
