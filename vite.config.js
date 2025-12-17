@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/cuttora/', // Repo adınızı buraya yazın
+  base: '/',  // ← Burası önemli! Custom domain için / olmalı
   build: {
     outDir: 'docs'
   }
