@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Render Backend URL
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- ICONS (Full Set) ---
+// --- ICONS (Full Rich Set) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -123,7 +123,7 @@ const AnnouncementBar = () => (
   </div>
 );
 
-// --- LEGAL MODALS (NEW) ---
+// --- LEGAL MODALS ---
 const LegalModal = ({ isOpen, onClose, title, content }) => {
     if (!isOpen) return null;
     return (
@@ -146,7 +146,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
     );
 };
 
-// --- PAYMENT MODAL (Sunucu Uyanma Korumalı) ---
+// --- PAYMENT MODAL (Cleaned up for Paid Server) ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,7 +155,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
         e.preventDefault();
         setIsSubmitting(true);
         await onSubmit(email, plan);
-        // isSubmitting will be handled based on success/failure in parent
+        setIsSubmitting(false); 
     };
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -170,7 +170,7 @@ const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div><label className="block text-sm font-medium text-slate-300 mb-1">Email Address for Receipt</label><input type="email" placeholder="you@company.com" className="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-cyan-500 transition-colors" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isSubmitting} /></div>
                     {isSubmitting ? (
-                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait border border-slate-600"><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Connecting to Secure Server... (Wait ~30s)</div>
+                        <div className="w-full bg-slate-800 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 cursor-wait border border-slate-600"><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>Processing Securely...</div>
                     ) : (
                         <Button variant="gradient" className="w-full justify-center">Proceed to Payment</Button>
                     )}
@@ -266,7 +266,6 @@ const TestimonialCard = ({ quote, author, role }) => (
   </TiltCard>
 );
 
-// --- BIG FAQ (More Readable) ---
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -324,17 +323,7 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [serverStatus, setServerStatus] = useState('checking'); 
 
-  // --- AUTO WAKE UP & ADMIN KEY CHECK ---
   useEffect(() => {
-    const checkServer = async () => {
-        try {
-            const res = await fetch(API_URL);
-            if (res.ok) { setServerStatus('awake'); } 
-            else { setServerStatus('sleeping'); }
-        } catch (e) { setServerStatus('sleeping'); setTimeout(checkServer, 5000); }
-    };
-    checkServer();
-
     const handleScroll = () => setIsScrolled(window.scrollY > 20); 
     window.addEventListener('scroll', handleScroll); 
     
@@ -352,9 +341,9 @@ export default function App() {
            setCredits(999999);
        } else {
            fetch(`${API_URL}/api/credits/${apiKey}`)
-            .then(r => { if(!r.ok) throw new Error("Server sleeping"); return r.json(); })
+            .then(r => r.json())
             .then(d=>setCredits(d.credits))
-            .catch(e => { console.log("Server might be sleeping:", e); });
+            .catch(e => console.log(e));
        }
     }
     return () => window.removeEventListener('scroll', handleScroll); 
@@ -371,20 +360,16 @@ export default function App() {
         fd.append("email", email);
         fd.append("package_type", plan.toLowerCase()); 
         
-        // SUNUCU UYANDIRMA KORUMASI
         const res = await fetch(`${API_URL}/api/create-checkout`, { method: "POST", body: fd });
         
         if(!res.ok) { 
-            // Modal'ı kapatma, kullanıcıya beklemesini söyle
             return; 
         }
         
         const data = await res.json();
         if(data.url) window.location.href = data.url; 
         else alert("Error: " + data.error);
-    } catch(e) { 
-        // Hata olsa bile modal kapanmaz, kullanıcı bekler
-    }
+    } catch(e) { }
   };
 
   const handleUpload = async (e) => {
@@ -420,7 +405,7 @@ export default function App() {
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
   const testimonials = [
-    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once during a 4-hour job.", author: "Mike T.", role: "CNC Operator" },
+    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once.", author: "Mike T.", role: "CNC Operator" },
     { quote: "The node reduction is a game changer. No more messy double lines in my metal cuts.", author: "Sarah K.", role: "Laser Designer" },
     { quote: "DXF export is actually clean. No double lines, no weird spline issues.", author: "James L.", role: "Industrial Engineer" }
   ];
@@ -455,13 +440,6 @@ export default function App() {
           <div className="hidden md:flex items-center gap-4">
              {apiKey ? (
                  <div className="flex items-center gap-4">
-                    <div className="hidden md:flex items-center gap-2 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700">
-                        {serverStatus === 'awake' ? (
-                            <><div className="w-2 h-2 rounded-full bg-green-500 animate-pulse-green"></div><span className="text-xs text-green-400 font-mono">System Ready</span></>
-                        ) : (
-                            <><div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div><span className="text-xs text-yellow-400 font-mono">Waking Server...</span></>
-                        )}
-                    </div>
                     <span className="text-cyan-400 font-mono font-bold border border-cyan-500/30 px-3 py-1 rounded bg-cyan-900/20">Credits: {credits}</span>
                     <Button variant="outline" className="py-2 px-4 text-sm" onClick={logout}>Log Out</Button>
                  </div>
@@ -530,9 +508,9 @@ export default function App() {
                             <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Server className="text-cyan-400 w-5 h-5"/> System Status</h3>
                             <div className="flex items-center justify-between bg-slate-950 p-4 rounded-lg border border-slate-800">
                                 <span className="text-slate-400 text-sm">Server</span>
-                                {serverStatus === 'awake' ? ( <span className="flex items-center gap-2 text-green-400 text-sm font-bold"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div> Online</span> ) : ( <span className="flex items-center gap-2 text-yellow-400 text-sm font-bold"><div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div> Waking Up...</span> )}
+                                <span className="flex items-center gap-2 text-green-400 text-sm font-bold"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div> Online</span>
                             </div>
-                            <p className="text-xs text-slate-500 mt-3 leading-relaxed">If the status is yellow, your first upload might take ~50 seconds. Subsequent uploads will be instant.</p>
+                            <p className="text-xs text-slate-500 mt-3 leading-relaxed">System is operational. Uploads are processed instantly.</p>
                         </div>
                     </TiltCard>
                     <TiltCard>
@@ -549,7 +527,7 @@ export default function App() {
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
                 <div className="max-w-7xl mx-auto text-center">
-                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v2.0 Available: Smart Island Detection</span></div></Reveal>
+                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Live: AI Vector Engine</span></div></Reveal>
                 <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
                 <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
                 <Reveal delay={400}><div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"><Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button></div></Reveal>
@@ -564,7 +542,7 @@ export default function App() {
             <section id="features" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
-                    <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output. Generates clean, closed paths with minimal nodes—not messy auto-trace spaghetti." /></Reveal>
+                    <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output." /></Reveal>
                     <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora automatically analyzes lines that fall below your machine's tolerance. Detects and thickens lines that fall below your machine's kerf or material tolerance." /></Reveal>
                     <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Automatically connect floating islands to prevent lost parts. Don't lose the center of your 'O's." badge="Beta" /></Reveal>
                     <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines and removes zero-length segments for smoothest movement." /></Reveal>
