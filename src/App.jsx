@@ -1,27 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Render Adresin (Sonunda slash / yok)
+// Render Backend Adresin (Sonunda / yok)
 const API_URL = "https://cuttora-backend.onrender.com"; 
 
-// --- Icons (Inline SVG) ---
+// --- Icons (Değişmedi) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className} 
-    {...props}
-  >
-    {children}
-  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
-
 const Zap = (props) => (<IconWrapper {...props}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></IconWrapper>);
 const Layers = (props) => (<IconWrapper {...props}><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></IconWrapper>);
 const Scissors = (props) => (<IconWrapper {...props}><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><line x1="20" y1="4" x2="8.12" y2="15.88" /><line x1="14.47" y1="14.48" x2="20" y2="20" /><line x1="8.12" y1="8.12" x2="12" y2="12" /></IconWrapper>);
@@ -38,7 +23,7 @@ const Quote = (props) => (<IconWrapper {...props}><path d="M3 21c3 0 7-1 7-8V5c0
 const Plus = (props) => (<IconWrapper {...props}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
 const Minus = (props) => (<IconWrapper {...props}><line x1="5" y1="12" x2="19" y2="12" /></IconWrapper>);
 
-// --- Styles & Animations ---
+// --- Styles & Animations (Değişmedi) ---
 const GlobalStyles = () => (
   <style>{`
     @keyframes laser-scan { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
@@ -59,7 +44,7 @@ const GlobalStyles = () => (
   `}</style>
 );
 
-// --- Helper Components ---
+// --- Components (Değişmedi) ---
 const Reveal = ({ children, delay = 0, className = "" }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
@@ -117,7 +102,6 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
     primary: "bg-white text-slate-950 hover:bg-cyan-50 hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.4)]",
     gradient: "bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 bg-[length:200%_auto] animate-text-shimmer text-white hover:shadow-[0_0_40px_rgba(6,182,212,0.6)] border border-transparent hover:scale-105",
     outline: "border border-slate-600 text-slate-200 hover:border-cyan-400 hover:text-white bg-transparent hover:bg-slate-800/50 backdrop-blur-sm",
-    text: "text-slate-300 hover:text-white px-4 py-2"
   };
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} onClick={onClick} {...props}><span className="relative z-10 flex items-center gap-2">{children}</span></button>;
 };
