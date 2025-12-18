@@ -376,12 +376,20 @@ export default function App() {
       const file = e.target.files[0];
       if(!file) return;
       if(!apiKey) { alert("Please buy a package first."); return; }
+      
       setIsProcessing(true);
       const fd = new FormData();
       fd.append("file", file);
       fd.append("api_key", apiKey);
+
       try {
-          const res = await fetch(`${API_URL}/process`, { method: "POST", body: fd });
+          // Headers kısmını tamamen boş bırakıyoruz, FormData otomatik ayarlar.
+          const res = await fetch(`${API_URL}/process`, { 
+              method: "POST", 
+              body: fd,
+              mode: 'cors' // CORS modunu açıkça belirtmek uyumluluğu artırır
+          });
+
           if(res.ok) {
               const data = await res.json();
               if(data.status === "success") {
@@ -389,12 +397,20 @@ export default function App() {
                   if (apiKey !== "cuttora_admin_master") {
                       fetch(`${API_URL}/api/credits/${apiKey}`).then(r=>r.json()).then(d=>setCredits(d.credits));
                   }
-              } else { alert("Error: " + data.detail); }
-          } else { alert("Server Error. Please try again."); }
-      } catch(e) { alert("Connection error. Please check your internet or try uploading a smaller file."); }
+              } else { 
+                  alert("Error: " + (data.detail || "Unknown error")); 
+              }
+          } else { 
+              alert("Server Error. Please check if the backend is live."); 
+          }
+      } catch(e) { 
+          // 45 saniye uyarısı burada tamamen kaldırıldı
+          alert("Connection error. Please ensure your internet is active and try again."); 
+          console.error("Network Error:", e);
+      }
       setIsProcessing(false);
   };
-
+  
   const manualLogin = () => {
       const k = prompt("Enter your License Key:");
       if(k) { localStorage.setItem('cuttora_key', k); setApiKey(k); window.location.reload(); }
