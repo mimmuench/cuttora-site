@@ -391,7 +391,7 @@ export default function App() {
                   }
               } else { alert("Error: " + data.detail); }
           } else { alert("Server Error. Please try again."); }
-      } catch(e) { alert("Server is waking up. Please wait 45s and retry."); }
+      } catch(e) { alert("Connection error. Please check your internet or try uploading a smaller file."); }
       setIsProcessing(false);
   };
 
