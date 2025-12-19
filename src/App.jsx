@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Render Backend URL
-const API_URL = "https://cuttora-backend.onrender.com"; 
+const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? "http://127.0.0.1:8000"              // Eğer Localhost'taysak burayı kullan (Senin bilgisayarın)
+  : "https://cuttora-backend-production.up.railway.app";
 
 // --- ICONS (Full Rich Set) ---
 const IconWrapper = ({ children, className = "", ...props }) => (
