@@ -641,7 +641,7 @@ export default function App() {
       <LegalModal isOpen={cookieOpen} onClose={() => setCookieOpen(false)} title="Cookie Policy" content={`Last Updated: December 2025\n\n1. Essential Cookies: Login sessions only.`} />
 
       {/* --- NAVIGATION (TEK KONTROL NOKTASI) --- */}
-      <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
+      <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-white group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
             <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.5)]">
@@ -653,7 +653,7 @@ export default function App() {
           <div className="hidden md:flex items-center gap-4">
             {apiKey ? (
               <div className="flex items-center gap-4">
-                <span className="text-cyan-400 font-mono font-black border border-cyan-500/30 px-4 py-1.5 rounded-lg bg-cyan-900/20 shadow-inner">CREDITS: {credits}</span>
+                <span className="text-cyan-400 font-mono font-black border border-cyan-500/30 px-4 py-1.5 rounded-lg bg-cyan-900/20 shadow-inner uppercase">Credits: {credits}</span>
                 <Button variant="outline" className="py-2 px-5 text-xs font-black uppercase tracking-widest" onClick={logout}>Log Out</Button>
               </div>
             ) : (
@@ -674,7 +674,7 @@ export default function App() {
         <section className="pt-8 pb-24 px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
           <div className="max-w-6xl mx-auto space-y-8">
 
-            {/* 💡 PH LANSMAN DOKUNUŞU: JOB SUCCESSFUL BADGE (İşlem Bitince Parlar) */}
+            {/* 💡 PH LANSMAN DOKUNUŞU: JOB SUCCESSFUL BADGE */}
             {result && (
               <div className="animate-fade-in flex justify-center">
                 <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-green-500/10 border border-green-500/30 shadow-[0_0_25px_rgba(34,197,94,0.25)]">
@@ -686,19 +686,24 @@ export default function App() {
               </div>
             )}
 
-            {/* 1. İSTASYON: VARLIK YÜKLEME VE KİMLİK */}
+            {/* 1. İSTASYON: VARLIK YÜKLEME (TOPLU İŞLEM DESTEĞİ) */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden workshop-panel">
               <div className="grid md:grid-cols-3 gap-10 items-center">
                 <div className="relative group/upload h-full">
-                  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
+                  {/* BATCH PROCESSING: multiple ekledim */}
+                  <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
                   <div className="border-2 border-dashed border-slate-700 rounded-3xl p-12 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center">
-                    <Upload className="w-12 h-12 text-cyan-500 mb-4" />
-                    <span className="text-xs text-white font-black uppercase tracking-[0.2em]">New Production Asset</span>
+                    <div className="relative">
+                       <Upload className="w-12 h-12 text-cyan-500 mb-4" />
+                       <Layers className="w-6 h-6 text-blue-400 absolute -bottom-2 -right-2 opacity-0 group-hover/upload:opacity-100 transition-opacity" />
+                    </div>
+                    <span className="text-[10px] text-white font-black uppercase tracking-[0.2em]">Batch Processing Ready</span>
+                    <span className="text-[9px] text-slate-500 uppercase mt-2">Drop Multiple Files</span>
                   </div>
                 </div>
 
                 <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 min-h-[250px] shadow-inner relative">
-                  <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl">
+                  <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl relative">
                     {result ? (
                       <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-full object-contain" alt="SVG Master" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
                     ) : pendingFile ? (
@@ -706,12 +711,13 @@ export default function App() {
                     ) : (
                       <Layers className="w-12 h-12 text-slate-800" />
                     )}
+                    {isProcessing && <div className="absolute inset-0 bg-cyan-500/20 animate-pulse flex items-center justify-center font-black text-cyan-400 text-[10px] uppercase">Processing...</div>}
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start mb-6">
                       <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
                         <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
-                        <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">System Online</span>
+                        <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Industrial Hub</span>
                       </div>
                       <div className="flex flex-col items-end gap-3">
                         <div className="text-cyan-400 font-mono font-black text-2xl tracking-tighter">CREDITS: {credits}</div>
@@ -721,43 +727,42 @@ export default function App() {
                       </div>
                     </div>
                     <h3 className="text-white font-black text-3xl uppercase tracking-tighter truncate max-w-md">
-                      {pendingFile ? pendingFile.name : "Waiting for Input..."}
+                      {pendingFile ? pendingFile.name : "System Idle"}
                     </h3>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ (SABİT PANEL) */}
-            <div className={`transition-all duration-700 ${qualityReport ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
-              <div className={`p-10 rounded-[2.5rem] border-l-[16px] flex flex-col lg:flex-row items-center justify-between shadow-2xl ${qualityReport?.energy < 300 ? 'bg-orange-950/40 border-orange-600' : 'bg-slate-900/60 border-slate-700'}`}>
+            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ VE KREDİ ONAYI */}
+            {qualityReport && !result && (
+              <div className="animate-fade-in p-10 rounded-[2.5rem] border-l-[16px] flex flex-col lg:flex-row items-center justify-between shadow-2xl bg-orange-950/40 border-orange-600">
                 <div className="flex items-center gap-10">
-                  <div className={`w-20 h-20 rounded-full flex items-center justify-center border shadow-2xl ${qualityReport?.energy < 300 ? 'bg-orange-500/20 border-orange-500/40' : 'bg-green-500/20 border-green-500/40'}`}>
-                    {qualityReport?.energy < 300 ? <AlertCircle className="w-10 h-10 text-orange-500" /> : <Check className="w-10 h-10 text-green-500" />}
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center border border-orange-500/40 bg-orange-500/20 animate-pulse">
+                    <AlertCircle className="w-10 h-10 text-orange-500" />
                   </div>
                   <div className="max-w-2xl">
-                    <h4 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
-                      Diagnostic: {qualityReport ? qualityReport.status : "Awaiting Scan"}
-                    </h4>
-                    <p className="text-slate-300 text-sm font-bold uppercase tracking-tight leading-relaxed">
-                      {qualityReport ? `"${qualityReport.message}"` : "Please upload a file to begin technical analysis."}
-                    </p>
+                    <h4 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">Diagnostic: {qualityReport.status}</h4>
+                    <p className="text-slate-300 text-sm font-bold uppercase tracking-tight">"{qualityReport.message}"</p>
+                    <span className="block mt-2 text-orange-400 font-black text-[10px]">⚠️ AUTHORIZATION CONSUMES 1 CREDIT.</span>
                   </div>
                 </div>
-                <div className="mt-8 lg:mt-0">
-                  {qualityReport && !result && (
-                    <Button variant="gradient" className="py-6 px-12 text-sm font-black uppercase shadow-2xl" onClick={() => startFinalProcessing(pendingFile)}>
-                      Authorize Fabrication (-1)
-                    </Button>
-                  )}
-                </div>
+                <Button variant="gradient" className="py-6 px-12 text-sm font-black uppercase shadow-2xl" onClick={() => startFinalProcessing(pendingFile)}>
+                  Authorize Fabrication (-1)
+                </Button>
+				{/* BUTONUN HEMEN ALTINA EKLE: */}
+				<div className="mt-3 text-[9px] text-slate-500 font-bold uppercase text-center italic tracking-widest opacity-70">
+				  <Check className="w-3 h-3 inline mr-1" /> Backed by our 30-day quality guarantee
+				</div>
               </div>
-            </div>
+            )}
 
-            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE 7 DOSYALIK SET */}
+            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE TAM PAKET */}
             <div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
-              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
+              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl workshop-panel">
                 <div className="grid lg:grid-cols-2 gap-16">
+                  
+                  {/* SOL: AYDINLATILMIŞ PREVIEW */}
                   <div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
                     {isProcessing ? (
                       <div className="text-center">
@@ -773,15 +778,16 @@ export default function App() {
                       />
                     )}
                   </div>
+
                   <div className="flex flex-col justify-center gap-6">
                     {result && (
                       <>
                         <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-2 shadow-xl">
                           <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Specs</h5>
                           <div className="grid grid-cols-3 gap-8 font-mono text-sm">
-                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
-                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
-                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 384}</span></div>
+                            <div><span className="text-slate-600 block mb-2 text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
                           </div>
                         </div>
 
@@ -793,8 +799,8 @@ export default function App() {
 
                           <a href={`${API_URL}${result.files.zip}?v=${new Date().getTime()}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border-l-[16px] border-cyan-500 rounded-2xl hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between shadow-2xl mt-4">
                             <div>
-                              <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Bundle</div>
-                              <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">7 PRODUCTION ASSETS INCLUDED</div>
+                              <div className="font-black text-white text-3xl italic uppercase">Download Bundle</div>
+                              <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2">7 PRODUCTION ASSETS INCLUDED</div>
                             </div>
                             <Download className="w-12 h-12 text-white shadow-lg" />
                           </a>
@@ -853,9 +859,13 @@ export default function App() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
                         <Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button>
                         <Button variant="outline" className="w-full sm:w-auto text-xl px-10 py-4" onClick={manualLogin}>I have a Key</Button>
-                    </div>
+                    </div>					
+				{/* BURAYA EKLE: */}
+				<p className="mt-[-4rem] mb-12 text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] flex items-center justify-center gap-2 animate-fade-in">
+				  <Lock className="w-3 h-3" /> Risk-Free Trial • 30 Day Money Back Guarantee
+				</p>										
                 </Reveal>
-                
+               
                 <Reveal delay={600}><ShowcaseSection /></Reveal>
                 
                 </div>
@@ -903,35 +913,79 @@ export default function App() {
             </section>
 
             <section id="pricing" className="py-32 relative z-10">
-                <div className="max-w-7xl mx-auto px-6">
-                <Reveal><div className="text-center mb-20"><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2><p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p></div></Reveal>
-                <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
-                    <Reveal delay={100} className="h-full"><PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} /></Reveal>
-                    <Reveal delay={200} className="h-full"><PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} /></Reveal>
-                    <Reveal delay={300} className="h-full"><PricingCard plan="Agency" price="$90" originalPrice="$180" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} /></Reveal>
-                </div>
-                <div className="text-center mt-12"><p className="text-slate-400 text-lg">Have custom requirements or high volume needs? <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}>Contact us</a> for enterprise solutions.</p></div>
+			  <div className="max-w-7xl mx-auto px-6">
+				<Reveal>
+				  <div className="text-center mb-20">
+					<h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2>
+					<p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p>
+				  </div>
+				</Reveal>
+				
+				{/* PRICING CARDS LISTER (MEVCUT YAPI) */}
+				<div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+				  <Reveal delay={100} className="h-full">
+					<PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} />
+				  </Reveal>
+				  <Reveal delay={200} className="h-full">
+					<PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} />
+				  </Reveal>
+				  <Reveal delay={300} className="h-full">
+					<PricingCard plan="Agency" price="$90" originalPrice="$180" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} />
+				  </Reveal>
+				</div>
+
+				{/* ✅ GÜVEN BANDI (DOĞRU HİYERARŞİ) */}
+                    <Reveal delay={400}>
+                        <div className="mt-16 flex flex-col items-center justify-center">
+                            <div className="flex items-center gap-4 px-8 py-5 bg-slate-900/40 border border-green-500/20 rounded-[2rem] backdrop-blur-md shadow-[0_0_40px_rgba(34,197,94,0.1)] group hover:border-green-500/40 transition-all">
+                                <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform">
+                                    <Check className="w-6 h-6 text-green-400" />
+                                </div>
+                                <div className="text-left">
+                                    <h4 className="text-white font-black uppercase tracking-widest text-xs">30-Day Satisfaction Guarantee</h4>
+                                    <p className="text-slate-400 text-[10px] uppercase font-bold mt-1 tracking-tight">
+                                        Not satisfied with the vectors? We'll refund your credits or manually fix your file.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </Reveal>
+
+                    <div className="text-center mt-12">
+                        <p className="text-slate-400 text-lg">
+                            Have custom requirements or high volume needs? 
+                            <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}> Contact us</a> for enterprise solutions.
+                        </p>
+                    </div>
                 </div>
             </section>
             
             <section id="faq" className="py-32 relative z-10">
                 <div className="max-w-4xl mx-auto px-6">
-                <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
-                <div className="space-y-4">{faqs.map((item, i) => (<Reveal key={i} delay={i * 100}><FAQItem question={item.q} answer={item.a} /></Reveal>))}</div>
+                    <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
+                    <div className="space-y-4">
+                        {faqs.map((item, i) => (
+                            <Reveal key={i} delay={i * 100}>
+                                <FAQItem question={item.q} answer={item.a} />
+                            </Reveal>
+                        ))}
+                    </div>
                 </div>
             </section>
 
             <section className="py-32 relative z-10">
                 <div className="max-w-5xl mx-auto px-6">
-                <Reveal>
-                    <TiltCard>
-                    <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900/30 rounded-[3rem] p-16 text-center border border-slate-600 hover:border-cyan-500/50 transition-all duration-700 overflow-hidden relative group shadow-2xl">
-                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Ready to optimize your workflow?</h2>
-                        <div className="flex justify-center gap-4 relative z-10"><Button variant="gradient" className="text-lg px-12 py-5 shadow-2xl" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started</Button></div>
-                    </div>
-                    </TiltCard>
-                </Reveal>
+                    <Reveal>
+                        <TiltCard>
+                            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900/30 rounded-[3rem] p-16 text-center border border-slate-600 hover:border-cyan-500/50 transition-all duration-700 overflow-hidden relative group shadow-2xl">
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Ready to optimize your workflow?</h2>
+                                <div className="flex justify-center gap-4 relative z-10">
+                                    <Button variant="gradient" className="text-lg px-12 py-5 shadow-2xl" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started</Button>
+                                </div>
+                            </div>
+                        </TiltCard>
+                    </Reveal>
                 </div>
             </section>
         </>
