@@ -737,50 +737,57 @@ export default function App() {
               </div>
             )}
 
-            {/* 3. KATMAN: ÜRETİM VE İNDİRME MERKEZİ */}
-            {(isProcessing || result) && (
-              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 shadow-2xl animate-fade-in-up">
-                 <div className="grid lg:grid-cols-2 gap-12">
-                    <div className="space-y-6">
-                       <div className="bg-black/60 rounded-[2.5rem] border border-slate-800 p-8 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner">
-                          {isProcessing && <div className="absolute top-0 left-0 w-full h-[4px] bg-cyan-500 shadow-[0_0_20px_cyan] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
-                          <img src={result ? `${API_URL}${result.preview_url}` : (pendingFile ? URL.createObjectURL(pendingFile) : '')} className={`max-w-full max-h-full rounded-2xl transition-all duration-1000 ${isProcessing ? 'grayscale blur-[3px] opacity-40' : 'opacity-100'}`} alt="Output" />
-                       </div>
-                       {result && (
-                          <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl">
-                             <h5 className="text-[10px] text-slate-500 uppercase font-black mb-4 tracking-widest border-b border-slate-900 pb-2">Technical Core Analysis</h5>
-                             <div className="grid grid-cols-3 gap-6 font-mono text-[11px]">
-                                <div><span className="text-slate-600 block mb-1 uppercase font-black tracking-tighter">Width</span><span className="text-cyan-400 font-bold">{result.width_mm} mm</span></div>
-                                <div><span className="text-slate-600 block mb-1 uppercase font-black tracking-tighter">Height</span><span className="text-cyan-400 font-bold">{result.height_mm} mm</span></div>
-                                <div><span className="text-slate-600 block mb-1 uppercase font-black tracking-tighter">Nodes</span><span className="text-white font-bold">{result.node_count || 384}</span></div>
-                             </div>
-                          </div>
-                       )}
-                    </div>
-                    <div className="flex flex-col justify-center gap-4">
-                       {isProcessing ? (
-                          <div className="bg-black/40 rounded-3xl p-10 border border-slate-800 h-full flex flex-col justify-center text-center">
-                             <h4 className="text-cyan-400 text-3xl font-black mb-6 uppercase tracking-tighter animate-pulse">{processStatus}</h4>
-                             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden border border-slate-700 shadow-inner"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]" style={{width: '75%'}}></div></div>
-                          </div>
-                       ) : result && (
-                          <div className="space-y-4">
-                             <h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Export Final Production Assets</h5>
-                             <a href={`${API_URL}${result.files.dxf}`} className="group p-5 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between">
-                                <span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Output</span>
-                                <Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
-                             </a>
-                             <a href={`${API_URL}${result.files.zip}`} className="group p-8 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-2xl hover:shadow-[0_0_50px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[12px] border-l-cyan-500 shadow-2xl">
-                                <span className="font-black text-white text-2xl tracking-tighter uppercase italic">Download All Bundle</span>
-                                <Download className="w-8 h-8 text-white shadow-lg" />
-                             </a>
-                             <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">Initialize New Asset</button>
-                          </div>
-                       )}
-                    </div>
-                 </div>
-              </div>
-            )}
+            {/* 3. KATMAN: ÜRETİM VE İNDİRME MERKEZİ (TAM RESTORE) */}
+			{(isProcessing || result) && (
+			  <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 shadow-2xl animate-fade-in-up">
+				<div className="grid lg:grid-cols-2 gap-12">
+				  <div className="space-y-6">
+					{/* SVG PREVIEW - VEKTÖR NETLİĞİ İÇİN */}
+					<div className="bg-black/60 rounded-[2.5rem] border border-slate-800 p-8 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner">
+					  {isProcessing && <div className="absolute top-0 left-0 w-full h-[4px] bg-cyan-500 shadow-[0_0_20px_cyan] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
+					  <img 
+						src={result ? `${API_URL}${result.files.svg}` : (pendingFile ? URL.createObjectURL(pendingFile) : '')} 
+						className={`max-w-full max-h-full transition-all duration-1000 ${isProcessing ? 'grayscale blur-[3px] opacity-40' : 'opacity-100'}`} 
+						alt="Production SVG Preview" 
+					  />
+					</div>
+				  </div>
+
+				  <div className="flex flex-col justify-center gap-4">
+					{isProcessing ? (
+					  <div className="bg-black/40 rounded-3xl p-10 border border-slate-800 h-full flex flex-col justify-center text-center">
+						<h4 className="text-cyan-400 text-3xl font-black mb-6 uppercase tracking-tighter animate-pulse">{processStatus}</h4>
+						<div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]" style={{width: '85%'}}></div></div>
+					  </div>
+					) : result && (
+					  <div className="space-y-4">
+						<h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Production-Ready Assets</h5>
+						
+						{/* HER DOSYA TÜRÜ İÇİN AYRI BUTON (RESTORED) */}
+						<a href={`${API_URL}${result.files.dxf}`} className="group p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-lg">
+						  <span className="font-bold text-white text-sm uppercase">Industrial DXF (CNC/Laser)</span>
+						  <Download className="w-5 h-5 text-slate-700 group-hover:text-cyan-400" />
+						</a>
+						
+						<a href={`${API_URL}${result.files.svg}`} className="group p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-blue-500 transition-all flex items-center justify-between shadow-lg">
+						  <span className="font-bold text-white text-sm uppercase">Vector SVG (Master Edit)</span>
+						  <Download className="w-5 h-5 text-slate-700 group-hover:text-blue-400" />
+						</a>
+
+						{/* FULL BUNDLE (TÜM DOSYALAR: EPS, RAW, SMOOTH) */}
+						<a href={`${API_URL}${result.files.zip}`} className="group p-8 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-2xl hover:shadow-[0_0_50px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[12px] border-l-cyan-500 shadow-2xl mt-4">
+						  <div className="flex flex-col">
+							<span className="font-black text-white text-2xl tracking-tighter uppercase italic">Download Full Bundle</span>
+							<span className="text-[10px] text-cyan-300 font-bold uppercase mt-1 tracking-widest">Includes DXF, SVG, EPS, PDF & Metadata</span>
+						  </div>
+						  <Download className="w-10 h-10 text-white shadow-lg" />
+						</a>
+					  </div>
+					)}
+				  </div>
+				</div>
+			  </div>
+			)}
 
             {/* 4. KATMAN: GENEL UYARI VE DISCLAIMER (SABİT EN ALTA) */}
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl">
