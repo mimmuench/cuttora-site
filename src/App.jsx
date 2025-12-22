@@ -686,50 +686,89 @@ export default function App() {
               </div>
             )}
 
-            {/* 1. İSTASYON: VARLIK YÜKLEME (TOPLU İŞLEM DESTEĞİ) */}
+            {/* 1. İSTASYON: VARLIK YÜKLEME VE YAKIT İSTASYONU (DASHBOARD İÇİ) */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden workshop-panel">
-              <div className="grid md:grid-cols-3 gap-10 items-center">
-                <div className="relative group/upload h-full">
-                  {/* BATCH PROCESSING: multiple ekledim */}
+              <div className="grid md:grid-cols-3 gap-10 items-start">
+                
+                {/* SOL: DOSYA YÜKLEME ALANI (DEĞİŞMEDİ) */}
+                <div className="relative group/upload h-full min-h-[300px]">
                   <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
-                  <div className="border-2 border-dashed border-slate-700 rounded-3xl p-12 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center">
-                    <div className="relative">
-                       <Upload className="w-12 h-12 text-cyan-500 mb-4" />
-                       <Layers className="w-6 h-6 text-blue-400 absolute -bottom-2 -right-2 opacity-0 group-hover/upload:opacity-100 transition-opacity" />
+                  <div className="border-2 border-dashed border-slate-700 rounded-3xl p-8 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center relative overflow-hidden">
+                    <div className="relative z-10">
+                       <Upload className="w-12 h-12 text-cyan-500 mb-4 mx-auto" />
+                       <span className="text-[10px] text-white font-black uppercase tracking-[0.2em] block">Batch Processing Ready</span>
+                       <span className="text-[9px] text-slate-500 uppercase mt-2 block">Drop Multiple Files</span>
                     </div>
-                    <span className="text-[10px] text-white font-black uppercase tracking-[0.2em]">Batch Processing Ready</span>
-                    <span className="text-[9px] text-slate-500 uppercase mt-2">Drop Multiple Files</span>
+                    <div className="absolute inset-0 bg-cyan-500/5 translate-y-full group-hover/upload:translate-y-0 transition-transform duration-500"></div>
                   </div>
                 </div>
 
-                <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 min-h-[250px] shadow-inner relative">
-                  <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl relative">
-                    {result ? (
-                      <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-full object-contain" alt="SVG Master" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
-                    ) : pendingFile ? (
-                      <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
-                    ) : (
-                      <Layers className="w-12 h-12 text-slate-800" />
-                    )}
-                    {isProcessing && <div className="absolute inset-0 bg-cyan-500/20 animate-pulse flex items-center justify-center font-black text-cyan-400 text-[10px] uppercase">Processing...</div>}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-6">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-                        <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
-                        <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Industrial Hub</span>
-                      </div>
-                      <div className="flex flex-col items-end gap-3">
-                        <div className="text-cyan-400 font-mono font-black text-2xl tracking-tighter">CREDITS: {credits}</div>
-                        <button onClick={() => setPaymentModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 px-6 rounded-xl text-[10px] uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all">
-                          🚀 Buy Extra Credits
-                        </button>
-                      </div>
+                {/* SAĞ: KREDİ DURUMU VE YENİ EK PAKETLER */}
+                <div className="md:col-span-2 flex flex-col gap-6">
+                  
+                  {/* MEVCUT DURUM KARTI */}
+                  <div className="bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 shadow-inner relative">
+                    <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl relative">
+                        {result ? (
+                        <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-full object-contain" alt="SVG Master" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
+                        ) : pendingFile ? (
+                        <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
+                        ) : (
+                        <Layers className="w-10 h-10 text-slate-800" />
+                        )}
+                        {isProcessing && <div className="absolute inset-0 bg-cyan-500/20 animate-pulse flex items-center justify-center font-black text-cyan-400 text-[10px] uppercase">Processing...</div>}
                     </div>
-                    <h3 className="text-white font-black text-3xl uppercase tracking-tighter truncate max-w-md">
-                      {pendingFile ? pendingFile.name : "System Idle"}
-                    </h3>
+                    <div className="flex-1">
+                        <div className="flex justify-between items-start mb-2">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
+                                <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
+                                <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">System Online</span>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Credits Left</div>
+                                <div className="text-cyan-400 font-mono font-black text-4xl tracking-tighter">{credits}</div>
+                            </div>
+                        </div>
+                        <h3 className="text-white font-black text-xl uppercase tracking-tighter truncate max-w-md">
+                        {pendingFile ? pendingFile.name : "Waiting for Input..."}
+                        </h3>
+                    </div>
                   </div>
+
+                  {/* 🔥 YENİ EKLENEN KISIM: EK KREDİ PAKETLERİ (TOP-UP) */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {/* PAKET 1: QUICK FIX ($15 / 10 Kredi) */}
+                    <button 
+                        onClick={() => openPaymentModal('extra_10', 15)}
+                        className="bg-slate-900/50 border border-slate-800 hover:border-slate-500 p-4 rounded-2xl text-left hover:bg-slate-800 transition-all group"
+                    >
+                        <div className="text-white font-black text-2xl group-hover:text-cyan-400 transition-colors">+10</div>
+                        <div className="text-[10px] text-slate-500 font-bold uppercase">Quick Fix</div>
+                        <div className="mt-1 text-slate-300 font-mono text-xs">$15.00</div>
+                    </button>
+
+                    {/* PAKET 2: PROJECT PACK ($50 / 50 Kredi) */}
+                    <button 
+                        onClick={() => openPaymentModal('extra_50', 50)}
+                        className="bg-slate-800 border border-cyan-500/30 hover:border-cyan-400 p-4 rounded-2xl text-left relative overflow-hidden group shadow-[0_0_15px_rgba(6,182,212,0.1)]"
+                    >
+                        <div className="absolute top-0 right-0 bg-cyan-500 text-white text-[8px] font-black px-2 py-0.5 rounded-bl-lg">POPULAR</div>
+                        <div className="text-cyan-400 font-black text-2xl group-hover:text-white transition-colors">+50</div>
+                        <div className="text-[10px] text-cyan-200/70 font-bold uppercase">Project Pack</div>
+                        <div className="mt-1 text-white font-mono text-xs">$50.00</div>
+                    </button>
+
+                    {/* PAKET 3: STUDIO BULK ($90 / 100 Kredi) */}
+                    <button 
+                        onClick={() => openPaymentModal('extra_100', 90)}
+                        className="bg-slate-900/50 border border-slate-800 hover:border-slate-500 p-4 rounded-2xl text-left hover:bg-slate-800 transition-all group"
+                    >
+                        <div className="text-white font-black text-2xl group-hover:text-cyan-400 transition-colors">+100</div>
+                        <div className="text-[10px] text-slate-500 font-bold uppercase">Studio Bulk</div>
+                        <div className="mt-1 text-slate-300 font-mono text-xs">$90.00</div>
+                    </button>
+                  </div>
+
                 </div>
               </div>
             </div>
