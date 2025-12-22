@@ -1114,7 +1114,7 @@ export default function App() {
 				<Reveal>
 				  <div className="text-center mb-20">
 					<h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2>
-					<p className="text-slate-300 text-2xl font-light">Limited offer for the first 500 users.</p>
+					<p className="text-slate-300 text-2xl font-light">🔥 Limited offer for the first 500 users.</p>
 				  </div>
 				</Reveal>
 				
