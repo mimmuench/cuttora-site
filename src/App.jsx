@@ -715,27 +715,58 @@ export default function App() {
               </div>
             </div>
 
-            {/* 2. KATMAN: ÖN KONTROL VE UYARI EKRANI (YÜKLEME ALTINDA) */}
-            {qualityReport && !result && (
-              <div className="animate-fade-in p-8 rounded-3xl border-l-[12px] flex items-center justify-between shadow-2xl bg-orange-950/40 border-orange-600">
-                 <div className="flex items-center gap-8">
-                    <AlertCircle className="w-12 h-12 text-orange-500" />
-                    <div>
-                       <h4 className="text-2xl font-black text-white uppercase tracking-tighter">Diagnostic Warning: {qualityReport.status}</h4>
-                       <p className="text-slate-300 text-sm font-bold uppercase tracking-tight opacity-80 mt-1 italic">"{qualityReport.message}"</p>
-                    </div>
-                 </div>
-                 <div className="flex items-center gap-8 border-l border-slate-800 pl-8">
-                    <div className="text-right hidden md:block mr-4">
-                       <span className="text-[9px] text-slate-500 uppercase font-black tracking-widest">Sharpness</span>
-                       <div className="text-3xl font-mono font-black text-orange-500">{qualityReport.energy} / 500</div>
-                    </div>
-                    {!isProcessing && (
-                      <Button variant="gradient" className="py-4 px-12 text-xs font-black uppercase shadow-xl" onClick={() => startFinalProcessing(pendingFile)}>Authorize Fabrication</Button>
-                    )}
-                 </div>
-              </div>
-            )}
+            {/* 2. KATMAN: ZARİF ÖN KONTROL & KREDİ ONAY SİSTEMİ */}
+			{qualityReport && !result && (
+			  <div className="animate-fade-in p-8 rounded-[2rem] border border-orange-500/30 bg-slate-900/90 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
+				{/* Üst Bilgi Şeridi */}
+				<div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
+				  <AlertCircle className="w-5 h-5 text-orange-500" />
+				  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+					Diagnostic Intelligence Unit
+				  </span>
+				</div>
+
+				<div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+				  <div className="flex-1">
+					<h4 className="text-xl font-black text-white uppercase tracking-tight mb-2">
+					  {qualityReport.status}
+					</h4>
+					<p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xl">
+					  "{qualityReport.message}" <br/>
+					  <span className="text-orange-500/80 font-bold block mt-2 text-xs uppercase tracking-wide">
+						Note: Low sharpness may cause jagged paths. Authorization will consume 1 credit.
+					  </span>
+					</p>
+				  </div>
+
+				  {/* Skor ve Aksiyon Alanı */}
+				  <div className="flex items-center gap-10 bg-black/40 p-6 rounded-2xl border border-slate-800 shadow-inner w-full lg:w-auto">
+					<div className="text-center pr-10 border-r border-slate-800">
+					  <span className="text-[9px] text-slate-500 uppercase font-black block mb-1">Integrity</span>
+					  <div className="text-3xl font-mono font-black text-orange-500">
+						{qualityReport.energy}<span className="text-slate-700 text-base">/500</span>
+					  </div>
+					</div>
+
+					<div className="flex flex-col gap-3">
+					  <Button 
+						variant="gradient" 
+						className="py-3 px-8 text-[11px] font-black uppercase shadow-lg shadow-cyan-500/20" 
+						onClick={() => startFinalProcessing(pendingFile)}
+					  >
+						Authorize Process (-1 Credit)
+					  </Button>
+					  <button 
+						onClick={() => {setQualityReport(null); setPendingFile(null);}}
+						className="text-[10px] text-slate-500 font-black uppercase tracking-widest hover:text-white transition-colors text-center"
+					  >
+						← Fix & Upload New File
+					  </button>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			)}
 
             {/* 3. KATMAN: ÜRETİM VE İNDİRME MERKEZİ (TAM RESTORE) */}
 			{(isProcessing || result) && (
