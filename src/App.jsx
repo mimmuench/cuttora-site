@@ -681,14 +681,17 @@ export default function App() {
 					 </div>
 				  </div>
 				  
-				  {/* AKTİF GÖRSEL PREVIEW - BOŞLUK DOLDURAN ANA UNSUR */}
+				  {/* AKTİF GÖRSEL PREVIEW - BOŞLUK DOLDURAN ANA UNSUR */}				  
 				  <div className="flex-1 bg-black/60 rounded-2xl border border-slate-800 p-4 flex items-center gap-6 relative overflow-hidden">
-					 <div className="w-24 h-24 bg-slate-900 rounded-lg border border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
-						{pendingFile || result ? (
-						  <img src={result ? `${API_URL}${result.preview_url}` : URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Current Asset" />
-						) : (
+				     <div className="w-24 h-24 bg-slate-900 rounded-lg border border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+					    {/* BURASI DEĞİŞİYOR: null kontrolü eklendi */}
+					    {result ? (
+						  <img src={`${API_URL}${result.preview_url}`} className="max-w-full max-h-full object-contain" alt="Current Asset" />
+					    ) : pendingFile ? (
+						  <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending Asset" />
+					    ) : (
 						  <Layers className="w-8 h-8 text-slate-700" />
-						)}
+					    )}							
 					 </div>
 					 <div>
 						<h3 className="text-white font-black text-xl uppercase tracking-tighter italic">Current Production Unit</h3>
@@ -765,7 +768,12 @@ export default function App() {
 					  <div className="space-y-6">
 						 <div className="bg-black/60 rounded-3xl border border-slate-800 p-6 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner group/final">
 							{isProcessing && <div className="absolute top-0 left-0 w-full h-[3px] bg-cyan-500 shadow-[0_0_20px_cyan] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
-							<img src={result ? `${API_URL}${result.preview_url}` : URL.createObjectURL(pendingFile)} className={`max-w-full max-h-full rounded-xl transition-all duration-700 ${isProcessing ? 'grayscale blur-[3px] opacity-40' : 'opacity-100'}`} />
+							
+							<img 
+							  src={result ? `${API_URL}${result.preview_url}` : (pendingFile ? URL.createObjectURL(pendingFile) : '')} 
+							  className={`max-w-full max-h-full rounded-xl transition-all duration-700 ${isProcessing ? 'grayscale blur-[3px] opacity-40' : 'opacity-100'}`} 
+							/>
+							
 						 </div>
 						 {result && (
 							<div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl">
