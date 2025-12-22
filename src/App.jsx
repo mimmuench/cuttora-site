@@ -635,10 +635,10 @@ export default function App() {
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
-      {/* --- LEGAL MODALS (İNGİLİZCE PROTOKOLLER) --- */}
-      <LegalModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy" content={`Last Updated: December 2025\n\n1. Data Collection\nWe collect your email address solely for account management and transactional purposes. We do not sell your data.\n\n2. Image Processing\nImages uploaded to Cuttora are processed temporarily on our secure servers to generate vector files. Source files are automatically deleted after 24 hours.\n\n3. Security\nWe implement SSL encryption and use Stripe for secure payment processing.`} />
-      <LegalModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service" content={`Last Updated: December 2025\n\n1. Usage License\nCuttora grants you a non-exclusive, non-transferable license to use our software for converting raster images to vector formats.\n\n2. User Responsibility\nYou represent that you have the right to use the images you upload.\n\n3. Refund Policy\nDue to the nature of digital goods (API credits), refunds are generally not provided once credits have been utilized.`} />
-      <LegalModal isOpen={cookieOpen} onClose={() => setCookieOpen(false)} title="Cookie Policy" content={`Last Updated: December 2025\n\n1. Essential Cookies\nWe use essential cookies to maintain your login session (License Key) and ensure the site functions correctly.`} />
+      {/* --- LEGAL MODALS (STABİL) --- */}
+      <LegalModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy" content={`Last Updated: December 2025\n\n1. Data Collection: Email only.\n2. Processing: Secure temporary servers.\n3. Security: SSL & Stripe.`} />
+      <LegalModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service" content={`Last Updated: December 2025\n\n1. Usage: Non-exclusive license.\n2. Responsibility: User-owned images.\n3. Refunds: Digital goods policy.`} />
+      <LegalModal isOpen={cookieOpen} onClose={() => setCookieOpen(false)} title="Cookie Policy" content={`Last Updated: December 2025\n\n1. Essential Cookies: Login sessions only.`} />
 
       {/* --- NAVIGATION (TEK KONTROL NOKTASI) --- */}
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
@@ -674,11 +674,11 @@ export default function App() {
         <section className="pt-8 pb-24 px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
           <div className="max-w-6xl mx-auto space-y-8">
 
-            {/* 1. İSTASYON: VARLIK YÜKLEME VE KİMLİK (SABİT ÜST PANEL) */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+            {/* 1. İSTASYON: VARLIK YÜKLEME VE KİMLİK */}
+            <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden workshop-panel">
               <div className="grid md:grid-cols-3 gap-10 items-center">
                 <div className="relative group/upload h-full">
-                  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" multiple />
+                  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
                   <div className="border-2 border-dashed border-slate-700 rounded-3xl p-12 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center">
                     <Upload className="w-12 h-12 text-cyan-500 mb-4" />
                     <span className="text-xs text-white font-black uppercase tracking-[0.2em]">New Production Asset</span>
@@ -687,14 +687,8 @@ export default function App() {
 
                 <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 min-h-[250px] shadow-inner relative">
                   <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl">
-                    {/* CANLI ÖNİZLEME: ANALİZ VE ÜRETİM SENKRONU */}
                     {result ? (
-                      <img 
-                        src={`${API_URL}${result.files.svg}`} 
-                        className="max-w-full max-h-full object-contain" 
-                        alt="SVG Master" 
-                        style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
-                      />
+                      <img src={`${API_URL}${result.files.svg}`} className="max-w-full max-h-full object-contain" alt="SVG Master" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
                     ) : pendingFile ? (
                       <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
                     ) : (
@@ -722,7 +716,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ VE KREDİ ONAYI (SABİT PANEL) */}
+            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ */}
             <div className={`transition-all duration-700 ${qualityReport ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
               <div className={`p-10 rounded-[2.5rem] border-l-[16px] flex flex-col lg:flex-row items-center justify-between shadow-2xl ${qualityReport?.energy < 300 ? 'bg-orange-950/40 border-orange-600' : 'bg-slate-900/60 border-slate-700'}`}>
                 <div className="flex items-center gap-10">
@@ -757,31 +751,21 @@ export default function App() {
               </div>
             </div>
 
-            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE ONAYLANMIŞ ÇIKTI PAKETİ */}
+            {/* 3. İSTASYON: ÜRETİM MERKEZİ */}
             <div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
               <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
                 <div className="grid lg:grid-cols-2 gap-16">
-                  
-                  {/* SOL: ÜRETİLEN SVG ÖNİZLEMESİ (SADECE GÖRÜNÜR YAPILDI) */}
-                  <div className="space-y-6">
-                    <div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
-                      {isProcessing ? (
-                        <div className="text-center">
-                          <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
-                          <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div></div>
-                        </div>
-                      ) : (
-                        <img 
-                          src={result ? `${API_URL}${result.files.svg}` : ''} 
-                          className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" 
-                          alt="Final Production Preview" 
-                          style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
-                        />
-                      )}
-                    </div>
+                  <div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
+                    {isProcessing ? (
+                      <div className="text-center">
+                        <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
+                        <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div></div>
+                      </div>
+                    ) : (
+                      <img src={result ? `${API_URL}${result.files.svg}` : ''} className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" alt="Final Production Preview" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
+                    )}
                   </div>
 
-                  {/* SAĞ: BACKEND'DEN GELEN TÜM DOSYALARIN LİSTESİ */}
                   <div className="flex flex-col justify-center gap-6">
                     {result && (
                       <>
@@ -793,13 +777,11 @@ export default function App() {
                             <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
                           </div>
                         </div>
-
                         <div className="grid gap-4">
                           <a href={`${API_URL}${result.files.dxf}`} download className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
                             <span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</span>
                             <Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
                           </a>
-
                           <a href={`${API_URL}${result.files.zip}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border-l-[16px] border-cyan-500 rounded-2xl hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between shadow-2xl mt-4">
                             <div>
                               <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Full Bundle</div>
@@ -808,18 +790,15 @@ export default function App() {
                             <Download className="w-12 h-12 text-white shadow-lg" />
                           </a>
                         </div>
-                        
-                        <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">
-                          Initialize New Production Cycle
-                        </button>
+                        <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">Initialize New Production Cycle</button>
                       </>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-            
-            {/* 4. İSTASYON: DISCLAIMER & PROTOKOL (SABİT EN ALTA) */}
+
+            {/* 4. İSTASYON: DISCLAIMER & PROTOKOL */}
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl">
               <h4 className="text-2xl font-black text-white mb-10 border-b border-slate-800 pb-6 flex items-center gap-4 tracking-tighter uppercase">
                 <AlertCircle className="w-8 h-8 text-yellow-500" /> Production Disclaimer & Safety Protocol
