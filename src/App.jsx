@@ -1,10 +1,38 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// --- DATASET: 3 Ürünlü + Hız Verisi ---
+const SHOWCASE_DATA = [
+  {
+    title: "Festive Jingle - Bells",
+    description: "Sharp decorative vectors with production-ready closed paths.",
+    before: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/bells_raster.png",
+    svg: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/bells_svg.png",
+    dxf: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/bells_dxf.png",
+    stats: { nodes: "850 → 180", resolution: "Excellent", speed: "0.8s" }
+  },
+  {
+    title: "Zenith Bloom - Mandala",
+    description: "Complex geometry optimized for high-precision laser cutting.",
+    before: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/mandala_raster.png",
+    svg: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/mandala_svg.png",
+    dxf: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/mandala_dxf.png",
+    stats: { nodes: "1,120 → 245", resolution: "Excellent", speed: "1.2s" }
+  },
+  {
+    title: "Harvest Haven - Tree of Life",
+    description: "Intricate technical lines processed with advanced smoothing.",
+    before: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/tree_raster.jpg",
+    svg: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/tree_svg.png",
+    dxf: "https://cuttora-backend-production.up.railway.app/files/SAMPLES/tree_dxf.png",
+    stats: { nodes: "2,840 → 612", resolution: "Excellent", speed: "1.5s" }
+  }
+];
+
 const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-  ? "http://127.0.0.1:8000"              // Eğer Localhost'taysak burayı kullan (Senin bilgisayarın)
+  ? "http://127.0.0.1:8000"
   : "https://cuttora-backend-production.up.railway.app";
 
-// --- ICONS (Full Rich Set) ---
+// --- ICONS ---
 const IconWrapper = ({ children, className = "", ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
 );
@@ -147,7 +175,7 @@ const LegalModal = ({ isOpen, onClose, title, content }) => {
     );
 };
 
-// --- PAYMENT MODAL (Cleaned up for Paid Server) ---
+// --- PAYMENT MODAL ---
 const PaymentModal = ({ isOpen, onClose, plan, price, onSubmit }) => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -280,29 +308,86 @@ const FAQItem = ({ question, answer }) => {
   );
 };
 
-const BeforeAfterVisual = () => {
-    const [activeTab, setActiveTab] = useState('after');
-    return (
-      <div className="w-full max-w-4xl mx-auto mt-16 bg-slate-900/90 rounded-xl border border-slate-600 overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] relative group backdrop-blur-sm transform transition-transform hover:scale-[1.01] duration-500">
-        <div className="absolute inset-0 z-20 pointer-events-none overflow-hidden rounded-xl"><div className="w-full h-[2px] bg-cyan-400 absolute laser-line opacity-50" style={{ animation: 'laser-scan 4s cubic-bezier(0.4, 0, 0.2, 1) infinite' }}></div></div>
-        <div className="flex border-b border-slate-700 relative z-30 bg-slate-950/50">
-          <button onClick={() => setActiveTab('before')} className={`flex-1 py-4 text-sm font-bold transition-colors ${activeTab === 'before' ? 'bg-slate-800 text-white shadow-[inset_0_-2px_0_#94a3b8]' : 'text-slate-400 hover:text-white'}`}>Original Upload (Raster)</button>
-          <button onClick={() => setActiveTab('after')} className={`flex-1 py-4 text-sm font-bold transition-colors ${activeTab === 'after' ? 'bg-cyan-500/10 text-cyan-400 shadow-[inset_0_-2px_0_#06b6d4]' : 'text-slate-400 hover:text-white'}`}>Cuttora Output (Vector)</button>
+// --- SHOWCASE SECTION (Profesyonel Galeri) ---
+const ShowcaseSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState('svg'); 
+  const item = SHOWCASE_DATA[currentIndex];
+
+  const next = () => { setCurrentIndex((prev) => (prev + 1) % SHOWCASE_DATA.length); setActiveTab('svg'); };
+  const prev = () => { setCurrentIndex((prev) => (prev === 0 ? SHOWCASE_DATA.length - 1 : prev - 1)); setActiveTab('svg'); };
+
+  return (
+    <div className="max-w-6xl mx-auto mt-20 px-4">
+      {/* BAŞLIK ALANI */}
+      <div className="text-center mb-12">
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Production Gallery</h2>
+        <div className="h-1 w-20 bg-cyan-500 mx-auto rounded-full shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+      </div>
+
+      <div className="bg-slate-900/60 border border-slate-700 rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-xl relative">
+        {/* ÜST SEKME NAVİGASYONU */}
+        <div className="flex border-b border-slate-800 bg-slate-950/40">
+          {['before', 'svg', 'dxf'].map((tab) => (
+            <button key={tab} onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-5 text-xs font-bold uppercase tracking-[0.2em] transition-all relative overflow-hidden ${activeTab === tab ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'}`}
+            >
+              {tab === 'before' ? 'Original Raster' : (tab === 'svg' ? 'Clean SVG' : 'CNC DXF Output')}
+              {activeTab === tab && <div className="absolute bottom-0 left-0 w-full h-1 bg-cyan-500 shadow-[0_0_15px_rgba(6,182,212,1)]"></div>}
+            </button>
+          ))}
         </div>
-        <div className="p-8 md:p-12 min-h-[400px] flex items-center justify-center relative bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] transition-all duration-500">
-          <div className="absolute inset-0 bg-slate-950/90" />
-          <div className="absolute inset-0 transition-opacity duration-1000" style={{ backgroundImage: activeTab === 'after' ? 'radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 60%)' : 'none' }} />
-          {activeTab === 'before' ? (
-            <div className="relative z-10 animate-fade-in">
-                <div className="grid grid-cols-12 gap-1 w-64 h-64 opacity-60 mix-blend-screen scale-95 blur-[0.5px]">{[...Array(144)].map((_, i) => (<div key={i} className={`rounded-sm transition-colors duration-500 ${Math.random() > 0.6 ? 'bg-slate-500' : 'bg-transparent'}`} />))}</div>
-                <div className="absolute inset-0 flex items-center justify-center"><span className="text-red-400 font-mono font-bold bg-slate-950/90 px-6 py-4 rounded border border-red-900/50 backdrop-blur-md shadow-2xl flex flex-col gap-2 animate-bounce"><span>❌ Unsafe Thin Lines</span><span>❌ Pixelated Edges</span></span></div>
+
+        {/* ANA İÇERİK */}
+        <div className="grid lg:grid-cols-2 gap-0 min-h-[500px]">
+          {/* SOL: GÖRSEL */}
+          <div className="bg-black/40 flex items-center justify-center p-12 relative group border-r border-slate-800">
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent h-20 w-full top-0 animate-[laser-scan_4s_linear_infinite] pointer-events-none opacity-50"></div>
+            <img 
+              src={activeTab === 'before' ? item.before : (activeTab === 'svg' ? item.svg : item.dxf)} 
+              className="max-w-full max-h-[380px] object-contain transition-all duration-700 transform group-hover:scale-105" 
+              alt={item.title}
+            />
+            <div className="absolute top-6 left-6 flex items-center gap-2">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Live View: {activeTab}</span>
             </div>
-          ) : (
-             <div className="relative z-10 w-full max-w-md animate-fade-in"><svg viewBox="0 0 400 300" className="w-full drop-shadow-[0_0_25px_rgba(6,182,212,0.6)]"><defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style={{ stopColor: '#06b6d4', stopOpacity: 1 }} /><stop offset="100%" style={{ stopColor: '#3b82f6', stopOpacity: 1 }} /></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="2.5" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path d="M 50 150 Q 100 50 200 150 T 350 150" fill="none" stroke="url(#grad1)" strokeWidth="4" strokeLinecap="round" className="animate-draw" filter="url(#glow)" /><circle cx="50" cy="150" r="4" fill="#fff" filter="url(#glow)" /><circle cx="200" cy="150" r="4" fill="#fff" filter="url(#glow)" /><circle cx="350" cy="150" r="4" fill="#fff" filter="url(#glow)" /><g className="animate-pulse"><path d="M 180 220 L 220 220" stroke="#2dd4bf" strokeWidth="4" filter="url(#glow)" /><text x="175" y="250" fill="#2dd4bf" fontSize="12" fontFamily="monospace" fontWeight="bold">✓ Auto-Bridge</text></g></svg></div>
-          )}
+          </div>
+
+          {/* SAĞ: TEKNİK VERİLER */}
+          <div className="p-12 flex flex-col justify-center bg-slate-900/40 relative">
+            <div className="mb-8">
+              <h3 className="text-3xl font-bold text-white mb-3">{item.title}</h3>
+              <p className="text-slate-400 leading-relaxed text-sm italic">"{item.description}"</p>
+            </div>
+
+            {/* İSTATİSTİKLER (3 KUTU: Nodes, Quality, Speed) */}
+            <div className="grid grid-cols-3 gap-3 mb-10">
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+                <div className="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-tighter">Optimization</div>
+                <div className="text-lg font-mono text-cyan-400">{item.stats.nodes}</div>
+              </div>
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+                <div className="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-tighter">Quality</div>
+                <div className="text-lg font-mono text-green-400">{item.stats.resolution}</div>
+              </div>
+              <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800">
+                <div className="text-[9px] text-slate-500 uppercase font-bold mb-1 tracking-tighter">Speed</div>
+                <div className="text-lg font-mono text-yellow-400">{item.stats.speed}</div>
+              </div>
+            </div>
+
+            {/* OKLAR */}
+            <div className="flex items-center gap-6">
+              <button onClick={prev} className="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center hover:border-cyan-500 text-white transition-all bg-slate-950/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]"><ArrowLeft className="w-5 h-5" /></button>
+              <div className="text-xs font-mono text-slate-500 tracking-widest">ITEM <span className="text-white font-bold">{currentIndex + 1}</span> / {SHOWCASE_DATA.length}</div>
+              <button onClick={next} className="w-12 h-12 rounded-full border border-slate-700 flex items-center justify-center hover:border-cyan-500 text-white transition-all bg-slate-950/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)]"><ArrowRight className="w-5 h-5" /></button>
+            </div>
+          </div>
         </div>
       </div>
-    );
+    </div>
+  );
 };
 
 // --- MAIN APP ---
@@ -384,11 +469,10 @@ export default function App() {
       fd.append("api_key", apiKey);
 
       try {
-          // Headers kısmını tamamen boş bırakıyoruz, FormData otomatik ayarlar.
           const res = await fetch(`${API_URL}/process`, { 
               method: "POST", 
               body: fd,
-              mode: 'cors' // CORS modunu açıkça belirtmek uyumluluğu artırır
+              mode: 'cors'
           });
 
           if(res.ok) {
@@ -405,7 +489,6 @@ export default function App() {
               alert("Server Error. Please check if the backend is live."); 
           }
       } catch(e) { 
-          // 45 saniye uyarısı burada tamamen kaldırıldı
           alert("Connection error. Please ensure your internet is active and try again."); 
           console.error("Network Error:", e);
       }
@@ -430,7 +513,7 @@ export default function App() {
   const faqs = [
     { q: "What image formats do you support?", a: "We currently support JPG, PNG, WEBP, and BMP files. We are working on supporting PDF imports soon." },
     { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free and yours to use for any commercial fabrication or digital sales." },
-    { q: "How accurate is the 'Thin Line' detection?", a: "Our AI is trained specifically for CNC tolerances. You can set your minimum kerf width (e.g., 1.2mm for plasma), and it detects anything thinner with 98% accuracy." },
+    { q: "How accurate is the 'Thin Line' detection?", a: "Our AI is trained specifically for CNC tolerances. It highlights areas that might be too thin for standard plasma or laser kerfs." },
     { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based. It runs in your browser and uses cloud processing for heavy lifting." },
     { q: "What is coming in Version 2.0?", a: "We are building the future of fabrication! V2 will include Smart Island Detection, Automatic Bridging, Line Thickening tools, and detailed Risk Analysis Reports to ensure perfect cuts every time." }
   ];
@@ -547,8 +630,17 @@ export default function App() {
                 <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Live: AI Vector Engine</span></div></Reveal>
                 <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
                 <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
-                <Reveal delay={400}><div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"><Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button></div></Reveal>
-                <Reveal delay={600}><BeforeAfterVisual /></Reveal>
+                
+                {/* --- ACİL GİRİŞ BUTONU (BURASI YENİ!) --- */}
+                <Reveal delay={400}>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
+                        <Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button>
+                        <Button variant="outline" className="w-full sm:w-auto text-xl px-10 py-4" onClick={manualLogin}>I have a Key</Button>
+                    </div>
+                </Reveal>
+                
+                <Reveal delay={600}><ShowcaseSection /></Reveal>
+                
                 </div>
             </section>
             
@@ -560,8 +652,8 @@ export default function App() {
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
                     <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output." /></Reveal>
-                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora automatically analyzes lines that fall below your machine's tolerance. Detects and thickens lines that fall below your machine's kerf or material tolerance." /></Reveal>
-                    <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Automatically connect floating islands to prevent lost parts. Don't lose the center of your 'O's." badge="Beta" /></Reveal>
+                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora identifies lines that fall below standard tolerances so you can fix them before cutting." /></Reveal>
+                    <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Experimental feature to help connect floating islands. Great for stencil fonts and simple shapes." badge="Beta" /></Reveal>
                     <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines and removes zero-length segments for smoothest movement." /></Reveal>
                 </div>
                 </div>
@@ -570,7 +662,7 @@ export default function App() {
             <section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
                 <div className="max-w-7xl mx-auto px-6">
                 <Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-24 text-center">From Pixel to Part</h2></Reveal>
-                <div className="grid md:grid-cols-4 gap-12 relative"><Step number="1" title="Upload" description="Drag & drop any PNG, JPG, or SVG sketch. Even low-res images work." /><Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." /><Step number="3" title="Optimize" description="Lines are thickened, bridges added, and paths smoothed automatically." /><Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} /></div>
+                <div className="grid md:grid-cols-4 gap-12 relative"><Step number="1" title="Upload" description="Upload your design (PNG/JPG). Black & white or high-contrast images yield the best results." /><Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." /><Step number="3" title="Optimize" description="Paths are smoothed, nodes are reduced, and geometry is cleaned for faster machining." /><Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} /></div>
                 </div>
             </section>
             
