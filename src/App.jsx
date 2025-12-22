@@ -644,10 +644,12 @@ export default function App() {
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg shadow-cyan-900/5' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-white group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-            <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.5)]"><Scissors className="w-5 h-5 text-white" /></div>
+            <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition-transform shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+              <Scissors className="w-5 h-5 text-white" />
+            </div>
             <span className="group-hover:text-cyan-200 transition-colors">Cuttora</span>
           </div>
-          
+
           <div className="hidden md:flex items-center gap-4">
             {apiKey ? (
               <div className="flex items-center gap-4">
@@ -670,182 +672,167 @@ export default function App() {
       {/* --- GATEWAY: WORKSPACE OR LANDING --- */}
       {apiKey ? (
         <section className="pt-8 pb-24 px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
-          <div className="max-w-6xl mx-auto space-y-6">
-            
-            {/* 1. KATMAN: GİRİŞ ÜNİTESİ & ÖNİZLEME (ÜSTTE) */}
+          <div className="max-w-6xl mx-auto space-y-8">
+
+            {/* 1. İSTASYON: VARLIK YÜKLEME VE KİMLİK (SABİT ÜST PANEL) */}
             <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden">
               <div className="grid md:grid-cols-3 gap-10 items-center">
-                <div className="relative group/upload h-full flex flex-col justify-center">
-                   <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" multiple />
-                   <div className="border-2 border-dashed border-slate-700 rounded-3xl p-10 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center">
-                      <Upload className="w-12 h-12 text-cyan-500 mx-auto mb-4" />
-                      <span className="text-[10px] text-white font-black uppercase tracking-[0.2em]">Upload Resource Asset</span>
-                   </div>
+                <div className="relative group/upload h-full">
+                  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" multiple />
+                  <div className="border-2 border-dashed border-slate-700 rounded-3xl p-12 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center">
+                    <Upload className="w-12 h-12 text-cyan-500 mb-4" />
+                    <span className="text-xs text-white font-black uppercase tracking-[0.2em]">New Production Asset</span>
+                  </div>
                 </div>
-                
-                <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 relative overflow-hidden min-h-[250px] shadow-inner">
-                   <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl">
-                      {result ? (
-                        <img src={`${API_URL}${result.preview_url}`} className="max-w-full max-h-full object-contain" alt="Current Asset" />
-                      ) : pendingFile ? (
-                        <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending Asset" />
-                      ) : (
-                        <Layers className="w-12 h-12 text-slate-700" />
-                      )}
-                   </div>
-                   <div className="flex-1">
-                      <div className="flex justify-between items-start mb-6">
-                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-                            <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
-                            <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">Input Unit Ready</span>
-                         </div>
-                         <button onClick={() => document.getElementById('pricing')?.scrollIntoView({behavior: 'smooth'})} className="text-[10px] font-black text-white uppercase bg-blue-600 px-4 py-2 rounded-lg shadow-lg tracking-widest">+ Add Credits</button>
+
+                <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 min-h-[250px] shadow-inner relative">
+                  <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl">
+                    {/* CANLI ÖNİZLEME: SVG VARSA SVG, YOKSA PENDING, O DA YOKSA ICON */}
+                    {result ? (
+                      <img src={`${API_URL}${result.files.svg}`} className="max-w-full max-h-full object-contain" alt="SVG Master" />
+                    ) : pendingFile ? (
+                      <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
+                    ) : (
+                      <Layers className="w-12 h-12 text-slate-800" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
+                        <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
+                        <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">System Online</span>
                       </div>
-                      <h3 className="text-white font-black text-3xl uppercase tracking-tighter mb-4">
-                         {pendingFile ? pendingFile.name : "Waiting for Input"}
-                      </h3>
-                      <div className="flex gap-6 border-t border-slate-800 pt-6">
-                         <div className="flex flex-col">
-                            <span className="text-[9px] text-slate-500 uppercase font-black tracking-widest mb-1">Architecture</span>
-                            <span className="text-xs text-slate-300 font-bold uppercase tracking-tight">AI Vector Engine v1.6.2</span>
-                         </div>
+                      <div className="flex flex-col items-end gap-3">
+                        <div className="text-cyan-400 font-mono font-black text-2xl tracking-tighter">CREDITS: {credits}</div>
+                        {/* ZENGİNLEŞTİRİLMİŞ KREDİ BUTONU */}
+                        <button onClick={() => setPaymentModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all">
+                          🚀 Add More Credits
+                        </button>
                       </div>
-                   </div>
+                    </div>
+                    <h3 className="text-white font-black text-3xl uppercase tracking-tighter truncate max-w-md">
+                      {pendingFile ? pendingFile.name : "Waiting for Input..."}
+                    </h3>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 2. KATMAN: ZARİF ÖN KONTROL & KREDİ ONAY SİSTEMİ */}
-			{qualityReport && !result && (
-			  <div className="animate-fade-in p-8 rounded-[2rem] border border-orange-500/30 bg-slate-900/90 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
-				{/* Üst Bilgi Şeridi */}
-				<div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-800">
-				  <AlertCircle className="w-5 h-5 text-orange-500" />
-				  <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-					Diagnostic Intelligence Unit
-				  </span>
-				</div>
+            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ VE KREDİ ONAYI (SABİT PANEL) */}
+            <div className={`transition-all duration-700 ${qualityReport ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
+              <div className={`p-10 rounded-[2.5rem] border-l-[16px] flex flex-col lg:flex-row items-center justify-between shadow-2xl ${qualityReport?.energy < 300 ? 'bg-orange-950/40 border-orange-600' : 'bg-slate-900/60 border-slate-700'}`}>
+                <div className="flex items-center gap-10">
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center border shadow-2xl ${qualityReport?.energy < 300 ? 'bg-orange-500/20 border-orange-500/40' : 'bg-green-500/20 border-green-500/40'}`}>
+                    {qualityReport?.energy < 300 ? <AlertCircle className="w-10 h-10 text-orange-500" /> : <Check className="w-10 h-10 text-green-500" />}
+                  </div>
+                  <div className="max-w-2xl">
+                    <h4 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+                      Diagnostic Report: {qualityReport ? qualityReport.status : "Awaiting Scan"}
+                    </h4>
+                    <p className="text-slate-300 text-sm font-bold uppercase tracking-tight leading-relaxed">
+                      {qualityReport ? `"${qualityReport.message}"` : "Please upload a file to begin automated technical analysis."}
+                      {qualityReport && <span className="block mt-2 text-orange-400">⚠️ IMPORTANT: Authorization will consume 1 credit. Low resolution may affect precision.</span>}
+                    </p>
+                  </div>
+                </div>
 
-				<div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
-				  <div className="flex-1">
-					<h4 className="text-xl font-black text-white uppercase tracking-tight mb-2">
-					  {qualityReport.status}
-					</h4>
-					<p className="text-slate-400 text-sm font-medium leading-relaxed max-w-xl">
-					  "{qualityReport.message}" <br/>
-					  <span className="text-orange-500/80 font-bold block mt-2 text-xs uppercase tracking-wide">
-						Note: Low sharpness may cause jagged paths. Authorization will consume 1 credit.
-					  </span>
-					</p>
-				  </div>
+                <div className="flex flex-col gap-4 mt-8 lg:mt-0 min-w-[300px]">
+                  {qualityReport && !result && (
+                    <Button variant="gradient" className="py-6 px-12 text-sm font-black uppercase shadow-2xl" onClick={() => startFinalProcessing(pendingFile)}>
+                      Authorize Fabrication (-1 Credit)
+                    </Button>
+                  )}
+                  {result && (
+                    <div className="bg-green-500/20 border border-green-500/40 p-5 rounded-2xl text-center shadow-inner">
+                      <span className="text-green-400 font-black uppercase text-xs tracking-widest flex items-center justify-center gap-2">
+                        <Check className="w-4 h-4" /> Scan Authorized & Successfully Processed
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
 
-				  {/* Skor ve Aksiyon Alanı */}
-				  <div className="flex items-center gap-10 bg-black/40 p-6 rounded-2xl border border-slate-800 shadow-inner w-full lg:w-auto">
-					<div className="text-center pr-10 border-r border-slate-800">
-					  <span className="text-[9px] text-slate-500 uppercase font-black block mb-1">Integrity</span>
-					  <div className="text-3xl font-mono font-black text-orange-500">
-						{qualityReport.energy}<span className="text-slate-700 text-base">/500</span>
-					  </div>
-					</div>
+            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE ÇIKTI PAKETİ */}
+            <div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
+              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
+                <div className="grid lg:grid-cols-2 gap-16">
+                  {/* SOL: ÜRETİLEN SVG ÖNİZLEMESİ */}
+                  <div className="space-y-6">
+                    <div className="bg-black/60 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
+                      {isProcessing ? (
+                        <div className="text-center">
+                          <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
+                          <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto">
+                            <div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div>
+                          </div>
+                        </div>
+                      ) : (
+                        <img src={result ? `${API_URL}${result.files.svg}` : ''} className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(6,182,212,0.2)]" alt="Final SVG Preview" />
+                      )}
+                    </div>
+                  </div>
 
-					<div className="flex flex-col gap-3">
-					  <Button 
-						variant="gradient" 
-						className="py-3 px-8 text-[11px] font-black uppercase shadow-lg shadow-cyan-500/20" 
-						onClick={() => startFinalProcessing(pendingFile)}
-					  >
-						Authorize Process (-1 Credit)
-					  </Button>
-					  <button 
-						onClick={() => {setQualityReport(null); setPendingFile(null);}}
-						className="text-[10px] text-slate-500 font-black uppercase tracking-widest hover:text-white transition-colors text-center"
-					  >
-						← Fix & Upload New File
-					  </button>
-					</div>
-				  </div>
-				</div>
-			  </div>
-			)}
+                  {/* SAĞ: TEKNİK ÖZELLİKLER VE İNDİRME DOSYALARI */}
+                  <div className="flex flex-col justify-center gap-6">
+                    {result && (
+                      <>
+                        <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-4 shadow-xl">
+                          <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Unit Specs</h5>
+                          <div className="grid grid-cols-3 gap-8 font-mono text-sm">
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
+                          </div>
+                        </div>
 
-            {/* 3. KATMAN: ÜRETİM VE İNDİRME MERKEZİ (TAM RESTORE) */}
-			{(isProcessing || result) && (
-			  <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-10 shadow-2xl animate-fade-in-up">
-				<div className="grid lg:grid-cols-2 gap-12">
-				  <div className="space-y-6">
-					{/* SVG PREVIEW - VEKTÖR NETLİĞİ İÇİN */}
-					<div className="bg-black/60 rounded-[2.5rem] border border-slate-800 p-8 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner">
-					  {isProcessing && <div className="absolute top-0 left-0 w-full h-[4px] bg-cyan-500 shadow-[0_0_20px_cyan] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
-					  <img 
-						src={result ? `${API_URL}${result.files.svg}` : (pendingFile ? URL.createObjectURL(pendingFile) : '')} 
-						className={`max-w-full max-h-full transition-all duration-1000 ${isProcessing ? 'grayscale blur-[3px] opacity-40' : 'opacity-100'}`} 
-						alt="Production SVG Preview" 
-					  />
-					</div>
-				  </div>
+                        <div className="grid gap-4">
+                          <a href={`${API_URL}${result.files.dxf}`} className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
+                            <div className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</div>
+                            <Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
+                          </a>
+                          <a href={`${API_URL}${result.files.zip}`} className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-[2rem] hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[16px] border-l-cyan-500 shadow-2xl">
+                            <div>
+                              <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Bundle</div>
+                              <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">DXF, SVG, EPS, PDF & README INCLUDED</div>
+                            </div>
+                            <Download className="w-12 h-12 text-white shadow-lg" />
+                          </a>
+                          <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">Initialize New Production Unit</button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
 
-				  <div className="flex flex-col justify-center gap-4">
-					{isProcessing ? (
-					  <div className="bg-black/40 rounded-3xl p-10 border border-slate-800 h-full flex flex-col justify-center text-center">
-						<h4 className="text-cyan-400 text-3xl font-black mb-6 uppercase tracking-tighter animate-pulse">{processStatus}</h4>
-						<div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]" style={{width: '85%'}}></div></div>
-					  </div>
-					) : result && (
-					  <div className="space-y-4">
-						<h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-4">Production-Ready Assets</h5>
-						
-						{/* HER DOSYA TÜRÜ İÇİN AYRI BUTON (RESTORED) */}
-						<a href={`${API_URL}${result.files.dxf}`} className="group p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-lg">
-						  <span className="font-bold text-white text-sm uppercase">Industrial DXF (CNC/Laser)</span>
-						  <Download className="w-5 h-5 text-slate-700 group-hover:text-cyan-400" />
-						</a>
-						
-						<a href={`${API_URL}${result.files.svg}`} className="group p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-blue-500 transition-all flex items-center justify-between shadow-lg">
-						  <span className="font-bold text-white text-sm uppercase">Vector SVG (Master Edit)</span>
-						  <Download className="w-5 h-5 text-slate-700 group-hover:text-blue-400" />
-						</a>
-
-						{/* FULL BUNDLE (TÜM DOSYALAR: EPS, RAW, SMOOTH) */}
-						<a href={`${API_URL}${result.files.zip}`} className="group p-8 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-2xl hover:shadow-[0_0_50px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[12px] border-l-cyan-500 shadow-2xl mt-4">
-						  <div className="flex flex-col">
-							<span className="font-black text-white text-2xl tracking-tighter uppercase italic">Download Full Bundle</span>
-							<span className="text-[10px] text-cyan-300 font-bold uppercase mt-1 tracking-widest">Includes DXF, SVG, EPS, PDF & Metadata</span>
-						  </div>
-						  <Download className="w-10 h-10 text-white shadow-lg" />
-						</a>
-					  </div>
-					)}
-				  </div>
-				</div>
-			  </div>
-			)}
-
-            {/* 4. KATMAN: GENEL UYARI VE DISCLAIMER (SABİT EN ALTA) */}
+            {/* 4. İSTASYON: DISCLAIMER & PROTOKOL (SABİT EN ALTA) */}
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl">
               <h4 className="text-2xl font-black text-white mb-10 border-b border-slate-800 pb-6 flex items-center gap-4 tracking-tighter uppercase">
                 <AlertCircle className="w-8 h-8 text-yellow-500" /> Production Disclaimer & Safety Protocol
               </h4>
               <div className="grid md:grid-cols-2 gap-12 text-[12px] leading-relaxed tracking-wider">
-                 <div className="space-y-8">
-                    <div>
-                       <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">1. Quality Acknowledgment:</h5>
-                       <p className="text-slate-300 font-bold uppercase opacity-70">The analysis indicates the source quality of your upload. If "Warning" is displayed, the input image was identified as low-resolution. You acknowledge that output precision is directly linked to input quality.</p>
-                    </div>
-                    <div>
-                       <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">2. Check Before Cutting:</h5>
-                       <p className="text-slate-300 font-bold uppercase opacity-70">Cuttora uses automated AI tools. ALWAYS verify dimensions, curves, and cut paths in your CAD software (AutoCAD, LightBurn, etc.) BEFORE sending files to your machine.</p>
-                    </div>
-                 </div>
-                 <div className="space-y-8">
-                    <div>
-                       <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">3. Liability Limitation:</h5>
-                       <p className="text-slate-300 font-bold uppercase opacity-70">Cuttora is NOT responsible for any wasted materials, machine time, or production errors. User assumes full responsibility for the final manufacturing output.</p>
-                    </div>
-                    <div className="bg-green-500/5 border border-green-500/20 p-8 rounded-2xl shadow-inner">
-                       <h5 className="text-green-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">4. 100% Satisfaction Guarantee:</h5>
-                       <p className="text-green-200 font-bold uppercase opacity-70">If this conversion is not usable: DO NOT cut the material. Contact us immediately at support@cuttora.com. We will refund your credits or manually fix the file.</p>
-                    </div>
-                 </div>
+                <div className="space-y-8">
+                  <div>
+                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">1. Quality Acknowledgment:</h5>
+                    <p className="text-slate-300 font-bold uppercase opacity-70">The analysis indicates the source quality of your upload. If "Warning" is displayed, the input image was identified as low-resolution. You acknowledge that output precision is directly linked to input quality.</p>
+                  </div>
+                  <div>
+                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">2. Check Before Cutting:</h5>
+                    <p className="text-slate-300 font-bold uppercase opacity-70">Cuttora uses automated AI tools. ALWAYS verify dimensions, curves, and cut paths in your CAD software (AutoCAD, LightBurn, etc.) BEFORE sending files to your machine.</p>
+                  </div>
+                </div>
+                <div className="space-y-8">
+                  <div>
+                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">3. Liability Limitation:</h5>
+                    <p className="text-slate-300 font-bold uppercase opacity-70">Cuttora is NOT responsible for any wasted materials, machine time, or production errors. User assumes full responsibility for the final manufacturing output.</p>
+                  </div>
+                  <div className="bg-green-500/5 border border-green-500/20 p-8 rounded-2xl shadow-inner">
+                    <h5 className="text-green-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">4. 100% Satisfaction Guarantee:</h5>
+                    <p className="text-green-200 font-bold uppercase opacity-70">If this conversion is not usable: DO NOT cut the material. Contact us immediately at support@cuttora.com. We will refund your credits or manually fix the file.</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
