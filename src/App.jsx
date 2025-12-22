@@ -238,10 +238,43 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
   return <button className={`${baseStyle} ${variants[variant]} ${className}`} onClick={onClick} {...props}><span className="relative z-10 flex items-center gap-2">{children}</span></button>;
 };
 
-// --- ANNOUNCEMENT BAR ---
+// --- ANNOUNCEMENT BAR (Kayan Yazı - Çift Mesaj) ---
 const AnnouncementBar = () => (
-  <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-white py-2 text-center text-sm font-bold tracking-wider animate-text-shimmer bg-[length:200%_auto] relative z-[60]">
-    🚀 WE ARE LIVE! <span className="hidden md:inline">- </span> <span className="text-yellow-300">50% OFF</span> LAUNCH SALE FOR THE FIRST 500 USERS
+  <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-blue-900 border-b border-white/10 text-white py-2.5 relative z-[60] overflow-hidden flex items-center">
+    {/* Sol ve Sağ Kenarlardaki Fade Efekti (Yazılar kaybolarak girsin/çıksın diye) */}
+    <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-blue-900 to-transparent z-10"></div>
+    <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-blue-900 to-transparent z-10"></div>
+
+    {/* Kayan İçerik (Sonsuz Döngü İçin Çiftlenmiş) */}
+    <div className="flex animate-scroll hover:pause-scroll whitespace-nowrap items-center gap-16 pl-4">
+      {/* 1. BLOK */}
+      <div className="flex items-center gap-3">
+        <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
+        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 50+ files at once.</span>
+      </div>
+
+      <div className="text-slate-600">✦</div> {/* Ayırıcı */}
+
+      <div className="flex items-center gap-3">
+        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">LAUNCH OFFER</span>
+        <span className="text-sm font-bold tracking-wide text-yellow-100">Get <span className="text-white underline decoration-yellow-500 decoration-2">50% OFF</span> all credit packs for the first 500 users!</span>
+      </div>
+      
+      <div className="text-slate-600">✦</div> {/* Ayırıcı */}
+
+      {/* 2. BLOK (Sonsuz döngü kesilmesin diye aynısının tekrarı) */}
+      <div className="flex items-center gap-3">
+        <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
+        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 50+ files at once.</span>
+      </div>
+
+      <div className="text-slate-600">✦</div>
+
+      <div className="flex items-center gap-3">
+        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">LAUNCH OFFER</span>
+        <span className="text-sm font-bold tracking-wide text-yellow-100">Get <span className="text-white underline decoration-yellow-500 decoration-2">50% OFF</span> all credit packs for the first 500 users!</span>
+      </div>
+    </div>
   </div>
 );
 
@@ -557,14 +590,13 @@ export default function App() {
     } catch(e) { }
   };
 
-  // --- 1. AŞAMA: AKILLI YÜKLEME YÖNETİCİSİ (BATCH & SINGLE) ---
+  // --- 1. AŞAMA: AKILLI YÜKLEME YÖNETİCİSİ (HER ZAMAN RAPOR GÖSTERİR) ---
   const handleUpload = async (e) => {
-    // 1. Dosyaları listeye çevir (Artık tek değil, çoklu gelebilir)
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
     if (!apiKey) { alert("Please login with a key."); return; }
 
-    // --- SENARYO A: TEK DOSYA (Eski Detaylı Analiz Modu) ---
+    // --- SENARYO A: TEK DOSYA (Kullanıcı Raporu Görmek İstiyor!) ---
     if (files.length === 1) {
         const file = files[0];
         setIsProcessing(true);
@@ -578,33 +610,31 @@ export default function App() {
             const data = await res.json();
             const report = data.quality_report;
             
-            // Kalite düşükse uyar
-            if (report.status.includes("Warning") || report.energy < 300) {
-                setQualityReport(report);
-                setPendingFile(file);
-                setQualityModalOpen(true);
-                setIsProcessing(false);
-            } else {
-                startFinalProcessing(file);
-            }
+            // --- KRİTİK DEĞİŞİKLİK BURADA ---
+            // Eskiden: "Sadece Warning varsa aç" diyorduk.
+            // Şimdi: Koşulsuz şartsız modalı açıyoruz.
+            // Böylece Excellent ise YEŞİL kutuyu görüp mutlu olacak.
+            
+            setQualityReport(report);
+            setPendingFile(file);
+            setQualityModalOpen(true); // <-- ARTIK HER ZAMAN AÇILACAK!
+            setIsProcessing(false);
+
         } catch (err) {
             console.error("Analysis failed, proceeding direct.");
             startFinalProcessing(file);
         }
     } 
-    // --- SENARYO B: TOPLU İŞLEM (Batch Blitz Modu - YENİ!) ---
+    // --- SENARYO B: TOPLU İŞLEM (Batch - Burası Hızlı Geçer) ---
     else {
-        // Kullanıcıdan toplu işlem onayı al
         if(!confirm(`Start batch processing for ${files.length} files?\n\nThis will consume ${files.length} credits.`)) return;
 
         setIsProcessing(true);
         let completed = 0;
 
-        // Döngüye gir: Her dosyayı sırayla işle
         for (const file of files) {
             setProcessStatus(`Batch Processing: ${completed + 1}/${files.length} \nFile: ${file.name}`);
             try {
-                // 'true' parametresi batch modunu açar (Sonucu ekrana basma, indir)
                 await startFinalProcessing(file, true); 
             } catch (error) {
                 console.error(`Error processing ${file.name}`, error);
@@ -613,7 +643,6 @@ export default function App() {
         }
         setIsProcessing(false);
         setProcessStatus("Batch Completed!");
-        // Döngü bitince input'u temizle ki tekrar aynı dosyaları seçebilsin
         e.target.value = null; 
         alert(`All ${files.length} files processed! Check your downloads folder.`);
     }
@@ -756,15 +785,26 @@ export default function App() {
             <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden workshop-panel">
               <div className="grid md:grid-cols-3 gap-10 items-start">
                 
-                {/* SOL: DOSYA YÜKLEME ALANI (DEĞİŞMEDİ) */}
+                {/* SOL: DOSYA YÜKLEME ALANI (DÜZELTİLDİ) */}
                 <div className="relative group/upload h-full min-h-[300px]">
                   <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
                   <div className="border-2 border-dashed border-slate-700 rounded-3xl p-8 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center relative overflow-hidden">
+                    
+                    {/* YENİ İÇERİK BURADA */}
                     <div className="relative z-10">
-                       <Upload className="w-12 h-12 text-cyan-500 mb-4 mx-auto" />
-                       <span className="text-[10px] text-white font-black uppercase tracking-[0.2em] block">Batch Processing Ready</span>
-                       <span className="text-[9px] text-slate-500 uppercase mt-2 block">Drop Multiple Files</span>
+                        <div className="relative inline-block">
+                            <Upload className="w-12 h-12 text-cyan-500 mb-4 mx-auto" />
+                            {/* 'NEW' Rozeti */}
+                            <div className="absolute -top-2 -right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded shadow-lg transform rotate-12">NEW</div>
+                        </div>
+                        <span className="text-[10px] text-white font-black uppercase tracking-[0.2em] block">
+                            Batch Processing Ready
+                        </span>
+                        <span className="text-[9px] text-slate-400 uppercase mt-2 block font-medium">
+                            Drop 1 or 100 Files — We handle the queue
+                        </span>
                     </div>
+
                     <div className="absolute inset-0 bg-cyan-500/5 translate-y-full group-hover/upload:translate-y-0 transition-transform duration-500"></div>
                   </div>
                 </div>
@@ -954,8 +994,16 @@ export default function App() {
 		// --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
-                <div className="max-w-7xl mx-auto text-center">
-                <Reveal><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-slate-600 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default"><Sparkles className="w-3 h-3 animate-pulse" /><span>v1.0 Live: AI Vector Engine</span></div></Reveal>
+                <div className="max-w-7xl mx-auto text-center">				
+				<Reveal>
+					<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-cyan-500/30 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default">
+						<span className="flex h-2 w-2 relative">
+							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+							<span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+						</span>
+						<span>v1.2 Update: Batch Processing Engine Online</span>
+					</div>
+				</Reveal>				
                 <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
                 <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
                 
