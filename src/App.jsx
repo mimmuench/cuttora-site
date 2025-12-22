@@ -28,6 +28,48 @@ const SHOWCASE_DATA = [
   }
 ];
 
+const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile }) => {
+    if (!isOpen || !report) return null;
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" onClick={onClose} />
+        <div className="relative bg-slate-900 border border-yellow-500/40 rounded-3xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(234,179,8,0.2)] animate-float">
+          <div className="text-center mb-6">
+            <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-500/30">
+              <AlertCircle className="w-10 h-10 text-yellow-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">{report.status}</h3>
+            <p className="text-slate-300 text-sm leading-relaxed">{report.message}</p>
+          </div>
+          
+          <div className="bg-slate-950/80 p-5 rounded-xl border border-slate-800 mb-8">
+            <div className="flex justify-between items-center mb-1">
+                <span className="text-xs text-slate-500 font-mono uppercase">Edge Sharpness Score</span>
+                <span className={`font-mono font-bold ${report.energy < 150 ? 'text-red-500' : 'text-yellow-500'}`}>{report.energy}</span>
+            </div>
+            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div className="bg-yellow-500 h-full transition-all duration-1000" style={{ width: `${Math.min(report.energy / 5, 100)}%` }} />
+            </div>
+          </div>
+
+          <Button 
+            variant="gradient" 
+            className="w-full justify-center py-4 text-lg" 
+            onClick={() => {
+                onClose(); 
+                startFinalProcessing(pendingFile); 
+            }}
+          >
+            I Understand & Accept (-1 Credit)
+          </Button>
+          <p className="text-[10px] text-slate-500 text-center mt-4 uppercase tracking-widest">Quality Assurance Shield Active</p>
+        </div>
+      </div>
+    );
+};
+
+
+
 const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://127.0.0.1:8000"
   : "https://cuttora-backend-production.up.railway.app";
@@ -398,6 +440,11 @@ export default function App() {
   const [selectedPlan, setSelectedPlan] = useState({ name: '', price: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   
+  const [processStatus, setProcessStatus] = useState("");
+  const [pendingFile, setPendingFile] = useState(null);
+  const [qualityModalOpen, setQualityModalOpen] = useState(false);
+  const [qualityReport, setQualityReport] = useState(null);
+ 
   // LEGAL MODALS STATE
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
@@ -458,41 +505,82 @@ export default function App() {
     } catch(e) { }
   };
 
+  // --- 1. AŞAMA: KALİTE ANALİZİ (Kredi Harcamaz) ---
   const handleUpload = async (e) => {
-      const file = e.target.files[0];
-      if(!file) return;
-      if(!apiKey) { alert("Please buy a package first."); return; }
-      
-      setIsProcessing(true);
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("api_key", apiKey);
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!apiKey) { alert("Please login with a key."); return; }
 
-      try {
-          const res = await fetch(`${API_URL}/process`, { 
-              method: "POST", 
-              body: fd,
-              mode: 'cors'
-          });
+    setIsProcessing(true);
+    setProcessStatus("Scanning Image Quality..."); // UI'da görünecek ilk mesaj
+    
+    const fd = new FormData();
+    fd.append("file", file);
 
-          if(res.ok) {
-              const data = await res.json();
-              if(data.status === "success") {
-                  setResult(data);
-                  if (apiKey !== "cuttora_admin_master") {
-                      fetch(`${API_URL}/api/credits/${apiKey}`).then(r=>r.json()).then(d=>setCredits(d.credits));
-                  }
-              } else { 
-                  alert("Error: " + (data.detail || "Unknown error")); 
-              }
-          } else { 
-              alert("Server Error. Please check if the backend is live."); 
-          }
-      } catch(e) { 
-          alert("Connection error. Please ensure your internet is active and try again."); 
-          console.error("Network Error:", e);
-      }
-      setIsProcessing(false);
+    try {
+        // Backend'deki analiz merkezine gidiyoruz
+        const res = await fetch(`${API_URL}/analyze`, { method: "POST", body: fd });
+        const data = await res.json();
+        const report = data.quality_report; // Backend'den gelen rapor
+        
+        // Eğer kalite düşükse veya risk varsa modalı aç ve dosyayı hafızaya al
+        if (report.status.includes("Warning") || report.energy < 300) {
+            setQualityReport(report);
+            setPendingFile(file); // Onay verirse kullanmak üzere dosyayı sakla
+            setQualityModalOpen(true);
+            setIsProcessing(false);
+        } else {
+            // Kalite "Excellent" ise hiç sormadan asıl işleme geç
+            startFinalProcessing(file);
+        }
+    } catch (err) {
+        console.error("Analysis failed, proceeding to direct processing");
+        startFinalProcessing(file); // Analiz çökerse kullanıcıyı bekletme, devam et
+    }
+  };
+  
+  // --- 2. AŞAMA: ASIL VEKTÖRLEŞTİRME (Kredi Burada Düşer) ---
+  const startFinalProcessing = async (file) => {
+    setIsProcessing(true);
+    
+    // Kullanıcıya işlemin aşamalarını hissettiren simülasyon metinleri
+    const statusMessages = [
+        "Analyzing Geometry...", 
+        "Optimizing Nodes...", 
+        "Closing Open Paths...", 
+        "Generating Production DXF..."
+    ];
+    let i = 0;
+    const interval = setInterval(() => { 
+        setProcessStatus(statusMessages[i % 4]); 
+        i++; 
+    }, 2000);
+
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("api_key", apiKey);
+
+    try {
+        const res = await fetch(`${API_URL}/process`, { method: "POST", body: fd });
+        const data = await res.json();
+        
+        if (data.status === "success") {
+            setResult(data);
+            // Başarılıysa krediyi güncelle
+            if (apiKey !== "cuttora_admin_master") {
+                fetch(`${API_URL}/api/credits/${apiKey}`)
+                  .then(r => r.json())
+                  .then(d => setCredits(d.credits));
+            }
+        } else { 
+            alert(data.detail || "Processing failed"); 
+        }
+    } catch (e) { 
+        alert("Connection error during processing."); 
+    } finally {
+        clearInterval(interval);
+        setIsProcessing(false);
+    }
   };
   
   const manualLogin = () => {
@@ -738,6 +826,15 @@ export default function App() {
           </div>
         </div>
       </footer>
+	  
+      {/* --- DOĞRU YER BURASI (SATIR 829 CİVARI) --- */}
+      <QualityWarningModal 
+          isOpen={qualityModalOpen} 
+          onClose={() => setQualityModalOpen(false)} 
+          report={qualityReport}
+          startFinalProcessing={startFinalProcessing} 
+          pendingFile={pendingFile} 
+      />
     </div>
   );
 }
