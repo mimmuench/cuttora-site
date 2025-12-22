@@ -28,8 +28,6 @@ const SHOWCASE_DATA = [
   }
 ];
 
-const [logs, setLogs] = useState([]);
-
 const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile }) => {
     if (!isOpen || !report) return null;
     return (
@@ -436,12 +434,13 @@ const ShowcaseSection = () => {
 
 // --- MAIN APP ---
 export default function App() {
+  const [logs, setLogs] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState({ name: '', price: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
-  
+
   const [processStatus, setProcessStatus] = useState("");
   const [pendingFile, setPendingFile] = useState(null);
   const [qualityModalOpen, setQualityModalOpen] = useState(false);
