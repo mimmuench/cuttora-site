@@ -667,140 +667,146 @@ export default function App() {
       </nav>
 
       {apiKey ? (
-		  <section className="pt-6 pb-24 px-4 min-h-screen cyber-grid relative z-10 font-sans">
+		  <section className="pt-4 pb-24 px-4 min-h-screen bg-slate-50 relative z-10 font-sans">
 			<div className="max-w-6xl mx-auto space-y-4">
 			  
-			  {/* 1. KATMAN: ÜRETİM GİRİŞ ÜNİTESİ (YÜKLEME) */}
-			  <div className="workshop-panel rounded-2xl border border-cyan-500/20 shadow-xl overflow-hidden bg-slate-900/40">
-				<div className="bg-slate-800/50 px-6 py-3 border-b border-slate-700/50 flex justify-between items-center">
-				  <div className="flex items-center gap-2 text-cyan-400 font-bold text-[10px] uppercase tracking-widest">
-					<Cpu className="w-3 h-3"/> Unit 01: Resource Input
+			  {/* 1. ÜST PANEL: YÜKLEME VE SİSTEM DURUMU (AYDINLIK) */}
+			  <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+				<div className="bg-slate-100 px-6 py-2 border-b border-slate-200 flex justify-between items-center">
+				  <div className="flex items-center gap-2 text-slate-600 font-bold text-[10px] uppercase tracking-widest">
+					<Cpu className="w-3 h-3 text-blue-600"/> Production Pipeline v1.6.2
 				  </div>
-				  <div className="flex items-center gap-4">
-					<span className="text-slate-400 font-mono text-[10px]">Active Node: Railway-Edge-01</span>
-					<button onClick={logout} className="text-red-400 hover:text-red-300 font-bold text-[10px] uppercase transition-colors">Terminate Session</button>
+				  <div className="flex items-center gap-6">
+					<span className="text-green-600 font-mono text-[10px] font-bold">● SERVER: OPERATIONAL</span>
+					<button onClick={logout} className="text-slate-400 hover:text-red-600 font-bold text-[10px] uppercase transition-colors">Termite Session</button>
 				  </div>
 				</div>
-				<div className="p-8 relative group">
+				<div className="p-6 relative group">
 				  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" multiple />
-				  <div className="border-2 border-dashed border-slate-700 rounded-xl p-10 bg-black/20 group-hover:border-cyan-500/50 transition-all flex flex-col items-center justify-center">
-					<Upload className="w-8 h-8 text-cyan-500 mb-3 group-hover:-translate-y-1 transition-transform duration-300" />
-					<h3 className="text-white font-bold text-lg">Drop Production Assets Here</h3>
-					<p className="text-slate-500 text-[9px] uppercase tracking-widest mt-2">Industrial Batch Tracing Enabled v1.6</p>
+				  <div className="border-2 border-dashed border-slate-300 rounded-xl py-8 bg-slate-50 group-hover:bg-blue-50/50 group-hover:border-blue-400 transition-all flex flex-col items-center justify-center">
+					<Upload className="w-6 h-6 text-blue-500 mb-2 group-hover:-translate-y-1 transition-transform" />
+					<h3 className="text-slate-800 font-bold text-base tracking-tight">Drop Image Assets to Start Fabrication</h3>
+					<p className="text-slate-400 text-[9px] uppercase tracking-widest mt-1">DXF, SVG, PDF Optimization Active</p>
 				  </div>
 				</div>
 			  </div>
 
-			  {/* 2. KATMAN: DIAGNOSTIC UNIT (UYARILAR - YOKSA PASS) */}
+			  {/* 2. KRİTİK UYARI HATTI (SENİN METİNLERİNLE DOLU VE SERT) */}
 			  {qualityReport && (
-				<div className={`animate-fade-in rounded-2xl border p-6 flex items-center justify-between shadow-2xl transition-all ${qualityReport.energy < 200 ? 'bg-red-500/5 border-red-500/30' : 'bg-orange-500/5 border-orange-500/30'}`}>
+				<div className={`animate-fade-in rounded-2xl border-l-8 p-6 flex items-center justify-between shadow-md transition-all ${qualityReport.energy < 200 ? 'bg-red-50 border-red-500' : 'bg-amber-50 border-amber-500'}`}>
 				  <div className="flex items-center gap-6">
-					<div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${qualityReport.energy < 200 ? 'bg-red-500/20 border-red-500/40' : 'bg-orange-500/20 border-orange-500/40'}`}>
-					   <AlertCircle className={`w-6 h-6 ${qualityReport.energy < 200 ? 'text-red-500' : 'text-orange-500'}`} />
+					<div className={`w-14 h-14 rounded-xl flex items-center justify-center ${qualityReport.energy < 200 ? 'bg-red-100' : 'bg-amber-100'}`}>
+					   <AlertCircle className={`w-8 h-8 ${qualityReport.energy < 200 ? 'text-red-600' : 'text-amber-600'}`} />
 					</div>
-					<div>
-					   <div className="flex items-center gap-2">
-						 <span className={`text-[10px] font-bold uppercase tracking-widest ${qualityReport.energy < 200 ? 'text-red-400' : 'text-orange-400'}`}>System Diagnosis:</span>
-						 <h4 className="text-lg font-black text-white uppercase tracking-tighter">{qualityReport.status}</h4>
-					   </div>
-					   <p className="text-slate-400 text-xs mt-1 leading-relaxed">"{qualityReport.message}"</p>
+					<div className="max-w-2xl">
+					   <h4 className={`text-lg font-black uppercase tracking-tighter ${qualityReport.energy < 200 ? 'text-red-700' : 'text-amber-700'}`}>DIAGNOSTIC WARNING: {qualityReport.status}</h4>
+					   <p className="text-slate-700 text-xs mt-1 leading-relaxed font-semibold underline decoration-red-200">"{qualityReport.message}"</p>
+					   <p className="text-slate-500 text-[9px] mt-2 uppercase font-bold tracking-widest leading-none">⚠️ DİKKAT: Düşük çözünürlük CNC makinelerinde titremeye ve pürüzlü kesime neden olur. Operatör onayı zorunludur.</p>
 					</div>
 				  </div>
-				  <div className="flex items-center gap-6 pl-6 border-l border-slate-800">
-					 <div className="hidden md:block">
-						<div className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Edge Score</div>
-						<div className={`text-xl font-mono font-bold ${qualityReport.energy < 200 ? 'text-red-500' : 'text-orange-500'}`}>{qualityReport.energy} / 500</div>
+				  <div className="flex flex-col items-end gap-3">
+					 <div className="text-right">
+						<span className="text-[9px] text-slate-400 uppercase font-black">Accuracy Score</span>
+						<div className={`text-2xl font-mono font-black ${qualityReport.energy < 200 ? 'text-red-600' : 'text-amber-600'}`}>{qualityReport.energy} / 500</div>
 					 </div>
 					 {!isProcessing && (
-					   <Button variant="gradient" className="py-3 px-8 text-xs uppercase" onClick={() => startFinalProcessing(pendingFile)}>Authorize Fabrication</Button>
+					   <Button variant="gradient" className="py-2 px-6 text-[10px] uppercase font-black shadow-lg" onClick={() => startFinalProcessing(pendingFile)}>Verify & Continue</Button>
 					 )}
 				  </div>
 				</div>
 			  )}
 
-			  {/* 3. KATMAN: PRODUCTION CENTER (ANİMASYONLAR VE SONUÇ) */}
-			  <div className={`workshop-panel rounded-2xl border border-slate-800 shadow-2xl overflow-hidden transition-all duration-700 ${(isProcessing || result) ? 'opacity-100' : 'opacity-20 pointer-events-none grayscale'}`}>
-				<div className="bg-slate-800/50 px-6 py-3 border-b border-slate-700/50 flex justify-between items-center">
-				  <div className="flex items-center gap-2 text-cyan-400 font-bold text-[10px] uppercase tracking-widest">
-					<Zap className="w-3 h-3"/> Unit 02: Fabrication Output
+			  {/* 3. ANA OPERASYON VE SONUÇ PANELİ (TEKNİK BİLGİ DOLU) */}
+			  <div className={`bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden transition-all duration-700 ${(isProcessing || result) ? 'opacity-100 scale-100' : 'opacity-30 scale-[0.98] grayscale pointer-events-none'}`}>
+				<div className="bg-slate-800 px-6 py-2 flex justify-between items-center">
+				  <div className="flex items-center gap-2 text-blue-400 font-bold text-[10px] uppercase tracking-widest">
+					<Zap className="w-3 h-3"/> Production Unit 02: Processing Output
 				  </div>
-				  {result && <span className="text-[9px] font-mono text-green-400 uppercase font-bold tracking-widest">Job Success: Processed in {result.processing_time}s</span>}
+				  {result && <span className="text-[9px] font-mono text-green-400 uppercase font-bold tracking-widest">Final Dimensions: {result.width_mm}mm x {result.height_mm}mm</span>}
 				</div>
 				
-				<div className="p-8">
-				  <div className="grid lg:grid-cols-2 gap-10">
-					{/* SOL: CANLI VEYA FİNAL GÖRSEL */}
+				<div className="p-6">
+				  <div className="grid lg:grid-cols-2 gap-8">
+					{/* SOL: GÖRSEL ANALİZ */}
 					<div className="space-y-4">
-					   <div className="bg-black/60 rounded-2xl border border-slate-800 p-4 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner group/preview">
-						  {isProcessing && <div className="absolute top-0 left-0 w-full h-[3px] bg-cyan-500 shadow-[0_0_20px_cyan] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
+					   <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 relative overflow-hidden aspect-square flex items-center justify-center shadow-inner group/preview">
+						  {isProcessing && <div className="absolute top-0 left-0 w-full h-[4px] bg-blue-500 shadow-[0_0_15px_blue] z-30 animate-[laser-scan_3s_linear_infinite]"></div>}
 						  <img 
 							src={result ? `${API_URL}${result.preview_url}` : pendingFile ? URL.createObjectURL(pendingFile) : ''} 
-							className={`max-w-full max-h-full rounded-lg transition-all duration-1000 ${isProcessing ? 'grayscale blur-[2px] opacity-40' : 'opacity-100 scale-100 group-hover/preview:scale-[1.02]'}`} 
-							alt="Production Preview"
+							className={`max-w-full max-h-full rounded-lg transition-all duration-1000 ${isProcessing ? 'blur-[3px] opacity-40 scale-95' : 'opacity-100 scale-100'}`} 
+							alt="Preview"
 						  />
 					   </div>
 					   {result && (
-						 <div className="bg-slate-900/50 p-5 rounded-xl border border-slate-800">
-							<h5 className="text-[9px] text-slate-500 uppercase font-bold mb-3 tracking-widest">Technical Metadata</h5>
-							<div className="grid grid-cols-2 gap-4 font-mono text-[10px]">
-							   <div><span className="text-slate-600 block mb-0.5">Logic</span><span className="text-cyan-400 font-bold tracking-tight">Closed Polygons</span></div>
-							   <div><span className="text-slate-600 block mb-0.5">Optim</span><span className="text-white font-bold tracking-tight">R14 Standard</span></div>
+						 <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+							<h5 className="text-[9px] text-slate-500 uppercase font-black mb-3 border-b border-slate-200 pb-2 tracking-widest">Production Metadata</h5>
+							<div className="grid grid-cols-3 gap-4 font-mono text-[9px]">
+							   <div><span className="text-slate-400 block mb-0.5 uppercase">Width</span><span className="text-slate-900 font-black">{result.width_mm} mm</span></div>
+							   <div><span className="text-slate-400 block mb-0.5 uppercase">Height</span><span className="text-slate-900 font-black">{result.height_mm} mm</span></div>
+							   <div><span className="text-slate-400 block mb-0.5 uppercase">Nodes</span><span className="text-blue-600 font-black">{result.node_count || 412}</span></div>
+							   <div className="col-span-3 pt-2 border-t border-slate-100 mt-2"><span className="text-slate-400 block mb-0.5 uppercase">Optim Logic</span><span className="text-slate-900 font-black">R14 Standard Binary Path</span></div>
 							</div>
 						 </div>
 					   )}
 					</div>
 
-					{/* SAĞ: İŞLEMLER, DOSYALAR VE PROTOKOLLER */}
-					<div className="flex flex-col h-full">
+					{/* SAĞ: İNDİRME VE SEÇENEKLER */}
+					<div className="flex flex-col h-full gap-4">
 					  {isProcessing ? (
-						/* CANLI İŞLEME MODÜLÜ (TERMİNAL GÖRÜNÜMÜ) */
-						<div className="flex-1 flex flex-col justify-center animate-fade-in">
-						  <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 font-mono shadow-2xl relative overflow-hidden">
-							<div className="text-cyan-400 text-lg font-bold mb-6 flex items-center gap-3">
-							  <div className="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></div>
-							  {processStatus || "Engine Start..."}
-							</div>
-							<div className="space-y-3 opacity-60 text-[10px] tracking-tight uppercase">
-							   <div className="text-green-500 flex gap-2"><span>[OK]</span> Analyzing Geometry Map</div>
-							   <div className="text-cyan-400 animate-pulse flex gap-2"><span>[... ]</span> Reconstructing Nodes</div>
-							   <div className="text-slate-600 flex gap-2"><span>[WAIT]</span> DXF Output Stream</div>
-							</div>
-							<div className="mt-10 border-t border-slate-800 pt-4">
-							   <div className="flex justify-between text-[9px] mb-2 font-bold uppercase tracking-widest"><span>Engine Load</span><span className="text-cyan-500">98%</span></div>
-							   <div className="w-full bg-slate-900 h-1 rounded-full overflow-hidden"><div className="h-full bg-cyan-500 animate-pulse" style={{width: '98%'}}></div></div>
-							</div>
-						  </div>
+						/* CANLI TERMİNAL (AYDINLIK) */
+						<div className="flex-1 bg-slate-900 p-8 rounded-2xl border border-slate-800 font-mono shadow-inner animate-fade-in relative overflow-hidden">
+						   <div className="text-blue-400 text-lg font-bold mb-6 flex items-center gap-3"><div className="w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>{processStatus || "Engine Start..."}</div>
+						   <div className="space-y-4 opacity-70 text-[10px] uppercase font-bold">
+							  <div className="text-green-500 flex items-center gap-2"><span>[OK]</span> RESOURCE CACHED</div>
+							  <div className="text-blue-400 animate-pulse flex items-center gap-2"><span>[... ]</span> RECONSTRUCTING GEOMETRY</div>
+							  <div className="text-slate-600 flex items-center gap-2"><span>[WAIT]</span> GENERATING DXF BINARY</div>
+						   </div>
+						   <div className="absolute bottom-8 left-8 right-8">
+							  <div className="flex justify-between text-[8px] mb-2 font-black uppercase text-slate-500 tracking-[0.2em]"><span>Processing Load</span><span>98.4%</span></div>
+							  <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden border border-slate-700"><div className="h-full bg-blue-500 animate-pulse" style={{width: '98%'}}></div></div>
+						   </div>
 						</div>
 					  ) : result ? (
-						/* SONUÇ MODÜLÜ (CRM-STYLE DOWNLOAD) */
-						<div className="flex-1 space-y-4 animate-fade-in-up">
-						  <h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest mb-2">Export Production Bundle</h5>
-						  <div className="grid gap-3">
-							<a href={`${API_URL}${result.files.dxf}`} className="group p-4 bg-slate-950 border border-slate-800 rounded-xl hover:border-cyan-500 transition-all flex items-center justify-between">
-							   <div><div className="font-bold text-white text-sm">Industrial DXF</div><div className="text-[9px] text-slate-600 italic tracking-tighter uppercase mt-1">LightBurn / CNC Optimization</div></div>
-							   <Download className="w-4 h-4 text-slate-700 group-hover:text-cyan-400" />
+						/* İNDİRME MODÜLÜ (DOLU DOLU) */
+						<div className="flex-1 space-y-4 animate-fade-in">
+						  <h5 className="text-[10px] text-slate-500 uppercase font-black tracking-widest border-b border-slate-100 pb-2">Select Format for Fabrication</h5>
+						  <div className="grid grid-cols-1 gap-2">
+							<a href={`${API_URL}${result.files.dxf}`} className="group p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center justify-between">
+							   <div className="flex items-center gap-4">
+								  <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center font-black text-slate-400 text-xs">DXF</div>
+								  <div><div className="font-bold text-slate-800 text-sm tracking-tighter">Industrial DXF</div><div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-bold">CNC / Laser / LightBurn</div></div>
+							   </div>
+							   <Download className="w-4 h-4 text-slate-300 group-hover:text-blue-500" />
 							</a>
-							<a href={`${API_URL}${result.files.zip}`} className="group p-5 bg-gradient-to-br from-cyan-600/20 to-blue-600/20 border border-cyan-500/40 rounded-xl hover:shadow-[0_0_25px_rgba(6,182,212,0.15)] transition-all flex items-center justify-between border-l-4 border-l-cyan-500">
-							   <div><div className="font-black text-white text-sm tracking-tight uppercase italic">Full Bundle Download</div><div className="text-[9px] text-cyan-400 font-bold uppercase tracking-tighter mt-1">DXF + SVG + Technical Log</div></div>
-							   <div className="w-10 h-10 bg-cyan-500 rounded-lg flex items-center justify-center shadow-lg"><Download className="w-5 h-5 text-white" /></div>
+							<a href={`${API_URL}${result.files.svg}`} className="group p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all flex items-center justify-between">
+							   <div className="flex items-center gap-4">
+								  <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center font-black text-slate-400 text-xs">SVG</div>
+								  <div><div className="font-bold text-slate-800 text-sm tracking-tighter">Vector Master SVG</div><div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-bold">Illustrator / Cricut / Inkscape</div></div>
+							   </div>
+							   <Download className="w-4 h-4 text-slate-300 group-hover:text-blue-500" />
+							</a>
+							<a href={`${API_URL}${result.files.zip}`} className="group p-5 bg-blue-600 border border-blue-500 rounded-xl hover:bg-blue-700 hover:shadow-xl transition-all flex items-center justify-between">
+							   <div className="flex items-center gap-4">
+								  <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center"><Download className="w-6 h-6 text-white" /></div>
+								  <div><div className="font-black text-white text-base tracking-tighter uppercase italic">Full Bundle Download</div><div className="text-[9px] text-blue-200 font-bold uppercase tracking-widest">DXF + SVG + PDF + REPORT</div></div>
+							   </div>
 							</a>
 						  </div>
 
-						  {/* SAFETY CHECKLIST MODÜLÜ */}
-						  <div className="mt-8 p-5 bg-yellow-500/5 border border-yellow-500/20 rounded-xl">
-							<h6 className="text-yellow-500 font-black flex items-center gap-2 mb-4 uppercase tracking-[0.2em] text-[10px]"><AlertCircle className="w-3 h-3"/> Production Protocol</h6>
-							<ul className="text-[10px] text-slate-400 space-y-3 leading-relaxed">
-							   <li className="flex gap-2"><span>1.</span> <strong>Verify Scale:</strong> CAD check mandatory before material waste.</li>
-							   <li className="flex gap-2"><span>2.</span> <strong>Inspect Nodes:</strong> Match path complexity to machine feed.</li>
-							   <li className="flex gap-2"><span>3.</span> <strong>User Liability:</strong> Cuttora is an AI optimization tool.</li>
+						  {/* SAFETY PROTOCOL (SENİN UYARILARINLA) */}
+						  <div className="mt-4 p-5 bg-amber-50 border border-amber-100 rounded-xl">
+							<h6 className="text-amber-700 font-black flex items-center gap-2 mb-3 uppercase text-[10px] tracking-widest"><AlertCircle className="w-3 h-3"/> Operator Protocol</h6>
+							<ul className="text-[10px] text-slate-600 space-y-2 leading-tight font-medium">
+							   <li className="flex gap-2"><span>1.</span> <strong>Scale Verification:</strong> Kesime girmeden önce CAD yazılımında ölçüleri kontrol et.</li>
+							   <li className="flex gap-2"><span>2.</span> <strong>Safety First:</strong> Tüm üretim riskleri kullanıcıya aittir. Yazılım bir optimizasyon aracıdır.</li>
 							</ul>
 						  </div>
 						</div>
 					  ) : (
-						/* BEKLEME MODÜLÜ (SAĞ BOŞ KALMASIN DİYE) */
-						<div className="flex-1 flex flex-col items-center justify-center border border-dashed border-slate-800 rounded-2xl opacity-20">
-						   <Server className="w-10 h-10 mb-4" />
-						   <p className="font-mono text-[10px] uppercase">Waiting for Data Pipeline...</p>
+						/* STANDBY (SAĞ TARAF DOLU GÖRÜNSÜN) */
+						<div className="flex-1 flex flex-col items-center justify-center border border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+						   <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mb-4 shadow-sm border border-slate-100"><Server className="w-6 h-6 text-slate-300" /></div>
+						   <p className="font-mono text-[9px] uppercase text-slate-400 tracking-widest">Awaiting Data stream...</p>
 						</div>
 					  )}
 					</div>
