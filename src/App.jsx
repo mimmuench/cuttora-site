@@ -370,17 +370,61 @@ const WaitlistModal = ({ isOpen, onClose }) => {
   );
 };
 
-// --- PRICING CARDS ---
+// --- PRICING CARDS (REVISED) ---
 const PricingCard = ({ plan, price, originalPrice, description, features, recommended = false, onJoin }) => (
   <TiltCard className="h-full">
-    <div className={`relative p-10 rounded-3xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900/90 border-cyan-500 shadow-[0_0_40px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/80 border-slate-700'}`}>
-      <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-[0_0_15px_rgba(34,197,94,0.6)] animate-pulse border border-green-400">50% OFF LAUNCH OFFER</div>
-      {recommended && <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs px-3 py-1 rounded-bl-xl rounded-tr-xl font-bold">POPULAR</div>}
-      <h3 className="text-3xl font-bold text-slate-200 mb-2">{plan}</h3>
-      <div className="flex items-baseline gap-3 mb-4"><div className="text-5xl font-bold text-white">{price}</div><div className="text-2xl text-slate-500 line-through decoration-red-500 decoration-2">{originalPrice}</div></div>
-      <p className="text-slate-400 text-sm mb-8 uppercase tracking-wider font-semibold">{description}</p>
-      <ul className="space-y-5 mb-10">{features.map((feat, idx) => (<li key={idx} className="flex items-start gap-3 text-slate-300 text-lg"><Check className="w-6 h-6 text-cyan-400 shrink-0" />{feat}</li>))}</ul>
-      <Button variant={recommended ? 'gradient' : 'outline'} className="w-full justify-center py-4 text-lg mt-auto" onClick={onJoin}>Buy Now</Button>
+    <div className={`relative p-8 rounded-3xl border transition-all duration-300 backdrop-blur-md h-full flex flex-col ${recommended ? 'bg-slate-900 border-cyan-500 shadow-[0_0_50px_rgba(6,182,212,0.15)] transform md:-translate-y-4' : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'}`}>
+      
+      {/* POPULAR BADGE (Sadece Pro kartta sağ üstte) */}
+      {recommended && (
+        <div className="absolute top-0 right-0">
+          <div className="bg-gradient-to-l from-cyan-600 to-blue-600 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl shadow-lg">
+            MOST POPULAR
+          </div>
+        </div>
+      )}
+
+      {/* HEADER KISMI */}
+      <div className="mb-6">
+        {/* İndirim Etiketi - Artık başlığın hemen üzerinde, kibar bir "Chip" şeklinde */}
+        <div className="inline-flex items-center gap-2 mb-3 px-2.5 py-1 rounded-md bg-green-500/10 border border-green-500/20">
+             <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+             <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">Launch Offer: 50% Off</span>
+        </div>
+
+        <h3 className={`text-3xl font-bold mb-2 ${recommended ? 'text-white' : 'text-slate-300'}`}>{plan}</h3>
+        <p className="text-slate-500 text-sm font-medium uppercase tracking-wide">{description}</p>
+      </div>
+
+      {/* FİYAT KISMI - Kırmızı çizgi gitti, gri ve silik oldu */}
+      <div className="flex items-end gap-3 mb-8 pb-8 border-b border-slate-800/50">
+        <div className="text-5xl font-black text-white tracking-tight">{price}</div>
+        <div className="flex flex-col justify-end mb-1">
+            <span className="text-sm text-slate-500 line-through font-mono decoration-slate-600">{originalPrice}</span>
+            <span className="text-[10px] text-slate-600 font-bold uppercase">USD / One-time</span>
+        </div>
+      </div>
+
+      {/* ÖZELLİKLER LİSTESİ */}
+      <ul className="space-y-4 mb-8 flex-grow">
+        {features.map((feat, idx) => (
+          <li key={idx} className="flex items-start gap-3 text-slate-300 text-sm font-medium leading-relaxed">
+            <div className={`mt-0.5 w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${recommended ? 'bg-cyan-500/20 text-cyan-400' : 'bg-slate-800 text-slate-500'}`}>
+                <Check className="w-3 h-3" />
+            </div>
+            {feat}
+          </li>
+        ))}
+      </ul>
+
+      {/* BUTON - En alta sabitlendi */}
+      <Button 
+        variant={recommended ? 'gradient' : 'outline'} 
+        className={`w-full justify-center py-4 text-sm font-bold uppercase tracking-widest mt-auto ${!recommended && 'border-slate-700 text-slate-400 hover:text-white hover:border-white'}`} 
+        onClick={onJoin}
+      >
+        Choose {plan}
+      </Button>
     </div>
   </TiltCard>
 );
@@ -1074,17 +1118,64 @@ export default function App() {
 				  </div>
 				</Reveal>
 				
-				{/* PRICING CARDS LISTER (MEVCUT YAPI) */}
-				<div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch">
+				{/* PRICING CARDS LISTER (GÜNCELLENMİŞ VE ZENGİNLEŞTİRİLMİŞ İÇERİK) */}
+				<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+				  
+				  {/* 1. STARTER PLAN - HOBİCİLER İÇİN */}
 				  <Reveal delay={100} className="h-full">
-					<PricingCard plan="Starter" price="$10" originalPrice="$20" description="5 Credits" features={["No Expiration Date", "Standard & High-Res", "Basic Optimization", "Community Support"]} onJoin={() => openPaymentModal('starter', 10)} />
+				    <PricingCard 
+				      plan="Starter" 
+				      price="$10" 
+				      originalPrice="$20" 
+				      description="Perfect for testing & hobby projects." 
+				      features={[
+				        "5 Credits (No Expiration)",
+				        "Clean SVG & DXF Export",
+				        "Smart Path Closing",
+				        "Standard Node Optimization",
+				        "Personal Use License"
+				      ]} 
+				      onJoin={() => openPaymentModal('starter', 10)} 
+				    />
 				  </Reveal>
+
+				  {/* 2. PRO PLAN - ETSY/SATICILAR İÇİN (En Önemlisi) */}
 				  <Reveal delay={200} className="h-full">
-					<PricingCard plan="Pro" price="$40" originalPrice="$80" description="50 Credits" recommended={true} features={["Save 20% Per File", "Advanced DXF & SVG", "Priority Processing", "Node Reduction", "Email Support"]} onJoin={() => openPaymentModal('pro', 40)} />
+				    <PricingCard 
+				      plan="Pro" 
+				      price="$40" 
+				      originalPrice="$80" 
+				      description="For Etsy sellers & small workshops." 
+				      recommended={true} 
+				      features={[
+				        "50 Credits ($0.80 / file)",
+				        "✨ Batch Processing (NEW)",
+				        "Commercial Use License",
+				        "Advanced Node Reduction",
+				        "Thin Line Safety Check"
+				      ]} 
+				      onJoin={() => openPaymentModal('pro', 40)} 
+				    />
 				  </Reveal>
+
+				  {/* 3. AGENCY PLAN - ATÖLYELER İÇİN */}
 				  <Reveal delay={300} className="h-full">
-					<PricingCard plan="Agency" price="$90" originalPrice="$180" description="150 Credits" features={["Best Value: $0.60/file", "Commercial License", "Bulk Processing Tools", "White-label Options"]} onJoin={() => openPaymentModal('agency', 90)} />
+				    <PricingCard 
+				      plan="Agency" 
+				      price="$90" 
+				      originalPrice="$180" 
+				      description="High volume production ready." 
+				      features={[
+				        "150 Credits ($0.60 / file)",
+				        "Unlimited Batch Size",
+				        "Lifetime Commercial Rights",
+				        "Priority Server Queue",
+				        "Direct Engineer Support"
+				      ]} 
+				      onJoin={() => openPaymentModal('agency', 90)} 
+				    />
 				  </Reveal>
+
 				</div>
 
 				{/* ✅ GÜVEN BANDI (DOĞRU HİYERARŞİ) */}
