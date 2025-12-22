@@ -30,14 +30,45 @@ const SHOWCASE_DATA = [
 
 const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile }) => {
     if (!isOpen || !report) return null;
+
+    // --- RENK VE DURUM MANTIĞI ---
+    // Eğer durum "Excellent" ise YEŞİL tema, değilse SARI/TURUNCU tema
+    const isSuccess = report.status === "Excellent";
+    
+    // Renk sınıflarını duruma göre seçiyoruz
+    const theme = isSuccess ? {
+        border: "border-green-500/40",
+        iconBg: "bg-green-500/10",
+        iconBorder: "border-green-500/30",
+        iconColor: "text-green-500",
+        barColor: "bg-green-500",
+        shadow: "shadow-[0_0_50px_rgba(34,197,94,0.2)]"
+    } : {
+        border: "border-yellow-500/40",
+        iconBg: "bg-yellow-500/10",
+        iconBorder: "border-yellow-500/30",
+        iconColor: "text-yellow-500",
+        barColor: "bg-yellow-500",
+        shadow: "shadow-[0_0_50px_rgba(234,179,8,0.2)]"
+    };
+
     return (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" onClick={onClose} />
-        <div className="relative bg-slate-900 border border-yellow-500/40 rounded-3xl p-8 max-w-md w-full shadow-[0_0_50px_rgba(234,179,8,0.2)] animate-float">
+        
+        {/* DİNAMİK KENAR VE GÖLGE RENGİ */}
+        <div className={`relative bg-slate-900 border ${theme.border} rounded-3xl p-8 max-w-md w-full ${theme.shadow} animate-float`}>
           <div className="text-center mb-6">
-            <div className="w-20 h-20 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-yellow-500/30">
-              <AlertCircle className="w-10 h-10 text-yellow-500" />
+            
+            {/* DİNAMİK İKON RENGİ */}
+            <div className={`w-20 h-20 ${theme.iconBg} rounded-full flex items-center justify-center mx-auto mb-4 border ${theme.iconBorder}`}>
+              {isSuccess ? (
+                  <Check className={`w-10 h-10 ${theme.iconColor}`} />
+              ) : (
+                  <AlertCircle className={`w-10 h-10 ${theme.iconColor}`} />
+              )}
             </div>
+            
             <h3 className="text-2xl font-bold text-white mb-2">{report.status}</h3>
             <p className="text-slate-300 text-sm leading-relaxed">{report.message}</p>
           </div>
@@ -45,10 +76,12 @@ const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pe
           <div className="bg-slate-950/80 p-5 rounded-xl border border-slate-800 mb-8">
             <div className="flex justify-between items-center mb-1">
                 <span className="text-xs text-slate-500 font-mono uppercase">Edge Sharpness Score</span>
-                <span className={`font-mono font-bold ${report.energy < 150 ? 'text-red-500' : 'text-yellow-500'}`}>{report.energy}</span>
+                {/* SKOR RENGİ */}
+                <span className={`font-mono font-bold ${theme.iconColor}`}>{report.energy}</span>
             </div>
             <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-yellow-500 h-full transition-all duration-1000" style={{ width: `${Math.min(report.energy / 5, 100)}%` }} />
+                {/* PROGRESS BAR RENGİ */}
+                <div className={`${theme.barColor} h-full transition-all duration-1000`} style={{ width: `${Math.min(report.energy / 5, 100)}%` }} />
             </div>
           </div>
 
@@ -60,15 +93,13 @@ const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pe
                 startFinalProcessing(pendingFile); 
             }}
           >
-            I Understand & Accept (-1 Credit)
+            {isSuccess ? "Start Production (-1 Credit)" : "I Understand & Accept (-1 Credit)"}
           </Button>
           <p className="text-[10px] text-slate-500 text-center mt-4 uppercase tracking-widest">Quality Assurance Shield Active</p>
         </div>
       </div>
     );
 };
-
-
 
 const API_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? "http://127.0.0.1:8000"
