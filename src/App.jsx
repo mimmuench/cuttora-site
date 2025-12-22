@@ -28,6 +28,8 @@ const SHOWCASE_DATA = [
   }
 ];
 
+const [logs, setLogs] = useState([]);
+
 const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile }) => {
     if (!isOpen || !report) return null;
     return (
@@ -646,71 +648,166 @@ export default function App() {
       </nav>
 
       {apiKey ? (
-        // --- WORKSPACE (COCKPIT MODE) ---
-        <section className="pt-12 pb-24 px-6 min-h-screen relative">
-            <div className="absolute top-4 left-6 md:left-20 z-50"><button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500"><ArrowLeft className="w-4 h-4"/> Back to Home / Logout</button></div>
-             <div className="max-w-6xl mx-auto grid lg:grid-cols-3 gap-8 mt-12">
-                 <div className="lg:col-span-2">
-                    <Reveal>
-                        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-8 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-                            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                            <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3"><Zap className="text-cyan-400"/> Cuttora Workshop</h2>
-                            {!result ? (
-                                <div className="min-h-[400px] border-2 border-dashed border-slate-700 rounded-xl hover:border-cyan-500 hover:bg-slate-800/50 transition-all flex flex-col items-center justify-center relative cursor-pointer group-hover:shadow-[0_0_30px_rgba(6,182,212,0.15)]">
-                                    <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-10" />
-                                    {isProcessing ? (
-                                        <div className="text-center">
-                                            <div className="w-20 h-20 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                                            <div className="font-mono text-cyan-400 text-lg"><TypingText text="Processing geometry..." speed={50} /></div>
-                                            <div className="text-slate-500 text-sm mt-2">Running AI Vectorization Engine...</div>
-                                        </div>
-                                    ) : (
-                                        <div className="text-center p-10">
-                                            <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg"><Upload className="w-10 h-10 text-cyan-400" /></div>
-                                            <h3 className="text-2xl font-bold text-white mb-2">Upload Image</h3>
-                                            <p className="text-slate-400 mb-6">Drag & drop or click to browse</p>
-                                            <div className="flex gap-2 justify-center"><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">JPG</span><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">PNG</span><span className="px-3 py-1 bg-slate-800 rounded text-xs text-slate-400 font-mono">WEBP</span></div>
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-6 animate-fade-in">
-                                    <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2"><Check className="text-green-400"/> Conversion Complete!</h3>
-                                    <div className="grid md:grid-cols-2 gap-6">
-                                        <div className="bg-slate-950 p-2 rounded-lg border border-slate-700"><img src={`${API_URL}${result.preview_url}`} alt="Preview" className="rounded w-full h-auto" /></div>
-                                        <div className="flex flex-col justify-center gap-4">
-                                            <div className="bg-slate-800/50 p-4 rounded-lg"><p className="text-sm text-slate-300 font-mono mb-1">Status: <span className="text-green-400">Optimized</span></p><p className="text-sm text-slate-300 font-mono">Format: <span className="text-cyan-400">DXF + SVG</span></p></div>
-                                            <a href={`${API_URL}${result.files.zip}`} className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-lg shadow-cyan-900/20"><Download className="w-5 h-5"/> Download ZIP Bundle</a>
-                                            <a href={`${API_URL}${result.files.svg}`} target="_blank" className="w-full border border-slate-600 hover:border-white text-slate-300 hover:text-white font-bold py-4 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors">View SVG</a>
-                                            <button onClick={() => setResult(null)} className="text-sm text-slate-500 hover:text-white mt-2 underline">Convert Another File</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </Reveal>
-                 </div>
-                 <div className="space-y-6">
-                    <TiltCard>
-                        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-6">
-                            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Server className="text-cyan-400 w-5 h-5"/> System Status</h3>
-                            <div className="flex items-center justify-between bg-slate-950 p-4 rounded-lg border border-slate-800">
-                                <span className="text-slate-400 text-sm">Server</span>
-                                <span className="flex items-center gap-2 text-green-400 text-sm font-bold"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div> Online</span>
-                            </div>
-                            <p className="text-xs text-slate-500 mt-3 leading-relaxed">System is operational. Uploads are processed instantly.</p>
-                        </div>
-                    </TiltCard>
-                    <TiltCard>
-                        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-6">
-                            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><AlertCircle className="text-blue-400 w-5 h-5"/> Quick Tips</h3>
-                            <ul className="space-y-3 text-sm text-slate-300"><li className="flex gap-2"><span className="text-cyan-400">•</span> High contrast images work best.</li><li className="flex gap-2"><span className="text-cyan-400">•</span> Silhouettes give cleanest cuts.</li><li className="flex gap-2"><span className="text-cyan-400">•</span> Avoid photos with shadows.</li></ul>
-                        </div>
-                    </TiltCard>
-                 </div>
-             </div>
-        </section>
-      ) : (
+	  // --- WORKSPACE (COCKPIT V2 - PRODUCTION MODE) ---
+	  <section className="pt-12 pb-24 px-6 min-h-screen relative z-10">
+		<div className="absolute top-4 left-6 md:left-20 z-50">
+		  <button onClick={logout} className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors bg-slate-900/50 px-4 py-2 rounded-full border border-slate-700 hover:border-cyan-500 shadow-xl backdrop-blur-md">
+			<ArrowLeft className="w-4 h-4"/> Back to Home / Logout
+		  </button>
+		</div>
+
+		<div className="max-w-7xl mx-auto mt-12">
+		  {!result ? (
+			// --- DURUM 1: YÜKLEME VE İŞLEME (SİBER COCKPIT) ---
+			<div className="grid lg:grid-cols-3 gap-8">
+			  <div className="lg:col-span-2">
+				<Reveal>
+				  <div className="bg-slate-900/80 border border-slate-700 rounded-[2.5rem] p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden group min-h-[520px] flex flex-col">
+					<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1),transparent)] pointer-events-none"></div>
+					<h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3 relative z-10">
+					  <Zap className="text-cyan-400 animate-pulse"/> Cuttora Workshop
+					</h2>
+					
+					<div className="flex-1 border-2 border-dashed border-slate-800 rounded-[2rem] hover:border-cyan-500/50 transition-all relative flex flex-col items-center justify-center overflow-hidden group/upload bg-black/20">
+					  <input type="file" onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" disabled={isProcessing} />
+					  
+					  {isProcessing ? (
+						<div className="grid md:grid-cols-2 gap-8 w-full h-full p-8 animate-fade-in relative z-10">
+						  {/* SOL: LAZER TARAMA */}
+						  <div className="bg-black/40 rounded-3xl border border-slate-800 relative overflow-hidden flex items-center justify-center group/scan">
+							<div className="absolute top-0 left-0 w-full h-[3px] bg-cyan-500 shadow-[0_0_20px_rgba(6,182,212,1)] z-30 animate-[laser-scan_3s_linear_infinite]"></div>
+							{pendingFile && (
+							  <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-[300px] object-contain opacity-40 grayscale blur-[1px] contrast-125" alt="Scanning..." />
+							)}
+							<div className="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded-full border border-cyan-500/30 backdrop-blur-md">
+							  <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest animate-pulse">AI Scanning Engine</span>
+							</div>
+						  </div>
+						  {/* SAĞ: TERMİNAL LOGLARI */}
+						  <div className="bg-slate-950/90 rounded-3xl border border-slate-800 p-6 font-mono flex flex-col shadow-inner">
+							<div className="text-cyan-400 text-lg font-bold mb-6 flex items-center gap-2">
+							  <div className="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></div>
+							  {processStatus || "Kernel Booting..."}
+							</div>
+							<div className="space-y-3 overflow-hidden opacity-80">
+							  <div className="text-green-500/80 text-[10px] flex gap-2 uppercase font-bold"><span className="text-green-900">[DONE]</span> Contrast Map Analysis</div>
+							  <div className="text-cyan-400 text-[10px] flex gap-2 uppercase font-bold animate-pulse"><span className="text-cyan-900">[RUN]</span> Reconstructing Bezier Curves</div>
+							  <div className="text-slate-600 text-[10px] flex gap-2 uppercase"><span className="text-slate-800">[WAIT]</span> Node Reduction Algorithm</div>
+							</div>
+							<div className="mt-auto pt-4 border-t border-slate-800">
+							   <div className="flex justify-between items-center mb-1"><span className="text-[9px] text-slate-500 uppercase">Load</span><span className="text-[9px] text-cyan-500">92%</span></div>
+							   <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden"><div className="bg-cyan-500 h-full w-[92%] animate-pulse"></div></div>
+							</div>
+						  </div>
+						</div>
+					  ) : (
+						<div className="text-center p-12 transition-transform duration-500 group-hover/upload:scale-105">
+						  <div className="w-24 h-24 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700 group-hover/upload:border-cyan-500 group-hover/upload:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all">
+							<Upload className="w-12 h-12 text-cyan-400" />
+						  </div>
+						  <h3 className="text-2xl font-bold text-white mb-2">Drop Production File</h3>
+						  <p className="text-slate-400 max-w-xs mx-auto text-sm leading-relaxed">High-contrast images yield the cleanest CNC paths.</p>
+						</div>
+					  )}
+					</div>
+				  </div>
+				</Reveal>
+			  </div>
+			  
+			  <div className="space-y-6">
+				<TiltCard><div className="bg-slate-900/80 border border-slate-700 rounded-3xl p-6 backdrop-blur-xl">
+				  <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2"><Server className="text-cyan-400 w-5 h-5"/> System Heartbeat</h3>
+				  <div className="bg-black/40 p-4 rounded-2xl border border-slate-800 flex justify-between items-center">
+					<span className="text-slate-400 text-sm font-mono">Kernel Status</span>
+					<span className="flex items-center gap-2 text-green-400 text-sm font-bold animate-pulse"><div className="w-2 h-2 bg-green-500 rounded-full"></div> Synchronized</span>
+				  </div>
+				</div></TiltCard>
+			  </div>
+			</div>
+		  ) : (
+			// --- DURUM 2: İŞLEM SONUCU (ÜRETİM KONTROL PANELİ) ---
+			<div className="grid lg:grid-cols-3 gap-8 animate-fade-in-up">
+			  <div className="lg:col-span-2">
+				<div className="bg-slate-900/80 border border-slate-700 rounded-[2.5rem] p-10 backdrop-blur-xl relative overflow-hidden">
+				  <div className="flex justify-between items-start mb-10">
+					<div>
+					  <h3 className="text-3xl font-bold text-white flex items-center gap-3"><Check className="text-green-400 w-8 h-8"/> Production Ready</h3>
+					  <p className="text-slate-400 mt-2 font-mono text-sm uppercase tracking-widest">Job ID: {result.preview_url.split('/').pop().split('.')[0]}</p>
+					</div>
+					<button onClick={() => setResult(null)} className="px-6 py-2 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:border-white transition-all text-sm font-bold">Process New File</button>
+				  </div>
+
+				  <div className="grid md:grid-cols-2 gap-10 mb-10">
+					<div className="space-y-6">
+					   <div className="bg-black/40 p-2 rounded-2xl border border-slate-800 shadow-2xl group relative overflow-hidden">
+						  <img src={`${API_URL}${result.preview_url}`} className="w-full h-auto rounded-xl grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" alt="Preview" />
+						  <div className="absolute inset-0 border-[20px] border-black/20 pointer-events-none"></div>
+					   </div>
+					   {/* TECHNICAL INFO KUTUSU */}
+					   <div className="bg-slate-950 p-6 rounded-2xl border border-slate-800">
+						  <h4 className="text-[10px] text-slate-500 uppercase font-bold mb-4 tracking-widest">Technical Metadata</h4>
+						  <div className="grid grid-cols-2 gap-4">
+							<div><div className="text-[9px] text-slate-600 uppercase">Path Logic</div><div className="text-xs text-white font-mono">Closed Polygons</div></div>
+							<div><div className="text-[9px] text-slate-600 uppercase">Optimization</div><div className="text-xs text-cyan-400 font-mono">R14 Standard</div></div>
+							<div><div className="text-[9px] text-slate-600 uppercase">Node Density</div><div className="text-xs text-white font-mono">Balanced</div></div>
+							<div><div className="text-[9px] text-slate-600 uppercase">Units</div><div className="text-xs text-white font-mono">Automatic (1:1)</div></div>
+						  </div>
+					   </div>
+					</div>
+
+					<div className="flex flex-col gap-4">
+					   <h4 className="text-sm font-bold text-slate-200 uppercase tracking-widest mb-2">Select Export Format</h4>
+					   {/* FORMAT KARTLARI */}
+					   <a href={`${API_URL}${result.files.dxf}`} className="group p-5 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between">
+						  <div><div className="font-bold text-white">Industrial DXF</div><div className="text-[10px] text-slate-500 italic mt-1">Optimized for LightBurn & CNC</div></div>
+						  <Download className="w-5 h-5 text-slate-700 group-hover:text-cyan-400 transition-colors" />
+					   </a>
+					   <a href={`${API_URL}${result.files.svg}`} className="group p-5 bg-slate-950 border border-slate-800 rounded-2xl hover:border-blue-500 transition-all flex items-center justify-between">
+						  <div><div className="font-bold text-white">Master SVG</div><div className="text-[10px] text-slate-500 italic mt-1">Perfect for Illustrator / Inkscape</div></div>
+						  <Download className="w-5 h-5 text-slate-700 group-hover:text-blue-400 transition-colors" />
+					   </a>
+					   <a href={`${API_URL}${result.files.zip}`} className="group p-6 bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border border-cyan-500/30 rounded-2xl hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all flex items-center justify-between">
+						  <div><div className="font-bold text-white">Full Production Bundle</div><div className="text-[10px] text-cyan-400 font-bold mt-1">INCLUDES ALL FORMATS + README</div></div>
+						  <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center shadow-lg"><Download className="w-5 h-5 text-white" /></div>
+					   </a>
+
+					   {/* PRODUCTION SAFETY CHECKLIST */}
+					   <div className="mt-8 p-6 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl">
+						  <h4 className="text-yellow-500 font-bold flex items-center gap-2 mb-4 uppercase tracking-tighter text-sm"><AlertCircle className="w-4 h-4"/> Production Protocol</h4>
+						  <ul className="text-[11px] text-slate-400 space-y-3">
+							<li className="flex gap-2"><span>1.</span> <strong>Verify Scale:</strong> Check dimensions in CAD before cutting material.</li>
+							<li className="flex gap-2"><span>2.</span> <strong>Inspect Nodes:</strong> Ensure path complexity matches your machine's feed rate.</li>
+							<li className="flex gap-2"><span>3.</span> <strong>Safety First:</strong> Cuttora is an AI tool. User assumes all manufacturing risks.</li>
+						  </ul>
+					   </div>
+					</div>
+				  </div>
+				</div>
+			  </div>
+
+			  <div className="space-y-6">
+				<div className="bg-slate-900/80 border border-slate-700 rounded-3xl p-8 backdrop-blur-xl">
+				   <h4 className="font-bold text-white mb-6 uppercase tracking-widest text-xs border-b border-slate-800 pb-4">Quality Assurance</h4>
+				   <div className="space-y-6">
+					  <div>
+						<div className="flex justify-between text-[10px] mb-2"><span className="text-slate-500 uppercase">Input Integrity</span><span className="text-green-400 font-bold">{result.quality_report?.status}</span></div>
+						<div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden"><div className="bg-green-500 h-full w-full"></div></div>
+					  </div>
+					  <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
+						<p className="text-[10px] text-slate-400 leading-relaxed italic">"{result.quality_report?.message}"</p>
+					  </div>
+					  <div className="pt-4">
+						<div className="text-[10px] text-slate-500 mb-2 uppercase">Recommended Material</div>
+						<div className="text-sm text-cyan-400 font-bold">3mm-5mm Plywood / Acrylic</div>
+					  </div>
+				   </div>
+				</div>
+			  </div>
+			</div>
+		  )}
+		</div>
+	  </section>
+	) : (
         // --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
