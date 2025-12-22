@@ -526,54 +526,77 @@ export default function App() {
     } catch(e) { }
   };
 
-  // --- 1. AŞAMA: KALİTE ANALİZİ (Kredi Harcamaz) ---
+  // --- 1. AŞAMA: AKILLI YÜKLEME YÖNETİCİSİ (BATCH & SINGLE) ---
   const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    // 1. Dosyaları listeye çevir (Artık tek değil, çoklu gelebilir)
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
     if (!apiKey) { alert("Please login with a key."); return; }
 
-    setIsProcessing(true);
-    setProcessStatus("Scanning Image Quality..."); // UI'da görünecek ilk mesaj
-    
-    const fd = new FormData();
-    fd.append("file", file);
-
-    try {
-        // Backend'deki analiz merkezine gidiyoruz
-        const res = await fetch(`${API_URL}/analyze`, { method: "POST", body: fd });
-        const data = await res.json();
-        const report = data.quality_report; // Backend'den gelen rapor
+    // --- SENARYO A: TEK DOSYA (Eski Detaylı Analiz Modu) ---
+    if (files.length === 1) {
+        const file = files[0];
+        setIsProcessing(true);
+        setProcessStatus("Scanning Image Quality..."); 
         
-        // Eğer kalite düşükse veya risk varsa modalı aç ve dosyayı hafızaya al
-        if (report.status.includes("Warning") || report.energy < 300) {
-            setQualityReport(report);
-            setPendingFile(file); // Onay verirse kullanmak üzere dosyayı sakla
-            setQualityModalOpen(true);
-            setIsProcessing(false);
-        } else {
-            // Kalite "Excellent" ise hiç sormadan asıl işleme geç
+        const fd = new FormData();
+        fd.append("file", file);
+
+        try {
+            const res = await fetch(`${API_URL}/analyze`, { method: "POST", body: fd });
+            const data = await res.json();
+            const report = data.quality_report;
+            
+            // Kalite düşükse uyar
+            if (report.status.includes("Warning") || report.energy < 300) {
+                setQualityReport(report);
+                setPendingFile(file);
+                setQualityModalOpen(true);
+                setIsProcessing(false);
+            } else {
+                startFinalProcessing(file);
+            }
+        } catch (err) {
+            console.error("Analysis failed, proceeding direct.");
             startFinalProcessing(file);
         }
-    } catch (err) {
-        console.error("Analysis failed, proceeding to direct processing");
-        startFinalProcessing(file); // Analiz çökerse kullanıcıyı bekletme, devam et
+    } 
+    // --- SENARYO B: TOPLU İŞLEM (Batch Blitz Modu - YENİ!) ---
+    else {
+        // Kullanıcıdan toplu işlem onayı al
+        if(!confirm(`Start batch processing for ${files.length} files?\n\nThis will consume ${files.length} credits.`)) return;
+
+        setIsProcessing(true);
+        let completed = 0;
+
+        // Döngüye gir: Her dosyayı sırayla işle
+        for (const file of files) {
+            setProcessStatus(`Batch Processing: ${completed + 1}/${files.length} \nFile: ${file.name}`);
+            try {
+                // 'true' parametresi batch modunu açar (Sonucu ekrana basma, indir)
+                await startFinalProcessing(file, true); 
+            } catch (error) {
+                console.error(`Error processing ${file.name}`, error);
+            }
+            completed++;
+        }
+        setIsProcessing(false);
+        setProcessStatus("Batch Completed!");
+        // Döngü bitince input'u temizle ki tekrar aynı dosyaları seçebilsin
+        e.target.value = null; 
+        alert(`All ${files.length} files processed! Check your downloads folder.`);
     }
   };
   
-  // --- 2. AŞAMA: ASIL VEKTÖRLEŞTİRME (Kredi Burada Düşer) ---
-  const startFinalProcessing = async (file) => {
-    setIsProcessing(true);
+  // --- 2. AŞAMA: ASIL VEKTÖRLEŞTİRME (Batch Destekli) ---
+  const startFinalProcessing = async (file, isBatch = false) => {
+    if(!isBatch) setIsProcessing(true);
     
-    // Kullanıcıya işlemin aşamalarını hissettiren simülasyon metinleri
-    const statusMessages = [
-        "Analyzing Geometry...", 
-        "Optimizing Nodes...", 
-        "Closing Open Paths...", 
-        "Generating Production DXF..."
-    ];
+    // Simülasyon metinleri (Sadece tekli işlemde veya batch'in içinde döner)
+    const statusMessages = ["Analyzing Geometry...", "Optimizing Nodes...", "Closing Open Paths...", "Generating Production DXF..."];
     let i = 0;
     const interval = setInterval(() => { 
-        setProcessStatus(statusMessages[i % 4]); 
+        if(!isBatch) setProcessStatus(statusMessages[i % 4]); 
         i++; 
     }, 2000);
 
@@ -586,21 +609,33 @@ export default function App() {
         const data = await res.json();
         
         if (data.status === "success") {
-            setResult(data);
-            // Başarılıysa krediyi güncelle
+            if (!isBatch) {
+                // Tekli işlemse sonucu ekrana bas (Eski usül)
+                setResult(data); 
+            } else {
+                // Batch ise sonucu ekrana basma, OTOMATİK İNDİR (Yeni usül)
+                const link = document.createElement('a');
+                link.href = `${API_URL}${data.files.zip}`;
+                link.setAttribute('download', '');
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+            }
+            
+            // Krediyi anlık güncelle
             if (apiKey !== "cuttora_admin_master") {
                 fetch(`${API_URL}/api/credits/${apiKey}`)
                   .then(r => r.json())
                   .then(d => setCredits(d.credits));
             }
         } else { 
-            alert(data.detail || "Processing failed"); 
+            if(!isBatch) alert(data.detail || "Processing failed"); 
         }
     } catch (e) { 
-        alert("Connection error during processing."); 
+        if(!isBatch) alert("Connection error during processing."); 
     } finally {
         clearInterval(interval);
-        setIsProcessing(false);
+        if(!isBatch) setIsProcessing(false);
     }
   };
   
