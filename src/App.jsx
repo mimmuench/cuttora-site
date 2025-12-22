@@ -687,9 +687,14 @@ export default function App() {
 
                 <div className="md:col-span-2 bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 min-h-[250px] shadow-inner relative">
                   <div className="w-44 h-44 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl">
-                    {/* CANLI ÖNİZLEME: SVG VARSA SVG, YOKSA PENDING, O DA YOKSA ICON */}
+                    {/* CANLI ÖNİZLEME: ANALİZ VE ÜRETİM SENKRONU */}
                     {result ? (
-                      <img src={`${API_URL}${result.files.svg}`} className="max-w-full max-h-full object-contain" alt="SVG Master" />
+                      <img 
+                        src={`${API_URL}${result.files.svg}`} 
+                        className="max-w-full max-h-full object-contain" 
+                        alt="SVG Master" 
+                        style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
+                      />
                     ) : pendingFile ? (
                       <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
                     ) : (
@@ -704,7 +709,6 @@ export default function App() {
                       </div>
                       <div className="flex flex-col items-end gap-3">
                         <div className="text-cyan-400 font-mono font-black text-2xl tracking-tighter">CREDITS: {credits}</div>
-                        {/* ZENGİNLEŞTİRİLMİŞ KREDİ BUTONU */}
                         <button onClick={() => setPaymentModalOpen(true)} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 px-6 rounded-xl text-xs uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(37,99,235,0.4)] transition-all">
                           🚀 Add More Credits
                         </button>
@@ -754,69 +758,67 @@ export default function App() {
             </div>
 
             {/* 3. İSTASYON: ÜRETİM MERKEZİ VE ONAYLANMIŞ ÇIKTI PAKETİ */}
-			<div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
-			  <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
-				<div className="grid lg:grid-cols-2 gap-16">
-				  
-				  {/* SOL: ÜRETİLEN SVG ÖNİZLEMESİ (SADECE GÖRÜNÜR YAPILDI) */}
-				  <div className="space-y-6">
-					<div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
-					  {isProcessing ? (
-						<div className="text-center">
-						  <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
-						  <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div></div>
-						</div>
-					  ) : (
-						<img 
-						  src={result ? `${API_URL}${result.files.svg}` : ''} 
-						  className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" 
-						  alt="Final Production Preview" 
-						  style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
-						/>
-					  )}
-					</div>
-				  </div>
+            <div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
+              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
+                <div className="grid lg:grid-cols-2 gap-16">
+                  
+                  {/* SOL: ÜRETİLEN SVG ÖNİZLEMESİ (SADECE GÖRÜNÜR YAPILDI) */}
+                  <div className="space-y-6">
+                    <div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
+                      {isProcessing ? (
+                        <div className="text-center">
+                          <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
+                          <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div></div>
+                        </div>
+                      ) : (
+                        <img 
+                          src={result ? `${API_URL}${result.files.svg}` : ''} 
+                          className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" 
+                          alt="Final Production Preview" 
+                          style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
+                        />
+                      )}
+                    </div>
+                  </div>
 
-				  {/* SAĞ: BACKEND'DEN GELEN TÜM DOSYALARIN LİSTESİ */}
-				  <div className="flex flex-col justify-center gap-6">
-					{result && (
-					  <>
-						<div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-4 shadow-xl">
-						  <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Specifications</h5>
-						  <div className="grid grid-cols-3 gap-8 font-mono text-sm">
-							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
-							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
-							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
-						  </div>
-						</div>
+                  {/* SAĞ: BACKEND'DEN GELEN TÜM DOSYALARIN LİSTESİ */}
+                  <div className="flex flex-col justify-center gap-6">
+                    {result && (
+                      <>
+                        <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-4 shadow-xl">
+                          <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Specifications</h5>
+                          <div className="grid grid-cols-3 gap-8 font-mono text-sm">
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
+                            <div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
+                          </div>
+                        </div>
 
-						<div className="grid gap-4">
-						  {/* ANA DXF BUTONU */}
-						  <a href={`${API_URL}${result.files.dxf}`} download className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
-							<span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</span>
-							<Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
-						  </a>
+                        <div className="grid gap-4">
+                          <a href={`${API_URL}${result.files.dxf}`} download className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
+                            <span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</span>
+                            <Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
+                          </a>
 
-						  {/* FULL BUNDLE (LOCAL'DE ÇALIŞAN 7 DOSYALIK SET) */}
-						  <a href={`${API_URL}${result.files.zip}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-[2rem] hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[16px] border-l-cyan-500 shadow-2xl mt-4">
-							<div>
-							  <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Full Bundle</div>
-							  <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">7 Files: DXF, SVG, EPS, PDF & Assets Included</div>
-							</div>
-							<Download className="w-12 h-12 text-white shadow-lg" />
-						  </a>
-						</div>
-						
-						<button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">
-						  Initialize New Production Cycle
-						</button>
-					  </>
-					)}
-				  </div>
-				</div>
-			  </div>
-			</div>
-			
+                          <a href={`${API_URL}${result.files.zip}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border-l-[16px] border-cyan-500 rounded-2xl hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between shadow-2xl mt-4">
+                            <div>
+                              <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Full Bundle</div>
+                              <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">7 Files: DXF, SVG, EPS, PDF & Assets Included</div>
+                            </div>
+                            <Download className="w-12 h-12 text-white shadow-lg" />
+                          </a>
+                        </div>
+                        
+                        <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">
+                          Initialize New Production Cycle
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             {/* 4. İSTASYON: DISCLAIMER & PROTOKOL (SABİT EN ALTA) */}
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl">
               <h4 className="text-2xl font-black text-white mb-10 border-b border-slate-800 pb-6 flex items-center gap-4 tracking-tighter uppercase">
@@ -848,7 +850,6 @@ export default function App() {
           </div>
         </section>
       ) : (
-						  
 		// --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
