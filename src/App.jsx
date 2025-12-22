@@ -753,14 +753,14 @@ export default function App() {
               </div>
             </div>
 
-            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE CANLI İNDİRME GARANTİSİ */}
+            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE ONAYLANMIŞ ÇIKTI PAKETİ */}
 			<div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
 			  <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl">
 				<div className="grid lg:grid-cols-2 gap-16">
 				  
-				  {/* SOL: CANLI SVG PREVIEW (AYDINLATILMIŞ) */}
+				  {/* SOL: ÜRETİLEN SVG ÖNİZLEMESİ (SADECE GÖRÜNÜR YAPILDI) */}
 				  <div className="space-y-6">
-					<div className="bg-white/[0.03] rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
+					<div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
 					  {isProcessing ? (
 						<div className="text-center">
 						  <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
@@ -769,68 +769,45 @@ export default function App() {
 					  ) : (
 						<img 
 						  src={result ? `${API_URL}${result.files.svg}` : ''} 
-						  className="max-w-full max-h-full drop-shadow-[0_0_50px_rgba(255,255,255,0.1)] brightness-110 invert" 
+						  className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" 
 						  alt="Final Production Preview" 
+						  style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
 						/>
 					  )}
 					</div>
 				  </div>
 
-				  {/* SAĞ: TEKNİK VERİLER & CANLI İNDİRME MERKEZİ */}
+				  {/* SAĞ: BACKEND'DEN GELEN TÜM DOSYALARIN LİSTESİ */}
 				  <div className="flex flex-col justify-center gap-6">
 					{result && (
 					  <>
-						<div className="bg-slate-950 p-6 rounded-2xl border border-slate-800 shadow-xl">
-						  <h5 className="text-[10px] text-slate-500 uppercase font-black mb-4 tracking-[0.4em] border-b border-slate-900 pb-2">Unit Metadata</h5>
-						  <div className="grid grid-cols-3 gap-6 font-mono text-[11px]">
-							<div><span className="text-slate-600 block mb-1 uppercase font-black">Width</span><span className="text-cyan-400 font-bold">{result.width_mm}mm</span></div>
-							<div><span className="text-slate-600 block mb-1 uppercase font-black">Height</span><span className="text-cyan-400 font-bold">{result.height_mm}mm</span></div>
-							<div><span className="text-slate-600 block mb-1 uppercase font-black">Nodes</span><span className="text-white font-bold">{result.node_count || 384}</span></div>
+						<div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-4 shadow-xl">
+						  <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Specifications</h5>
+						  <div className="grid grid-cols-3 gap-8 font-mono text-sm">
+							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
+							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
+							<div><span className="text-slate-600 block mb-2 font-black uppercase text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
 						  </div>
 						</div>
 
-						<div className="grid grid-cols-2 gap-4">
-						  {/* DXF BUTONU - CANLI SUNUCUDA FORCE DOWNLOAD */}
-						  <a 
-							href={`${API_URL}${result.files.dxf}`} 
-							target="_blank" 
-							rel="noopener noreferrer" 
-							download={`Cuttora_Industrial_${result.id || 'Output'}.dxf`}
-							className="group p-5 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between"
-						  >
-							<div className="flex flex-col text-left">
-							  <span className="font-black text-white text-[11px] uppercase">Industrial DXF</span>
-							  <span className="text-[9px] text-cyan-500/50 uppercase font-bold">CNC / LASER</span>
+						<div className="grid gap-4">
+						  {/* ANA DXF BUTONU */}
+						  <a href={`${API_URL}${result.files.dxf}`} download className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
+							<span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</span>
+							<Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
+						  </a>
+
+						  {/* FULL BUNDLE (LOCAL'DE ÇALIŞAN 7 DOSYALIK SET) */}
+						  <a href={`${API_URL}${result.files.zip}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-[2rem] hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[16px] border-l-cyan-500 shadow-2xl mt-4">
+							<div>
+							  <div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Full Bundle</div>
+							  <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">7 Files: DXF, SVG, EPS, PDF & Assets Included</div>
 							</div>
-							<Download className="w-5 h-5 text-slate-700 group-hover:text-cyan-400" />
-						  </a>
-
-						  {/* SVG BUTONU */}
-						  <a href={`${API_URL}${result.files.svg}`} download className="group p-5 bg-slate-950 border border-slate-800 rounded-2xl hover:border-blue-500 transition-all flex items-center justify-between">
-							<span className="font-black text-white text-[11px] uppercase">Master SVG</span>
-							<Download className="w-5 h-5 text-slate-700 group-hover:text-blue-400" />
+							<Download className="w-12 h-12 text-white shadow-lg" />
 						  </a>
 						</div>
-
-						{/* FULL BUNDLE - ZIP (TÜM DOSYALAR) */}
-						<a 
-						  href={`${API_URL}${result.files.zip}`} 
-						  download 
-						  className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 rounded-[2.5rem] hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between border-l-[16px] border-l-cyan-500 shadow-2xl mt-4"
-						>
-						  <div className="text-left">
-							<div className="font-black text-white text-3xl tracking-tighter uppercase italic">Download Bundle</div>
-							<div className="text-[10px] text-cyan-300 font-bold uppercase mt-2 tracking-widest">DXF, SVG, EPS, PDF & README ALL-IN-ONE</div>
-						  </div>
-						  <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-md border border-white/20 group-hover:scale-110 transition-transform">
-							<Download className="w-8 h-8 text-white shadow-lg" />
-						  </div>
-						</a>
 						
-						<button 
-						  onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} 
-						  className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4"
-						>
+						<button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] hover:text-cyan-400 transition-all border border-slate-800 rounded-2xl mt-4">
 						  Initialize New Production Cycle
 						</button>
 					  </>
@@ -839,6 +816,7 @@ export default function App() {
 				</div>
 			  </div>
 			</div>
+			
             {/* 4. İSTASYON: DISCLAIMER & PROTOKOL (SABİT EN ALTA) */}
             <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl">
               <h4 className="text-2xl font-black text-white mb-10 border-b border-slate-800 pb-6 flex items-center gap-4 tracking-tighter uppercase">
