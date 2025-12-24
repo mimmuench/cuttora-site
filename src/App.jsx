@@ -577,9 +577,8 @@ export default function App() {
   // LEGAL MODALS STATE
   const [privacyOpen, setPrivacyOpen] = useState(false);
   const [termsOpen, setTermsOpen] = useState(false);
-  const [cookieOpen, setCookieOpen] = useState(false);
-  
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('cuttora_key') || '');
+  const [cookieOpen, setCookieOpen] = useState(false); 
+  const [apiKey, setApiKey] = useState(() => sessionStorage.getItem('cuttora_auth_key') || '');  
   const [credits, setCredits] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [result, setResult] = useState(null);
@@ -743,12 +742,40 @@ export default function App() {
     }
   };
   
-  const manualLogin = () => {
-      const k = prompt("Enter your License Key:");
-      if(k) { localStorage.setItem('cuttora_key', k); setApiKey(k); window.location.reload(); }
+  // --- AUTHENTICATION MODULE ---
+  const manualLogin = async () => {
+    // 1. Request the license key
+    const k = prompt("Please enter your 12-digit Cuttora License Key:");
+    if (!k) return;
+
+    try {
+      // 2. Validate key with the backend
+      const res = await fetch(`${API_URL}/api/credits/${k}`);
+      const data = await res.json();
+
+      if (res.ok) {
+        // 3. Success: Store in Session (Temporary Memory)
+        sessionStorage.setItem('cuttora_auth_key', k);
+        setApiKey(k);
+        setCredits(data.credits);
+
+        // 4. Welcome Message with Credit Info
+        alert(`Welcome back! You have ${data.credits === 999999 ? 'Unlimited' : data.credits} credits remaining.`);
+      } else {
+        // 5. Invalid Key Warning
+        alert("ERROR: Invalid License Key or No Credits Left. Please check your email or purchase a new pack.");
+      }
+    } catch (e) {
+      alert("Connection Error: Could not reach the authentication server. Please try again later.");
+    }
   };
   
-  const logout = () => { localStorage.removeItem('cuttora_key'); setApiKey(''); setResult(null); window.location.reload(); };
+  const logout = () => {
+    sessionStorage.removeItem('cuttora_auth_key');
+    setApiKey('');
+    setResult(null);
+    window.location.reload(); // Refresh to lock the site again
+  };
 
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
