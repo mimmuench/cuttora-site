@@ -837,230 +837,174 @@ export default function App() {
 
       {/* --- GATEWAY: WORKSPACE OR LANDING --- */}
       {apiKey ? (
-        <section className="pt-8 pb-24 px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
-          <div className="max-w-6xl mx-auto space-y-8">
+        <>
+          {/* 1. İSTASYON: INDUSTRIAL WORKSPACE PANEL (MOBİL UYUMLU) */}
+          <section className="pt-4 md:pt-8 pb-12 px-4 md:px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
+            <div className="max-w-7xl mx-auto space-y-6">
 
-            {/* 💡 PH LANSMAN DOKUNUŞU: JOB SUCCESSFUL BADGE */}
-            {result && (
-              <div className="animate-fade-in flex justify-center">
-                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-green-500/10 border border-green-500/30 shadow-[0_0_25px_rgba(34,197,94,0.25)]">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-green"></div>
-                  <span className="text-xs font-black text-green-400 uppercase tracking-widest italic">
-                    Job Successful • 1 Credit Consumed • {credits} Credits Left
-                  </span>
+              {/* ÜST DURUM BANDI: İŞLEM BAŞARILI BİLGİSİ */}
+              {result && (
+                <div className="animate-fade-in flex justify-center">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-[10px] font-black text-green-400 uppercase tracking-widest">Production Assets Ready</span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* 1. İSTASYON: VARLIK YÜKLEME VE YAKIT İSTASYONU (DASHBOARD İÇİ) */}
-            <div className="bg-slate-900/80 border border-slate-800 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl relative overflow-hidden workshop-panel">
-              <div className="grid md:grid-cols-3 gap-10 items-start">
+              {/* ANA DASHBOARD GRID: ITEMS-STRETCH İLE SÜTUNLAR EŞİTLENDİ */}
+              <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 lg:items-stretch">
                 
-                {/* SOL: DOSYA YÜKLEME ALANI (DÜZELTİLDİ) */}
-                <div className="relative group/upload h-full min-h-[300px]">
-                  <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
-                  <div className="border-2 border-dashed border-slate-700 rounded-3xl p-8 bg-black/40 group-hover/upload:border-cyan-500 transition-all text-center h-full flex flex-col justify-center items-center relative overflow-hidden">
-                    
-                    {/* YENİ İÇERİK BURADA */}
-                    <div className="relative z-10">
-                        <div className="relative inline-block">
-                            <Upload className="w-12 h-12 text-cyan-500 mb-4 mx-auto" />
-                            {/* 'NEW' Rozeti */}
-                            <div className="absolute -top-2 -right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 text-[9px] font-black px-1.5 py-0.5 rounded shadow-lg transform rotate-12">NEW</div>
-                        </div>
-                        <span className="text-[10px] text-white font-black uppercase tracking-[0.2em] block">
-                            Batch Processing Ready
-                        </span>
-                        <span className="text-[9px] text-slate-400 uppercase mt-2 block font-medium">
-                            Drop 1 or 100 Files — We handle the queue
-                        </span>
-                    </div>
-
-                    <div className="absolute inset-0 bg-cyan-500/5 translate-y-full group-hover/upload:translate-y-0 transition-transform duration-500"></div>
-                  </div>
-                </div>
-
-                {/* SAĞ: KREDİ DURUMU VE YENİ EK PAKETLER */}
-                <div className="md:col-span-2 flex flex-col gap-6">
-                  
-                  {/* MEVCUT DURUM KARTI */}
-                  <div className="bg-black/60 rounded-3xl border border-slate-800 p-8 flex items-center gap-10 shadow-inner relative">
-                    <div className="w-32 h-32 bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden shrink-0 shadow-2xl relative">
-                        {result ? (
-                        <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-full object-contain" alt="SVG Master" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
-                        ) : pendingFile ? (
-                        <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-full object-contain" alt="Pending" />
-                        ) : (
-                        <Layers className="w-10 h-10 text-slate-800" />
-                        )}
-                        {isProcessing && <div className="absolute inset-0 bg-cyan-500/20 animate-pulse flex items-center justify-center font-black text-cyan-400 text-[10px] uppercase">Processing...</div>}
-                    </div>
-                    <div className="flex-1">
-                        <div className="flex justify-between items-start mb-2">
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-                                <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
-                                <span className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">System Online</span>
-                            </div>
-                            <div className="text-right">
-                                <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Credits Left</div>
-                                <div className="text-cyan-400 font-mono font-black text-4xl tracking-tighter">{credits}</div>
-                            </div>
-                        </div>
-                        <h3 className="text-white font-black text-xl uppercase tracking-tighter truncate max-w-md">
-                        {pendingFile ? pendingFile.name : "Waiting for Input..."}
-                        </h3>
-                    </div>
-                  </div>
-
-                  {/* 🔥 YENİ EKLENEN KISIM: EK KREDİ PAKETLERİ (TOP-UP) */}
-                  <div className="grid grid-cols-3 gap-4">
-                    {/* PAKET 1: QUICK FIX ($15 / 10 Kredi) */}
-                    <button 
-                        onClick={() => openPaymentModal('extra_10', 15)}
-                        className="bg-slate-900/50 border border-slate-800 hover:border-slate-500 p-4 rounded-2xl text-left hover:bg-slate-800 transition-all group"
-                    >
-                        <div className="text-white font-black text-2xl group-hover:text-cyan-400 transition-colors">+10</div>
-                        <div className="text-[10px] text-slate-500 font-bold uppercase">Quick Fix</div>
-                        <div className="mt-1 text-slate-300 font-mono text-xs">$15.00</div>
-                    </button>
-
-                    {/* PAKET 2: PROJECT PACK ($50 / 50 Kredi) */}
-                    <button 
-                        onClick={() => openPaymentModal('extra_50', 50)}
-                        className="bg-slate-800 border border-cyan-500/30 hover:border-cyan-400 p-4 rounded-2xl text-left relative overflow-hidden group shadow-[0_0_15px_rgba(6,182,212,0.1)]"
-                    >
-                        <div className="absolute top-0 right-0 bg-cyan-500 text-white text-[8px] font-black px-2 py-0.5 rounded-bl-lg">POPULAR</div>
-                        <div className="text-cyan-400 font-black text-2xl group-hover:text-white transition-colors">+50</div>
-                        <div className="text-[10px] text-cyan-200/70 font-bold uppercase">Project Pack</div>
-                        <div className="mt-1 text-white font-mono text-xs">$50.00</div>
-                    </button>
-
-                    {/* PAKET 3: STUDIO BULK ($90 / 100 Kredi) */}
-                    <button 
-                        onClick={() => openPaymentModal('extra_100', 90)}
-                        className="bg-slate-900/50 border border-slate-800 hover:border-slate-500 p-4 rounded-2xl text-left hover:bg-slate-800 transition-all group"
-                    >
-                        <div className="text-white font-black text-2xl group-hover:text-cyan-400 transition-colors">+100</div>
-                        <div className="text-[10px] text-slate-500 font-bold uppercase">Studio Bulk</div>
-                        <div className="mt-1 text-slate-300 font-mono text-xs">$90.00</div>
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            {/* 2. İSTASYON: DİAGNOSTİK ANALİZ VE KREDİ ONAYI */}
-            {qualityReport && !result && (
-              <div className="animate-fade-in p-10 rounded-[2.5rem] border-l-[16px] flex flex-col lg:flex-row items-center justify-between shadow-2xl bg-orange-950/40 border-orange-600">
-                <div className="flex items-center gap-10">
-                  <div className="w-20 h-20 rounded-full flex items-center justify-center border border-orange-500/40 bg-orange-500/20 animate-pulse">
-                    <AlertCircle className="w-10 h-10 text-orange-500" />
-                  </div>
-                  <div className="max-w-2xl">
-                    <h4 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">Diagnostic: {qualityReport.status}</h4>
-                    <p className="text-slate-300 text-sm font-bold uppercase tracking-tight">"{qualityReport.message}"</p>
-                    <span className="block mt-2 text-orange-400 font-black text-[10px]">⚠️ AUTHORIZATION CONSUMES 1 CREDIT.</span>
-                  </div>
-                </div>
-                <Button variant="gradient" className="py-6 px-12 text-sm font-black uppercase shadow-2xl" onClick={() => startFinalProcessing(pendingFile)}>
-                  Authorize Fabrication (-1)
-                </Button>
-				{/* BUTONUN HEMEN ALTINA EKLE: */}
-				<div className="mt-3 text-[9px] text-slate-500 font-bold uppercase text-center italic tracking-widest opacity-70">
-				  <Check className="w-3 h-3 inline mr-1" /> Backed by our 30-day quality guarantee
-				</div>
-              </div>
-            )}
-
-            {/* 3. İSTASYON: ÜRETİM MERKEZİ VE TAM PAKET */}
-            <div className={`transition-all duration-700 ${result || isProcessing ? 'opacity-100 scale-100' : 'opacity-20 scale-[0.98] pointer-events-none'}`}>
-              <div className="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-12 shadow-2xl workshop-panel">
-                <div className="grid lg:grid-cols-2 gap-16">
-                  
-                  {/* SOL: AYDINLATILMIŞ PREVIEW */}
-                  <div className="bg-white/5 rounded-[3rem] border border-slate-800 p-10 relative aspect-square flex items-center justify-center shadow-inner overflow-hidden">
-                    {isProcessing ? (
-                      <div className="text-center">
-                        <div className="text-cyan-400 text-3xl font-black uppercase tracking-widest animate-pulse mb-4">{processStatus}</div>
-                        <div className="w-64 h-1 bg-slate-800 rounded-full overflow-hidden mx-auto"><div className="h-full bg-cyan-500 animate-[laser-scan_2s_linear_infinite]"></div></div>
+                {/* SOL SIDEBAR: KONTROL VE KREDİ ÜNİTESİ */}
+                <div className="flex flex-col gap-6 h-full">
+                  <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/50 rounded-2xl p-6 shadow-xl relative overflow-hidden border-t-cyan-500/40 backdrop-blur-md">
+                    <div className="flex items-center justify-between">
+                      <div className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Engine Online</div>
+                      <div className="text-cyan-400 font-mono font-black text-xl">
+                          {credits === 999999 ? '∞ CREDITS' : `${credits} CREDITS`}
                       </div>
-                    ) : (
-                      <img 
-                        src={result ? `${API_URL}${result.files.svg}?v=${new Date().getTime()}` : ''} 
-                        className="max-w-full max-h-full drop-shadow-[0_0_30px_rgba(255,255,255,0.1)] brightness-125" 
-                        alt="Production Result" 
-                        style={{ filter: 'invert(0.9) hue-rotate(180deg)' }}
-                      />
-                    )}
+                    </div>
                   </div>
 
-                  <div className="flex flex-col justify-center gap-6">
-                    {result && (
-                      <>
-                        <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 mb-2 shadow-xl">
-                          <h5 className="text-[11px] text-slate-500 uppercase font-black mb-6 tracking-[0.4em] border-b border-slate-900 pb-3">Technical Specs</h5>
-                          <div className="grid grid-cols-3 gap-8 font-mono text-sm">
-                            <div><span className="text-slate-600 block mb-2 text-[10px]">Width</span><span className="text-cyan-400 font-black text-xl">{result.width_mm}mm</span></div>
-                            <div><span className="text-slate-600 block mb-2 text-[10px]">Height</span><span className="text-cyan-400 font-black text-xl">{result.height_mm}mm</span></div>
-                            <div><span className="text-slate-600 block mb-2 text-[10px]">Nodes</span><span className="text-white font-black text-xl">{result.node_count || 128}</span></div>
+                  <div className="relative group/upload h-40 lg:flex-1">
+                    <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
+                    <div className="h-full border-2 border-dashed border-slate-800 rounded-2xl bg-slate-900/40 group-hover/upload:border-cyan-500/50 transition-all text-center flex flex-col justify-center items-center backdrop-blur-sm">
+                      <Upload className="w-10 h-10 text-cyan-500/30 mb-3" />
+                      <span className="text-[11px] text-white font-black uppercase tracking-[0.2em]">Drop Technical Assets</span>
+                      <span className="text-[9px] text-slate-500 uppercase mt-2 font-bold italic tracking-widest">Supports PNG/JPG</span>
+                    </div>
+                  </div>
+
+                  {/* REFUEL STATION (ZARİF PAKETLER) */}
+                  <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-6 space-y-3 shadow-xl">
+                    <h4 className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2 px-1 flex items-center gap-2"><Zap className="w-3 h-3" /> Quick Refueling</h4>
+                    {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
+                      <button key={pkg.id} onClick={() => openPaymentModal(pkg.id, pkg.p)} className={`w-full p-4 rounded-xl text-left transition-all flex justify-between items-center border ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-950/50 border-slate-800/50 hover:border-slate-700'}`}>
+                        <div><div className={`text-lg font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div><div className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{pkg.l}</div></div>
+                        <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* SAĞ ANA PANEL: ÜRETİM TERMİNALİ VE AKILLI ANALİZ RAPORU */}
+                <div className="flex flex-col gap-6">
+                  <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 border border-slate-800/50 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl workshop-panel flex-1 flex flex-col min-h-[650px]">
+                    <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800/50">
+                      <div>
+                        <h2 className="text-white font-black text-2xl uppercase tracking-tight">Production Terminal</h2>
+                        <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.3em]">AI Core v1.2.4 Active</p>
+                      </div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div><span className="text-[10px] text-slate-400 font-mono uppercase italic tracking-widest">Live Feed</span></div>
+                    </div>
+
+                    <div className="flex-1 flex flex-col justify-center">
+                      <div className="bg-black/40 border border-slate-800/50 rounded-[2.5rem] p-8 flex-1 flex items-center justify-center relative overflow-hidden shadow-inner group mb-8">
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.03),transparent_70%)]"></div>
+                        {result ? (
+                          <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-[450px] object-contain drop-shadow-[0_0_40px_rgba(6,182,212,0.2)] brightness-125 transition-all duration-700" alt="Output" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
+                        ) : pendingFile ? (
+                          <div className="relative w-full h-full flex items-center justify-center">
+                            <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-[450px] object-contain opacity-70" alt="Input Source" />
+                            {isProcessing && (
+                                <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center z-50 text-center px-12">
+                                    <div className="text-cyan-400 text-3xl font-black uppercase tracking-[0.5em] animate-pulse mb-4">{processStatus}</div>
+                                    <div className="text-[11px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-10 leading-relaxed">Analyzing image quality & technical edge sharpness...</div>
+                                    <div className="w-72 h-1 bg-slate-800 rounded-full overflow-hidden relative">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 animate-[laser-scan_2s_linear_infinite]" />
+                                    </div>
+                                </div>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="text-center opacity-20 group-hover:opacity-30 transition-opacity"><Layers className="w-20 h-20 text-slate-400 mx-auto mb-6" /><p className="text-slate-400 text-xs font-black uppercase tracking-[0.5em]">Awaiting Technical Input</p></div>
+                        )}
+                      </div>
+
+                      {/* --- ONAY PANELİ: ANALİZ BİTİNCE MERKEZDE ÇIKAR --- */}
+                      {qualityReport && !result && !isProcessing && (
+                        <div className={`animate-fade-in p-8 rounded-[2.5rem] border-2 transition-all mx-auto w-full ${qualityReport.status === 'Excellent' ? 'border-green-500/40 bg-green-950/20' : 'border-red-500/40 bg-red-950/20 shadow-[0_0_50px_rgba(239,68,68,0.1)]'}`}>
+                          <div className="flex flex-col items-center text-center gap-6">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center border-4 ${qualityReport.status === 'Excellent' ? 'border-green-500 bg-green-500/20' : 'border-red-500 bg-red-500/20 animate-pulse'}`}>
+                              {qualityReport.status === 'Excellent' ? <Check className="w-8 h-8 text-green-500" /> : <AlertCircle className="w-8 h-8 text-red-500" />}
+                            </div>
+                            <div className="max-w-xl">
+                              <h4 className="text-2xl font-black text-white uppercase tracking-tighter">Diagnostic Result: {qualityReport.status}</h4>
+                              <p className="text-slate-300 text-sm mt-2 leading-relaxed italic tracking-wide">"{qualityReport.message}"</p>
+                              {qualityReport.status !== 'Excellent' && (
+                                <div className="mt-6 flex flex-wrap justify-center gap-3 animate-fade-in">
+                                  <span className="text-[9px] px-3 py-1.5 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 uppercase font-black tracking-widest shadow-lg">💡 Tip: Upscale Image</span>
+                                  <span className="text-[9px] px-3 py-1.5 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 uppercase font-black tracking-widest shadow-lg">💡 Tip: Remove Perspective</span>
+                                  <span className="text-[9px] px-3 py-1.5 bg-slate-800/80 rounded-full border border-slate-700 text-slate-400 uppercase font-black tracking-widest shadow-lg">💡 Tip: Use Flat Photos</span>
+                                </div>
+                              )}
+                            </div>
+                            <Button variant="gradient" className="w-full py-5 text-lg uppercase tracking-[0.2em] shadow-[0_0_60px_rgba(6,182,212,0.4)] active:scale-95 transition-all" onClick={() => startFinalProcessing(pendingFile)}>
+                              {qualityReport.status === 'Excellent' ? "Start Production & Generate Bundle (-1 Credit)" : "I Accept Risks & Generate Bundle (-1 Credit)"}
+                            </Button>
+                            {qualityReport.status !== 'Excellent' && ( <button onClick={() => {setPendingFile(null); setQualityReport(null);}} className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-white transition-colors underline decoration-dotted">Or upload a flat front-facing version</button> )}
                           </div>
                         </div>
+                      )}
 
-                        <div className="grid gap-4">
-                          <a href={`${API_URL}${result.files.dxf}`} download className="group p-6 bg-slate-950 border border-slate-800 rounded-2xl hover:border-cyan-500 transition-all flex items-center justify-between shadow-xl">
-                            <span className="font-black text-white text-base uppercase tracking-widest">Industrial DXF Export</span>
-                            <Download className="w-6 h-6 text-slate-700 group-hover:text-cyan-400" />
-                          </a>
-
-                          <a href={`${API_URL}${result.files.zip}?v=${new Date().getTime()}`} download className="group p-10 bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border-l-[16px] border-cyan-500 rounded-2xl hover:shadow-[0_0_60px_rgba(6,182,212,0.3)] transition-all flex items-center justify-between shadow-2xl mt-4">
-                            <div>
-                              <div className="font-black text-white text-3xl italic uppercase">Download Bundle</div>
-                              <div className="text-[11px] text-cyan-300 font-bold uppercase mt-2">7 PRODUCTION ASSETS INCLUDED</div>
+                      {/* --- SONUÇ PANELİ: MM ÖLÇÜLERİ KALDIRILDI, SADECE BUTONLAR KALDI --- */}
+                      {result && (
+                        <div className="animate-fade-in flex flex-col items-center w-full mx-auto space-y-8">
+                          <a href={`${API_URL}${result.files.zip}`} download className="flex items-center justify-between w-full bg-cyan-600 hover:bg-cyan-500 text-white p-8 rounded-[2rem] font-black uppercase tracking-widest text-2xl transition-all shadow-[0_10px_60px_rgba(6,182,212,0.4)] group active:scale-95 relative overflow-hidden">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            <div className="flex flex-col items-start text-left leading-tight">
+                              <span>Download Master Bundle (ZIP)</span>
+                              <span className="text-[10px] opacity-70 mt-1 uppercase font-bold tracking-tighter">Includes Raw/Smooth DXF, SVG, EPS, PNG & README</span>
                             </div>
-                            <Download className="w-12 h-12 text-white shadow-lg" />
+                            <Download className="w-12 h-12 group-hover:translate-y-1 transition-all" />
                           </a>
+                          
+                          <div className="flex flex-col items-center w-full border-t border-slate-800/50 pt-8">
+                             <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="text-[12px] text-slate-500 font-black uppercase tracking-[0.4em] hover:text-cyan-400 transition-colors flex items-center justify-center gap-4 py-4 px-12 border border-slate-800 rounded-full hover:border-cyan-500/50 active:scale-95 shadow-inner bg-slate-950/40">
+                                <Plus className="w-4 h-4" /> New Production Cycle
+                             </button>
+                          </div>
                         </div>
-                        <button onClick={() => {setResult(null); setQualityReport(null); setPendingFile(null); window.scrollTo({top: 0, behavior: 'smooth'})}} className="w-full py-5 text-[10px] text-slate-600 font-black uppercase tracking-[0.3em] border border-slate-800 rounded-2xl mt-4">
-                          Initialize New Production Cycle
-                        </button>
-                      </>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* 4. İSTASYON: DISCLAIMER & PROTOKOL (SABİT EN ALTA) */}
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 shadow-2xl workshop-panel">
-              <h4 className="text-2xl font-black text-white mb-10 border-b border-slate-800 pb-6 flex items-center gap-4 tracking-tighter uppercase">
-                <AlertCircle className="w-8 h-8 text-yellow-500" /> Production Disclaimer & Safety Protocol
-              </h4>
-              <div className="grid md:grid-cols-2 gap-12 text-[12px] leading-relaxed tracking-wider">
-                <div className="space-y-8">
-                  <div>
-                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">1. Quality Acknowledgment:</h5>
-                    <p className="text-slate-300 font-bold uppercase opacity-70">Output precision is directly linked to input quality. Low-resolution images may affect technical accuracy.</p>
+              {/* 🛡️ KRİTİK PROTOKOL VE DISCLAIMER (PERSPEKTİF UYARISI DAHİL) */}
+              <div className="bg-[#0f172a] border-2 border-slate-800 rounded-[2.5rem] p-12 shadow-2xl relative overflow-hidden workshop-panel">
+                <div className="absolute top-0 right-0 p-8 opacity-5"><Scissors className="w-32 h-32 text-white" /></div>
+                <h4 className="text-3xl font-black text-white mb-10 border-b-2 border-slate-800 pb-6 flex items-center gap-5 tracking-tighter uppercase">
+                  <AlertCircle className="w-10 h-10 text-yellow-500" /> Production Safety Protocol
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-[13px] leading-relaxed tracking-wide font-bold uppercase text-slate-300">
+                  <div className="space-y-10">
+                    <div className="border-l-4 border-red-500 pl-6 py-2 bg-red-500/5 transition-all hover:bg-red-500/10 shadow-lg">
+                      <h5 className="text-red-500 mb-3 tracking-[0.2em] text-[15px] font-black">1. PERSPECTIVE & SCENE CLEANUP (MANDATORY):</h5>
+                      <p className="leading-relaxed font-bold italic">The AI engine processes pixels based on canvas coordinates. <span className="text-white underline decoration-red-500 decoration-2">DELETE ALL FURNITURE, MOCKUPS, OR BACKGROUNDS</span> before uploading. Angled photos result in skewed vector geometry. Upload <span className="text-cyan-400 underline decoration-2">FLAT, FRONT-FACING</span> original artwork only.</p>
+                    </div>
+                    <div className="border-l-4 border-slate-700 pl-6 py-2">
+                      <h5 className="text-slate-400 mb-3 tracking-[0.2em] text-[15px] font-black">2. QUALITY ACKNOWLEDGMENT:</h5>
+                      <p className="italic opacity-80 text-[12px]">Technical precision is directly linked to source resolution. Processing low-res mockup backgrounds will result in skewed and degraded fabrication accuracy.</p>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">2. Check Before Cutting:</h5>
-                    <p className="text-slate-300 font-bold uppercase opacity-70">ALWAYS verify dimensions and cut paths in your CAD software BEFORE sending files to your machine.</p>
+                  <div className="space-y-10">
+                    <div className="border-l-4 border-cyan-500 pl-6 py-2 transition-all hover:bg-cyan-500/5 shadow-lg">
+                      <h5 className="text-cyan-500 mb-3 tracking-[0.2em] text-[15px] font-black">3. PRE-CUT VERIFICATION:</h5>
+                      <p className="leading-relaxed font-bold uppercase">ALWAYS verify dimensions and path integrity in technical CAD software (AutoCAD, LightBurn, RDWorks) <span className="text-white underline">BEFORE</span> sending files to your machine.</p>
+                    </div>
+                    <div className="bg-green-500/10 border border-green-500/30 p-8 rounded-3xl shadow-inner relative transition-all hover:bg-green-500/20">
+                      <div className="absolute top-4 right-4"><Check className="text-green-500 w-6 h-6 opacity-50" /></div>
+                      <h5 className="text-green-400 mb-3 tracking-[0.2em] text-[15px] font-black">4. SATISFACTION GUARANTEE:</h5>
+                      <p className="text-green-200 font-medium lowercase italic tracking-normal leading-relaxed leading-relaxed">Conversion unusable? <span className="underline cursor-pointer hover:text-green-400 transition-colors" onClick={() => setIsWaitlistOpen(true)}>Contact support@cuttora.com</span>. We will refund credits instantly or fix technical paths manually.</p>
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-8">
-                  <div>
-                    <h5 className="text-yellow-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">3. Liability Limitation:</h5>
-                    <p className="text-slate-300 font-bold uppercase opacity-70">Cuttora is NOT responsible for wasted materials or machine time. User assumes full responsibility for the final output.</p>
-                  </div>
-                  <div className="bg-green-500/5 border border-green-500/20 p-8 rounded-2xl shadow-inner">
-                    <h5 className="text-green-500 font-black uppercase mb-3 tracking-[0.2em] text-[13px]">4. Satisfaction Guarantee:</h5>
-                    <p className="text-green-200 font-bold uppercase opacity-70">If the conversion is unusable, contact support@cuttora.com. We will refund credits or manually fix the file.</p>
-                  </div>
-                </div>
+                <div className="mt-12 text-center border-t border-slate-800 pt-8 opacity-50"><p className="text-[10px] text-slate-500 font-black tracking-[0.5em] uppercase">CUTTORA SECURE FABRICATION PROTOCOL — REV 1.2.0</p></div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </>
       ) : (
 		// --- LANDING PAGE (LOGGED OUT) ---
         <>
