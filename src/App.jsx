@@ -265,7 +265,7 @@ const AnnouncementBar = () => (
       {/* 2. BLOK (Sonsuz döngü kesilmesin diye aynısının tekrarı) */}
       <div className="flex items-center gap-3">
         <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
-        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 50+ files at once.</span>
+        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert Up to 100 files at once.</span>
       </div>
 
       <div className="text-slate-600">✦</div>
@@ -779,18 +779,37 @@ export default function App() {
 
   const brands = ['LaserCo', 'MetalArt', 'CricutPro', 'EtsyMakers', 'CNCMasters', 'FabLab'];
   const doubledBrands = [...brands, ...brands]; 
+   
   const testimonials = [
-    { quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once.", author: "Mike T.", role: "CNC Operator" },
-    { quote: "The node reduction is a game changer. No more messy double lines in my metal cuts.", author: "Sarah K.", role: "Laser Designer" },
-    { quote: "DXF export is actually clean. No double lines, no weird spline issues.", author: "James L.", role: "Industrial Engineer" }
+    { 
+      quote: "Finally a tool that closes open paths automatically. My plasma cutter didn't stop once during complex cuts.", 
+      author: "Mike T.", 
+      role: "Industrial CNC Operator" 
+    },
+    { 
+      quote: "The node reduction is a total game changer. Cuttora eliminated all messy double lines in my metal art designs.", 
+      author: "Sarah K.", 
+      role: "Laser Design Specialist" 
+    },
+    { 
+      quote: "DXF export is exceptionally clean. No double nodes or spline issues even in high-detail geometric patterns.", 
+      author: "James L.", 
+      role: "Industrial Manufacturing Engineer" 
+    },
+    { 
+      quote: "Batch processing 50+ files saved me hours of manual cleanup. Essential tool for any serious production shop.", 
+      author: "Elena M.", 
+      role: "Workshop Owner & Maker" 
+    }
   ];
+  
   const doubledTestimonials = [...testimonials, ...testimonials];
   const faqs = [
-    { q: "What image formats do you support?", a: "We currently support JPG, PNG, WEBP, and BMP files. We are working on supporting PDF imports soon." },
-    { q: "Can I use the output for commercial projects?", a: "Yes! All files generated with Cuttora are royalty-free and yours to use for any commercial fabrication or digital sales." },
-    { q: "How accurate is the 'Thin Line' detection?", a: "Our AI is trained specifically for CNC tolerances. It highlights areas that might be too thin for standard plasma or laser kerfs." },
-    { q: "Do I need to install any software?", a: "No, Cuttora is 100% web-based. It runs in your browser and uses cloud processing for heavy lifting." },
-    { q: "What is coming in Version 2.0?", a: "We are building the future of fabrication! V2 will include Smart Island Detection, Automatic Bridging, Line Thickening tools, and detailed Risk Analysis Reports to ensure perfect cuts every time." }
+    { q: "Does it work with angled mockup photos?", a: "V1 is engineered for front-facing, high-contrast technical assets. While mockups can be processed, angled perspectives may lead to geometric distortion. For production-ready precision, we recommend using flat, isolated artwork." },
+    { q: "Do I spend a credit for every upload?", a: "No. Our Pre-Production Diagnostic Scan analyzes your asset's quality first. You only authorize credit usage after reviewing the technical report, ensuring you don't pay for low-resolution or incompatible files." },
+    { q: "What do I get in the Master Bundle?", a: "Every successful conversion delivers a secure ZIP containing Raw and Smooth DXF files, a production-ready SVG, an EPS file for legacy software, and a Technical README for machine setup." },
+    { q: "Can I use the output for commercial projects?", a: "Yes. All fabrication-ready files are royalty-free and yours to use for physical production, Etsy sales, or custom client commissions." },
+    { q: "What is on the V2 roadmap?", a: "V2 (January 2026) will introduce Smart Island Detection, Automatic Bridging, and AI Perspective Correction to handle complex mockup photos automatically." }
   ];
 
   return (
@@ -801,10 +820,27 @@ export default function App() {
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
-      {/* --- LEGAL MODALS (STABİL) --- */}
-      <LegalModal isOpen={privacyOpen} onClose={() => setPrivacyOpen(false)} title="Privacy Policy" content={`Last Updated: December 2025\n\n1. Data Collection: Email only.\n2. Processing: Secure temporary servers.\n3. Security: SSL & Stripe.`} />
-      <LegalModal isOpen={termsOpen} onClose={() => setTermsOpen(false)} title="Terms of Service" content={`Last Updated: December 2025\n\n1. Usage: Non-exclusive license.\n2. Responsibility: User-owned images.\n3. Refunds: Digital goods policy.`} />
-      <LegalModal isOpen={cookieOpen} onClose={() => setCookieOpen(false)} title="Cookie Policy" content={`Last Updated: December 2025\n\n1. Essential Cookies: Login sessions only.`} />
+      {/* --- LEGAL MODALS (GÜNCELLENMİŞ & GÜVENLİ) --- */}
+      <LegalModal 
+        isOpen={privacyOpen} 
+        onClose={() => setPrivacyOpen(false)} 
+        title="Privacy Policy" 
+        content={`Last Updated: December 2025\n\n1. Data Collection & Usage: We collect only your email address to manage your license key and credit balance. We do not sell your data to third parties.\n\n2. File Privacy: Your uploaded technical assets are processed on secure, temporary servers. Files are automatically deleted from our production cache 24 hours after processing to ensure your design IP remains private.\n\n3. Payment Security: All transactions are processed through Stripe’s Tier-1 secure infrastructure. Cuttora never sees or stores your credit card information.\n\n4. Data Security: We use industry-standard SSL encryption for all data transfers between your machine and our AI engine.`} 
+      />
+      
+      <LegalModal 
+        isOpen={termsOpen} 
+        onClose={() => setTermsOpen(false)} 
+        title="Terms of Service" 
+        content={`Last Updated: December 2025\n\n1. Usage Rights: Upon purchasing credits, Cuttora grants you a non-exclusive, perpetual license to use the generated vector files (DXF, SVG, EPS) for both personal and commercial projects.\n\n2. Content Responsibility: You represent that you own or have the necessary licenses for the images you upload. Cuttora does not claim ownership over your uploaded assets or resulting vectors.\n\n3. Refund Policy: Due to the nature of digital goods, credits are generally non-refundable once consumed. However, if a conversion is technically unusable due to an engine error, we provide a "Satisfaction Guarantee" to fix your file or refund the credit.\n\n4. Service Limitation: Users are responsible for verifying all dimensions and path integrity in their CAD/CAM software before physical production.`} 
+      />
+      
+      <LegalModal 
+        isOpen={cookieOpen} 
+        onClose={() => setCookieOpen(false)} 
+        title="Cookie Policy" 
+        content={`Last Updated: December 2025\n\n1. Essential Cookies: We use only strictly necessary cookies to maintain your secure login session and manage your license key authentication.\n\n2. No Tracking: Cuttora does not use any third-party tracking, advertising, or analytics cookies. We do not follow your behavior across other websites.\n\n3. Storage: Session data is stored locally on your browser to ensure you don't have to re-enter your license key every time you refresh the workspace.`} 
+      />
 
       {/* --- NAVIGATION (TEK KONTROL NOKTASI) --- */}
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg' : 'relative bg-transparent border-transparent py-6'}`}>
@@ -1019,9 +1055,9 @@ export default function App() {
 						<span>v1.2 Update: Batch Processing Engine Online</span>
 					</div>
 				</Reveal>				
-                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Turn Any Image Into <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">Production-Ready Vectors</span></h1>
-                <Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Cuttora automatically analyzes geometry and optimizes paths for laser, CNC, and Cricut." speed={30} delay={500} /></p></Reveal>
-                
+                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Fabrication-Ready Vectors for <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">CNC & Laser Machines</span></h1>
+
+				<Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Automatically scan, diagnose, and transform technical assets into precision DXF and SVG files in seconds." speed={30} delay={500} /></p></Reveal>
                 {/* --- ACİL GİRİŞ BUTONU (BURASI YENİ!) --- */}
                 <Reveal delay={400}>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
@@ -1039,28 +1075,70 @@ export default function App() {
                 </div>
             </section>
             
-            <section className="py-16 border-y border-slate-800/50 bg-slate-950/40 backdrop-blur-sm relative z-10 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-transparent to-slate-950 z-20 pointer-events-none" /><div className="w-full"><div className="flex overflow-hidden relative w-full"><div className="flex animate-scroll whitespace-nowrap gap-20 items-center">{doubledBrands.map((brand, i) => (<span key={i} className="text-2xl font-bold font-mono text-slate-400 flex items-center gap-2 hover:text-cyan-400 transition-colors cursor-default transform duration-300 flex-shrink-0"><div className="w-6 h-6 bg-slate-800 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.1)]"><div className="w-2 h-2 bg-slate-400 rounded-full"></div></div>{brand}</span>))} </div></div></div>
-            </section>
+            {/* YENİ VE SINIRLANDIRILMIŞ LOGO BÖLÜMÜ */}
+			<section className="py-16 border-y border-slate-800/50 bg-slate-950/40 backdrop-blur-sm relative z-10 overflow-hidden">
+			  <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
+				{/* Kenar Yumuşatma Maskeleri */}
+				<div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none" />
+				<div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none" />
+				
+				<div className="flex animate-scroll whitespace-nowrap gap-20 items-center">
+				  {doubledBrands.map((brand, i) => (
+					<span key={i} className="text-2xl font-bold font-mono text-slate-400 flex items-center gap-2 hover:text-cyan-400 transition-colors cursor-default flex-shrink-0">
+					  <div className="w-6 h-6 bg-slate-800 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+						<div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+					  </div>
+					  {brand}
+					</span>
+				  ))}
+				</div>
+			  </div>
+			</section>
 
             <section id="features" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
-                    <Reveal delay={100}><FeatureCard icon={Cpu} title="Smart Vector Engine" description="Proprietary AI tracing algorithms designed specifically for physical output." /></Reveal>
-                    <Reveal delay={200}><FeatureCard icon={Maximize} title="Cut-Safe Analysis" description="Never fail a cut again. Cuttora identifies lines that fall below standard tolerances so you can fix them before cutting." /></Reveal>
-                    <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging" description="Experimental feature to help connect floating islands. Great for stencil fonts and simple shapes." badge="Beta" /></Reveal>
-                    <Reveal delay={400}><FeatureCard icon={Zap} title="DXF Optimization" description="Native DXF export optimized for CNC software. Merges polylines and removes zero-length segments for smoothest movement." /></Reveal>
-                </div>
-                </div>
-            </section>
-            
-            <section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
-                <div className="max-w-7xl mx-auto px-6">
-                <Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-24 text-center">From Pixel to Part</h2></Reveal>
-                <div className="grid md:grid-cols-4 gap-12 relative"><Step number="1" title="Upload" description="Upload your design (PNG/JPG). Black & white or high-contrast images yield the best results." /><Step number="2" title="AI Analysis" description="Our engine identifies shapes, contours, and potential cutting hazards." /><Step number="3" title="Optimize" description="Paths are smoothed, nodes are reduced, and geometry is cleaned for faster machining." /><Step number="4" title="Fabricate" description="Download production-ready DXF or SVG files instantly." isLast={true} /></div>
+					<Reveal delay={100}><FeatureCard icon={Cpu} title="Industrial Conversion Pipeline" description="Optimized toolpaths designed specifically for physical output. No double lines or messy nodes." /></Reveal>                    					
+					<Reveal delay={200}><FeatureCard icon={Maximize} title="Pre-Production Diagnostic Scan" description="Get a detailed quality report and action plan before you authorize credit usage. Avoid wasted material." /></Reveal>                    					
+					<Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging (V2)" description="AI-powered connection for floating islands. Coming in January 2026." badge="Roadmap" /></Reveal>                    	
+					<Reveal delay={400}><FeatureCard icon={Zap} title="Industrial Batch Processing" description="Simultaneously process up to 100 designs. Get your entire production library optimized in minutes." /></Reveal>                
+					<Reveal delay={500}><FeatureCard icon={Maximize} title="AI Perspective Correction (V2)" description="Automatically flatten angled mockup photos into perfect 2D planes for precise cutting geometry." badge="Roadmap" /></Reveal>
+					<Reveal delay={600}><FeatureCard icon={AlertCircle} title="Smart Island Detection (V2)" description="Identify 'islands' or closed paths that would fall out during the cutting process before production." badge="Roadmap" /></Reveal>
+				</div>
                 </div>
             </section>
-            
+            			
+			<section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
+				<div className="max-w-7xl mx-auto px-6">
+				<Reveal><h2 className="text-5xl md:text-7xl font-extrabold text-white mb-24 text-center tracking-tight">Industrial <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Workflow</span>
+				</h2>
+				</Reveal>
+				<div className="grid md:grid-cols-4 gap-12 relative">
+				<Step 
+					number="1" 
+					title="Asset Ingestion" 
+					description="Submit high-contrast PNG/JPG files. Use front-facing artwork to ensure perfect vector geometry." 
+				/>
+				<Step 
+					number="2" 
+					title="Batch Pipeline" 
+					description="Deploy up to 100 designs simultaneously. Our engine handles mass-optimization in minutes." 
+				/>
+				<Step 
+					number="3" 
+					title="Integrity Audit" 
+					description="AI scans for resolution and cutting hazards. View your diagnostic report before processing." 
+				/>
+				<Step 
+					number="4" 
+					title="Master Bundle" 
+					description="Download a secure ZIP containing Raw/Smooth DXF, SVG, EPS, and a Technical README." 
+					isLast={true} 
+				/>
+				</div>
+			</div>
+			</section>
+			
             <section className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -1076,9 +1154,28 @@ export default function App() {
             </section>
             
             <section className="py-32 bg-slate-900/20 relative z-10 border-y border-slate-800/50 backdrop-blur-sm overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 mb-16 text-center"><Reveal><h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Feedback from our <span className="text-cyan-400">Private Beta</span></h2></Reveal></div>
-                <div className="flex overflow-hidden w-full relative"><div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8 pl-6">{doubledTestimonials.map((t, i) => (<div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300"><TestimonialCard quote={t.quote} author={t.author} role={t.role} /></div>))}</div></div>
-            </section>
+			  <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
+				<Reveal>
+				  <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+					Feedback from our <span className="text-cyan-400">Private Beta</span>
+				  </h2>
+				</Reveal>
+			  </div>
+			  
+			  {/* Sınırlandırılmış ve Maskelenmiş Kaydırma Alanı */}
+			  <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
+				<div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
+				<div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
+				
+				<div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8">
+				  {doubledTestimonials.map((t, i) => (
+					<div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300">
+					  <TestimonialCard quote={t.quote} author={t.author} role={t.role} />
+					</div>
+				  ))}
+				</div>
+			  </div>
+			</section>
 
             <section id="pricing" className="py-32 relative z-10">
 			  <div className="max-w-7xl mx-auto px-6">
@@ -1214,12 +1311,14 @@ export default function App() {
             <div><h4 className="font-bold text-white mb-6 text-xl">Resources</h4><ul className="space-y-4 text-slate-300"><li>Documentation</li><li>Laser Cutting Guide</li><li>Blog</li><li>Community</li></ul></div>
             <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors">Cookie Policy</button></li></ul></div>
           </div>
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
+         		  
+		  <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
             <p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
-            <div className="flex gap-6">
-              <div className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400"><span className="font-bold text-sm">𝕏</span></div>
-              <div className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400"><span className="font-bold text-sm">In</span></div>
-              <div className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400"><span className="font-bold text-sm">Ig</span></div>
+            <div className="flex gap-6 items-center">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-500/50 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
+                Community hubs launching Jan 2026
+              </span>
             </div>
           </div>
         </div>
