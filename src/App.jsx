@@ -1262,71 +1262,103 @@ export default function App() {
                             </div>
                         </div>
                     </Reveal>
-			
-					<div className="text-center mt-12">
+
+                    <div className="text-center mt-12">
 						<p className="text-slate-400 text-lg">
-							Have custom requirements or high volume needs? 
-							<a 
-								href="mailto:contact@cuttora.com?subject=Enterprise Inquiry - Cuttora" 
-								className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors"
-							> 
-								Contact us
-							</a> 
-							for enterprise solutions.
+						  Have custom requirements or high volume needs? 
+						  <a 
+							href="mailto:contact@cuttora.com?subject=Enterprise Inquiry - Cuttora" 
+							className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors"
+						  > 
+							Contact us
+						  </a> 
+						  for enterprise solutions.
 						</p>
+					  </div>
 					</div>
-						
-            <section id="faq" className="py-32 relative z-10">
-                <div className="max-w-4xl mx-auto px-6">
-                    <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
-                    <div className="space-y-4">
-                        {faqs.map((item, i) => (
-                            <Reveal key={i} delay={i * 100}>
-                                <FAQItem question={item.q} answer={item.a} />
-                            </Reveal>
-                        ))}
-                    </div>
-                </div>
-            </section>
+				  </section>
 
-            <section className="py-32 relative z-10">
-                <div className="max-w-5xl mx-auto px-6">
-                    <Reveal>
-                        <TiltCard>
-                            <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900/30 rounded-[3rem] p-16 text-center border border-slate-600 hover:border-cyan-500/50 transition-all duration-700 overflow-hidden relative group shadow-2xl">
-                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                                <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Ready to optimize your workflow?</h2>
-                                <div className="flex justify-center gap-4 relative z-10">
-                                    <Button variant="gradient" className="text-lg px-12 py-5 shadow-2xl" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started</Button>
-                                </div>
-                            </div>
-                        </TiltCard>
-                    </Reveal>
-                </div>
-            </section>
-        </>
-      )}
+				  <section id="faq" className="py-32 relative z-10">
+					<div className="max-w-4xl mx-auto px-6">
+					  <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
+					  <div className="space-y-4">
+						{faqs.map((item, i) => (
+						  <Reveal key={i} delay={i * 100}>
+							<FAQItem question={item.q} answer={item.a} />
+						  </Reveal>
+						))}
+					  </div>
+					</div>
+				  </section>
 
-      <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-1 md:col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6"><div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center"><Scissors className="w-4 h-4 text-white" /></div>Cuttora</div><p className="text-slate-300 leading-relaxed text-lg">The AI-powered vector engine for makers, fabricators, and designers.</p></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li><li>API</li><li>Showcase</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Resources</h4><ul className="space-y-4 text-slate-300"><li>Documentation</li><li>Laser Cutting Guide</li><li>Blog</li><li>Community</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors">Cookie Policy</button></li></ul></div>
-          </div>
-         		  
-		  <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
-            <p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
-            <div className="flex gap-6 items-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-500/50 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
-                Community hubs launching Jan 2026
-              </span>
-            </div>
-          </div>
-        </div>
-      </footer>     
-    </div>
-  );
-}
+				  <section className="py-32 relative z-10">
+					<div className="max-w-5xl mx-auto px-6">
+					  <Reveal>
+						<TiltCard>
+						  <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900/30 rounded-[3rem] p-16 text-center border border-slate-600 hover:border-cyan-500/50 transition-all duration-700 overflow-hidden relative group shadow-2xl">
+							<div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-transparent to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+							<h2 className="text-4xl md:text-6xl font-bold text-white mb-8 relative z-10">Ready to optimize your workflow?</h2>
+							<div className="flex justify-center gap-4 relative z-10">
+							  <Button variant="gradient" className="text-lg px-12 py-5 shadow-2xl" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started</Button>
+							</div>
+						  </div>
+						</TiltCard>
+					  </Reveal>
+					</div>
+				  </section>
+				</>
+			  )}
+
+			  <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
+				<div className="max-w-7xl mx-auto px-6">
+				  <div className="grid md:grid-cols-4 gap-12 mb-16">
+					<div className="col-span-1 md:col-span-1">
+					  <div className="flex items-center gap-2 font-bold text-2xl text-white mb-6">
+						<div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
+						  <Scissors className="w-4 h-4 text-white" />
+						</div>
+						Cuttora
+					  </div>
+					  <p className="text-slate-300 leading-relaxed text-lg">The AI-powered vector engine for makers, fabricators, and designers.</p>
+					</div>
+					<div>
+					  <h4 className="font-bold text-white mb-6 text-xl">Product</h4>
+					  <ul className="space-y-4 text-slate-300">
+						<li>Features</li>
+						<li>Pricing</li>
+						<li>API</li>
+						<li>Showcase</li>
+					  </ul>
+					</div>
+					<div>
+					  <h4 className="font-bold text-white mb-6 text-xl">Resources</h4>
+					  <ul className="space-y-4 text-slate-300">
+						<li>Documentation</li>
+						<li>Laser Cutting Guide</li>
+						<li>Blog</li>
+						<li>Community</li>
+					  </ul>
+					</div>
+					<div>
+					  <h4 className="font-bold text-white mb-6 text-xl">Legal</h4>
+					  <ul className="space-y-4 text-slate-300">
+						<li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li>
+						<li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li>
+						<li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors">Cookie Policy</button></li>
+					  </ul>
+					</div>
+				  </div>
+				  <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
+					<p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
+					<div className="flex gap-6 items-center">
+					  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-500/50 flex items-center gap-2">
+						<div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
+						Community hubs launching Jan 2026
+					  </span>
+					</div>
+				  </div>
+				</div>
+			  </footer>
+			</div>
+			);
+			}
