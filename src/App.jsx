@@ -1262,16 +1262,20 @@ export default function App() {
                             </div>
                         </div>
                     </Reveal>
-
-                    <div className="text-center mt-12">
-                        <p className="text-slate-400 text-lg">
-                            Have custom requirements or high volume needs? 
-                            <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}> Contact us</a> for enterprise solutions.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            
+			
+					<div className="text-center mt-12">
+						<p className="text-slate-400 text-lg">
+							Have custom requirements or high volume needs? 
+							<a 
+								href="mailto:contact@cuttora.com?subject=Enterprise Inquiry - Cuttora" 
+								className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors"
+							> 
+								Contact us
+							</a> 
+							for enterprise solutions.
+						</p>
+					</div>
+						
             <section id="faq" className="py-32 relative z-10">
                 <div className="max-w-4xl mx-auto px-6">
                     <h2 className="text-5xl md:text-6xl font-bold text-white mb-16 text-center">FAQ</h2>
