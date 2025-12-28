@@ -1109,7 +1109,7 @@ export default function App() {
 				<Reveal delay={200}>
 				  <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]">
 					<TypingText 
-					  text="From Midjourney to Metal. Automatically convert WebP, photos, and AI-generated art into production-ready DXF & SVG files. No manual tracing required." 
+					  text="From AI Concept to Physical Reality. Automatically convert WebP, photos, and AI-generated art into precision DXF & SVG files for CNC, Laser, and Plasma production."					  
 					  speed={30} 
 					  delay={500} 
 					/>
