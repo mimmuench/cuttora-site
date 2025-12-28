@@ -974,7 +974,7 @@ export default function App() {
                       <Upload className="w-10 h-10 text-cyan-500/30 mb-3" />
                       <span className="text-[11px] text-white font-black uppercase tracking-[0.2em]">Drop Technical Assets</span>
                       <span className="text-[9px] text-slate-500 uppercase mt-2 font-bold italic tracking-widest">Supports PNG/JPG</span>
-                    </div>
+            
                   </div>
 
 				  {/* SADECE GERÇEK MÜŞTERİLER İÇİN REFUEL STATION (LAUNCHFREE İÇİN DEĞİL) */}
@@ -989,8 +989,8 @@ export default function App() {
 						  <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
 					    </button>
 					  ))}
-				    </div>
-				  )}
+				  </div>
+				)}
 
                 {/* SAĞ ANA PANEL: ÜRETİM TERMİNALİ VE AKILLI ANALİZ RAPORU */}
                 <div className="flex flex-col gap-6">
@@ -1105,12 +1105,17 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-                <div className="mt-12 text-center border-t border-slate-800 pt-8 opacity-50"><p className="text-[10px] text-slate-500 font-black tracking-[0.5em] uppercase">CUTTORA SECURE FABRICATION PROTOCOL — REV 1.2.0</p></div>
-              </div>
-            </div>
-          </section>
-        </>
-      ) : (
+                <div className="mt-12 text-center border-t border-slate-800 pt-8 opacity-50">
+                  <p className="text-[10px] text-slate-500 font-black tracking-[0.5em] uppercase">CUTTORA SECURE FABRICATION PROTOCOL — REV 1.2.0</p>
+                </div>
+              </div> {/* 1. BU EKSİKTİ: workshop-panel div'ini kapatır */}
+            </div> {/* 2. Sağ Panel içeriğini kapatır */}
+          </div> {/* 3. Grid yapısını kapatır */}
+        </div> {/* 4. max-w-7xl div'ini kapatır */}
+      </section> {/* 5. ŞİMDİ HATA VERMEYECEK: Workspace Section kapanışı */}
+    </>
+  ) : (
+	 	  
 		// --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
@@ -1365,16 +1370,6 @@ export default function App() {
 
 				</div>
 				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-
 				  {/* --- EXTERNAL REFUEL STATION (GİRİŞ YAPMAYANLAR İÇİN) --- */}
 				<Reveal delay={400}>
 				  <div className="mt-20 max-w-5xl mx-auto border-t border-slate-800/50 pt-16">
@@ -1478,7 +1473,7 @@ export default function App() {
             </div>
           </div>
         </div>
-      </footer>     
+      </footer>
     </div>
   );
 }
