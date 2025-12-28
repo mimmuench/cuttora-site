@@ -1304,6 +1304,33 @@ export default function App() {
 
 				</div>
 
+				  {/* --- EXTERNAL REFUEL STATION (GİRİŞ YAPMAYANLAR İÇİN) --- */}
+				<Reveal delay={400}>
+				  <div className="mt-20 max-w-5xl mx-auto border-t border-slate-800/50 pt-16">
+				    <div className="text-center mb-10">
+				      <h3 className="text-2xl font-black text-white uppercase tracking-widest flex items-center justify-center gap-3">
+				        <Zap className="text-cyan-400 w-6 h-6" /> Quick Refuel Packs
+				      </h3>
+				      <p className="text-slate-400 text-sm mt-2 font-medium uppercase tracking-widest">Already have a key? Top up your production credits instantly.</p>
+				    </div>
+				    
+				    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+				      {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, 
+				        {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, 
+				        {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
+				        <div key={pkg.id} className={`group p-6 rounded-2xl border transition-all cursor-pointer backdrop-blur-md ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-900/40 border-slate-800 hover:border-slate-600'}`} onClick={() => openPaymentModal(pkg.id, pkg.p)}>
+				          <div className="flex justify-between items-start mb-4">
+				            <div className={`text-4xl font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div>
+				            <div className="text-slate-200 font-mono font-bold text-lg">${pkg.p}</div>
+				          </div>
+				          <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-6">{pkg.l}</div>
+				          <Button variant={pkg.b ? 'gradient' : 'outline'} className="w-full justify-center py-2 text-[10px] uppercase tracking-widest">Add Credits</Button>
+				        </div>
+				      ))}
+				    </div>
+				  </div>
+				</Reveal>
+
 				{/* ✅ GÜVEN BANDI (DOĞRU HİYERARŞİ) */}
                     <Reveal delay={400}>
                         <div className="mt-16 flex flex-col items-center justify-center">
