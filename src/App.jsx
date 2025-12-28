@@ -242,38 +242,40 @@ const Button = ({ children, variant = 'primary', className = '', onClick, ...pro
 // --- ANNOUNCEMENT BAR (Kayan Yazı - Çift Mesaj) ---
 const AnnouncementBar = () => (
   <div className="bg-gradient-to-r from-blue-900 via-slate-900 to-blue-900 border-b border-white/10 text-white py-2.5 relative z-[60] overflow-hidden flex items-center">
-    {/* Sol ve Sağ Kenarlardaki Fade Efekti (Yazılar kaybolarak girsin/çıksın diye) */}
     <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-blue-900 to-transparent z-10"></div>
     <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-blue-900 to-transparent z-10"></div>
 
-    {/* Kayan İçerik (Sonsuz Döngü İçin Çiftlenmiş) */}
     <div className="flex animate-scroll hover:pause-scroll whitespace-nowrap items-center gap-16 pl-4">
       {/* 1. BLOK */}
       <div className="flex items-center gap-3">
         <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
-        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 50+ files at once.</span>
-      </div>
-
-      <div className="text-slate-600">✦</div> {/* Ayırıcı */}
-
-      <div className="flex items-center gap-3">
-        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">LAUNCH OFFER</span>
-        <span className="text-sm font-bold tracking-wide text-yellow-100">Get <span className="text-white underline decoration-yellow-500 decoration-2">50% OFF</span> all credit packs for the first 500 users!</span>
-      </div>
-      
-      <div className="text-slate-600">✦</div> {/* Ayırıcı */}
-
-      {/* 2. BLOK (Sonsuz döngü kesilmesin diye aynısının tekrarı) */}
-      <div className="flex items-center gap-3">
-        <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
-        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert Up to 100 files at once.</span>
+        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 100+ files at once.</span>
       </div>
 
       <div className="text-slate-600">✦</div>
 
       <div className="flex items-center gap-3">
-        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">LAUNCH OFFER</span>
-        <span className="text-sm font-bold tracking-wide text-yellow-100">Get <span className="text-white underline decoration-yellow-500 decoration-2">50% OFF</span> all credit packs for the first 500 users!</span>
+        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW YEAR TRIAL</span>
+        <span className="text-sm font-bold tracking-wide text-yellow-100">
+          Use code <span className="text-white underline decoration-yellow-500 decoration-2 font-black">LAUNCHFREE</span> for 1 Free AI-to-CNC credit!
+        </span>
+      </div>
+      
+      <div className="text-slate-600">✦</div>
+
+      {/* 2. BLOK (Sonsuz döngü için tekrar) */}
+      <div className="flex items-center gap-3">
+        <span className="bg-cyan-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW UPDATE v1.2</span>
+        <span className="text-sm font-bold tracking-wide text-cyan-100">Batch Processing Engine is Live! Convert 100+ files at once.</span>
+      </div>
+
+      <div className="text-slate-600">✦</div>
+
+      <div className="flex items-center gap-3">
+        <span className="bg-yellow-500 text-slate-900 text-[10px] font-black px-2 py-0.5 rounded uppercase">NEW YEAR TRIAL</span>
+        <span className="text-sm font-bold tracking-wide text-yellow-100">
+          Use code <span className="text-white underline decoration-yellow-500 decoration-2 font-black">LAUNCHFREE</span> for 1 Free AI-to-CNC credit!
+        </span>
       </div>
     </div>
   </div>
