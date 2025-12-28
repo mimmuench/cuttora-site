@@ -1235,6 +1235,41 @@ export default function App() {
 			  </div>
 			</section>
 
+			  {/* --- PRODUCTION DEMO SECTION (howitworks.mp4) --- */}
+            <section id="demo" className="py-24 relative z-10 overflow-hidden bg-slate-950/50 border-t border-slate-800/50">
+                <div className="max-w-6xl mx-auto px-6">
+                    <Reveal>
+                        <div className="text-center mb-16">
+                            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">See Cuttora <span className="text-cyan-400">In Action</span></h2>
+                            <p className="text-slate-400 text-lg max-w-2xl mx-auto italic uppercase tracking-widest font-bold">From AI Concept to Fabrication-Ready Master Bundle in Seconds.</p>
+                        </div>
+                    </Reveal>
+
+                    <Reveal delay={200}>
+                        <TiltCard>
+                            <div className="relative rounded-[2.5rem] overflow-hidden border border-slate-700 bg-slate-950 shadow-[0_0_50px_rgba(6,182,212,0.2)] group">
+                                <video 
+                                    className="w-full aspect-video object-cover" 
+                                    controls 
+                                    playsInline
+                                    muted
+                                    autoPlay
+                                    loop
+                                >
+                                    <source src="/howitworks.mp4" type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                                
+                                <div className="absolute top-4 left-4 flex items-center gap-2 pointer-events-none">
+                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(239,68,68,1)]"></div>
+                                    <span className="text-[10px] font-mono text-white/50 uppercase tracking-[0.3em]">Cuttora Engine Demo v1.2</span>
+                                </div>
+                            </div>
+                        </TiltCard>
+                    </Reveal>
+                </div>
+            </section>
+
             <section id="pricing" className="py-32 relative z-10">
 			  <div className="max-w-7xl mx-auto px-6">
 				<Reveal>
