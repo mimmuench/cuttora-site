@@ -565,6 +565,7 @@ const ShowcaseSection = () => {
 
 // --- MAIN APP ---
 export default function App() {
+  const [showFreeTrialPopup, setShowFreeTrialPopup] = useState(false);
   const [logs, setLogs] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -591,6 +592,24 @@ export default function App() {
     const handleScroll = () => setIsScrolled(window.scrollY > 20); 
     window.addEventListener('scroll', handleScroll); 
     
+    // --- TAWK.TO CANLI DESTEK ENTEGRASYONU ---
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function() {
+      var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/69505961096840197e575756/1jdgtq9b9';
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+
+    // --- 5 SANİYE SONRA POP-UP GÖSTERİMİ ---
+    const hasSeenPopup = sessionStorage.getItem('cuttora_trial_popup');
+    if (!hasSeenPopup && !apiKey) {
+      const timer = setTimeout(() => setShowFreeTrialPopup(true), 5000);
+      // Temizlik aşamasında timer'ı temizle
+    }
+
     const p = new URLSearchParams(window.location.search);
     if (p.get('success') === 'true' && p.get('key')) {
       const newKey = p.get('key');
@@ -610,7 +629,9 @@ export default function App() {
             .catch(e => console.log(e));
        }
     }
-    return () => window.removeEventListener('scroll', handleScroll); 
+    return () => {
+        window.removeEventListener('scroll', handleScroll);
+    };
   }, [apiKey]);
 
   const openPaymentModal = (plan, price) => {
