@@ -747,29 +747,30 @@ export default function App() {
   
   // --- AUTHENTICATION MODULE ---
   const manualLogin = async () => {
-    // 1. Request the license key
-    const k = prompt("Please enter your 12-digit Cuttora License Key:");
+    // 1. Lisans anahtarı veya deneme kodu iste
+    const k = prompt("Please enter your License Key or type 'LAUNCHFREE' for a trial:");
     if (!k) return;
 
     try {
-      // 2. Validate key with the backend
-      const res = await fetch(`${API_URL}/api/credits/${k}`);
+      // 2. Anahtarı backend ile doğrula (LAUNCHFREE dahil)
+      const res = await fetch(`${API_URL}/api/credits/${k.trim()}`);
       const data = await res.json();
 
       if (res.ok) {
-        // 3. Success: Store in Session (Temporary Memory)
-        sessionStorage.setItem('cuttora_auth_key', k);
-        setApiKey(k);
+        // 3. Başarılı: Backend'den dönen özel key'i (FREE_IP gibi) veya girilen k'yı sakla
+        const finalKey = data.key || k.trim();
+        sessionStorage.setItem('cuttora_auth_key', finalKey);
+        setApiKey(finalKey);
         setCredits(data.credits);
 
-        // 4. Welcome Message with Credit Info
-        alert(`Welcome back! You have ${data.credits === 999999 ? 'Unlimited' : data.credits} credits remaining.`);
+        // 4. Bilgilendirme mesajı
+        alert(`Success! You have ${data.credits === 999999 ? 'Unlimited' : data.credits} credit(s) available.`);
       } else {
-        // 5. Invalid Key Warning
-        alert("ERROR: Invalid License Key or No Credits Left. Please check your email or purchase a new pack.");
+        // 5. Hata mesajı (Backend'den gelen detayı göster)
+        alert("Error: " + (data.detail || "Invalid License Key or No Credits Left."));
       }
     } catch (e) {
-      alert("Connection Error: Could not reach the authentication server. Please try again later.");
+      alert("Connection Error: Could not reach the server. Please try again later.");
     }
   };
   
