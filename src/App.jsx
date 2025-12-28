@@ -1098,10 +1098,25 @@ export default function App() {
 						<span>v1.2 Update: Batch Processing Engine Online</span>
 					</div>
 				</Reveal>				
-                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">Fabrication-Ready Vectors for <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">CNC & Laser Machines</span></h1>
+                
+				<h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">
+				  Transform AI Art & Images into Precision <br/>
+				  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">
+					CNC Vectors
+				  </span>
+				</h1>
 
-				<Reveal delay={200}><p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]"><TypingText text="Automatically scan, diagnose, and transform technical assets into precision DXF and SVG files in seconds." speed={30} delay={500} /></p></Reveal>
-                {/* --- ACİL GİRİŞ BUTONU (BURASI YENİ!) --- */}
+				<Reveal delay={200}>
+				  <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]">
+					<TypingText 
+					  text="From Midjourney to Metal. Automatically convert WebP, photos, and AI-generated art into production-ready DXF & SVG files. No manual tracing required." 
+					  speed={30} 
+					  delay={500} 
+					/>
+				  </p>
+				</Reveal>
+								
+				{/* --- ACİL GİRİŞ BUTONU (BURASI YENİ!) --- */}
                 <Reveal delay={400}>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
                         <Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button>
