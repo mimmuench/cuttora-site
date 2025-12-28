@@ -867,7 +867,7 @@ export default function App() {
         content={`Last Updated: December 2025\n\n1. Essential Cookies: We use only strictly necessary cookies to maintain your secure login session and manage your license key authentication.\n\n2. No Tracking: Cuttora does not use any third-party tracking, advertising, or analytics cookies. We do not follow your behavior across other websites.\n\n3. Storage: Session data is stored locally on your browser to ensure you don't have to re-enter your license key every time you refresh the workspace.`} 
       />
 
-	  {/* --- FREE TRIAL POPUP --- */}
+      {/* --- FREE TRIAL POPUP --- */}
       {showFreeTrialPopup && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={() => setShowFreeTrialPopup(false)} />
@@ -885,7 +885,7 @@ export default function App() {
         </div>
       )}
 
-      {/* --- NAVIGATION (TEK KONTROL NOKTASI) --- */}
+      {/* --- NAVIGATION --- */}
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="flex items-center gap-2 font-bold text-2xl tracking-tight text-white group cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
@@ -910,18 +910,20 @@ export default function App() {
               </div>
             )}
           </div>
-          <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>{mobileMenuOpen ? <X /> : <Menu />}</button>
+          <button className="md:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
         </div>
       </nav>
 
       {/* --- GATEWAY: WORKSPACE OR LANDING --- */}
       {apiKey ? (
         <>
-          {/* 1. İSTASYON: INDUSTRIAL WORKSPACE PANEL (MOBİL UYUMLU) */}
+          {/* 1. İSTASYON: INDUSTRIAL WORKSPACE PANEL */}
           <section className="pt-4 md:pt-8 pb-12 px-4 md:px-6 min-h-screen relative z-10 bg-[#020617] cyber-grid">
             <div className="max-w-7xl mx-auto space-y-6">
 
-              {/* ÜST DURUM BANDI: İŞLEM BAŞARILI BİLGİSİ */}
+              {/* ÜST DURUM BANDI */}
               {result && (
                 <div className="animate-fade-in flex justify-center">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/30 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
@@ -931,10 +933,10 @@ export default function App() {
                 </div>
               )}
 
-              {/* ANA DASHBOARD GRID: ITEMS-STRETCH İLE SÜTUNLAR EŞİTLENDİ */}
+              {/* ANA DASHBOARD GRID */}
               <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 lg:items-stretch">
                 
-                {/* SOL SIDEBAR: KONTROL VE KREDİ ÜNİTESİ */}
+                {/* SOL SIDEBAR */}
                 <div className="flex flex-col gap-6 h-full">
                   <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800/50 rounded-2xl p-6 shadow-xl relative overflow-hidden border-t-cyan-500/40 backdrop-blur-md">
                     <div className="flex items-center justify-between">
@@ -945,54 +947,54 @@ export default function App() {
                     </div>
                   </div>
 
-			  {/* --- TRIAL USER UPGRADE PANEL (Sadece LAUNCHFREE İçin) --- */}
-			  {apiKey === "LAUNCHFREE" && (
-			    <div className="mb-0 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/20 via-slate-900 to-slate-950 border-2 border-yellow-500/40 shadow-[0_0_30px_rgba(234,179,8,0.2)] animate-float">
-				  <div className="flex items-center gap-2 mb-3">
-				    <Lock className={`w-4 h-4 text-yellow-500`} />
-				    <span className="text-[10px] font-black text-white uppercase tracking-widest">Public Trial Active</span>
-				  </div>
-				  <p className="text-[11px] text-slate-300 font-bold mb-6 leading-relaxed italic">
-				    "You are using a shared key. Purchase a plan to get your PRIVATE License Key and save your production history."
-				  </p>
-				  <Button 
-				    variant="gradient" 
-				    className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-widest"
-				    onClick={() => {
-					  logout(); 
-					  setTimeout(() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }), 100);
-				    }}
-				  >
-				    Get My Private Key
-				  </Button>
-			    </div>
-			  )}
+                  {/* TRIAL USER UPGRADE PANEL */}
+                  {apiKey === "LAUNCHFREE" && (
+                    <div className="mb-0 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/20 via-slate-900 to-slate-950 border-2 border-yellow-500/40 shadow-[0_0_30px_rgba(234,179,8,0.2)] animate-float">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Lock className={`w-4 h-4 text-yellow-500`} />
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest">Public Trial Active</span>
+                      </div>
+                      <p className="text-[11px] text-slate-300 font-bold mb-6 leading-relaxed italic">
+                        "You are using a shared key. Purchase a plan to get your PRIVATE License Key and save your production history."
+                      </p>
+                      <Button 
+                        variant="gradient" 
+                        className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-widest"
+                        onClick={() => {
+                          logout(); 
+                          setTimeout(() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }), 100);
+                        }}
+                      >
+                        Get My Private Key
+                      </Button>
+                    </div>
+                  )}
 
-                  <div className="relative group/upload h-40 lg:flex-1">
+                  <div className="relative group/upload h-40">
                     <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
                     <div className="h-full border-2 border-dashed border-slate-800 rounded-2xl bg-slate-900/40 group-hover/upload:border-cyan-500/50 transition-all text-center flex flex-col justify-center items-center backdrop-blur-sm">
                       <Upload className="w-10 h-10 text-cyan-500/30 mb-3" />
                       <span className="text-[11px] text-white font-black uppercase tracking-[0.2em]">Drop Technical Assets</span>
                       <span className="text-[9px] text-slate-500 uppercase mt-2 font-bold italic tracking-widest">Supports PNG/JPG</span>
-            
+                    </div>
                   </div>
 
-				  {/* SADECE GERÇEK MÜŞTERİLER İÇİN REFUEL STATION (LAUNCHFREE İÇİN DEĞİL) */}
-				  {apiKey && apiKey !== "LAUNCHFREE" && (
-				    <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-6 space-y-3 shadow-xl">
-					  <h4 className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2 px-1 flex items-center gap-2">
-					    <Zap className="w-3 h-3" /> Quick Refueling
-					  </h4>
-					  {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
-					    <button key={pkg.id} onClick={() => openPaymentModal(pkg.id, pkg.p)} className={`w-full p-4 rounded-xl text-left transition-all flex justify-between items-center border ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-950/50 border-slate-800/50 hover:border-slate-700'}`}>
-						  <div><div className={`text-lg font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div><div className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{pkg.l}</div></div>
-						  <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
-					    </button>
-					  ))}
-				  </div>
-				)}
+                  {apiKey && apiKey !== "LAUNCHFREE" && (
+                    <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-6 space-y-3 shadow-xl">
+                      <h4 className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2 px-1 flex items-center gap-2">
+                        <Zap className="w-3 h-3" /> Quick Refueling
+                      </h4>
+                      {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
+                        <button key={pkg.id} onClick={() => openPaymentModal(pkg.id, pkg.p)} className={`w-full p-4 rounded-xl text-left transition-all flex justify-between items-center border ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-950/50 border-slate-800/50 hover:border-slate-700'}`}>
+                          <div><div className={`text-lg font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div><div className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{pkg.l}</div></div>
+                          <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div> {/* SOL SIDEBAR SONU */}
 
-                {/* SAĞ ANA PANEL: ÜRETİM TERMİNALİ VE AKILLI ANALİZ RAPORU */}
+                {/* SAĞ ANA PANEL: ÜRETİM TERMİNALİ */}
                 <div className="flex flex-col gap-6">
                   <div className="bg-gradient-to-br from-slate-900/60 to-slate-950/60 border border-slate-800/50 rounded-[2.5rem] p-10 backdrop-blur-xl shadow-2xl workshop-panel flex-1 flex flex-col min-h-[650px]">
                     <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-800/50">
@@ -1026,7 +1028,6 @@ export default function App() {
                         )}
                       </div>
 
-                      {/* --- ONAY PANELİ: ANALİZ BİTİNCE MERKEZDE ÇIKAR --- */}
                       {qualityReport && !result && !isProcessing && (
                         <div className={`animate-fade-in p-8 rounded-[2.5rem] border-2 transition-all mx-auto w-full ${qualityReport.status === 'Excellent' ? 'border-green-500/40 bg-green-950/20' : 'border-red-500/40 bg-red-950/20 shadow-[0_0_50px_rgba(239,68,68,0.1)]'}`}>
                           <div className="flex flex-col items-center text-center gap-6">
@@ -1052,7 +1053,6 @@ export default function App() {
                         </div>
                       )}
 
-                      {/* --- SONUÇ PANELİ: MM ÖLÇÜLERİ KALDIRILDI, SADECE BUTONLAR KALDI --- */}
                       {result && (
                         <div className="animate-fade-in flex flex-col items-center w-full mx-auto space-y-8">
                           <a href={`${API_URL}${result.files.zip}`} download className="flex items-center justify-between w-full bg-cyan-600 hover:bg-cyan-500 text-white p-8 rounded-[2rem] font-black uppercase tracking-widest text-2xl transition-all shadow-[0_10px_60px_rgba(6,182,212,0.4)] group active:scale-95 relative overflow-hidden">
@@ -1073,10 +1073,10 @@ export default function App() {
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
+                </div> {/* SAĞ ANA PANEL SONU */}
+              </div> {/* GRID SONU */}
 
-              {/* 🛡️ KRİTİK PROTOKOL VE DISCLAIMER (PERSPEKTİF UYARISI DAHİL) */}
+              {/* 🛡️ KRİTİK PROTOKOL VE DISCLAIMER */}
               <div className="bg-[#0f172a] border-2 border-slate-800 rounded-[2.5rem] p-12 shadow-2xl relative overflow-hidden workshop-panel">
                 <div className="absolute top-0 right-0 p-8 opacity-5"><Scissors className="w-32 h-32 text-white" /></div>
                 <h4 className="text-3xl font-black text-white mb-10 border-b-2 border-slate-800 pb-6 flex items-center gap-5 tracking-tighter uppercase">
@@ -1101,62 +1101,57 @@ export default function App() {
                     <div className="bg-green-500/10 border border-green-500/30 p-8 rounded-3xl shadow-inner relative transition-all hover:bg-green-500/20">
                       <div className="absolute top-4 right-4"><Check className="text-green-500 w-6 h-6 opacity-50" /></div>
                       <h5 className="text-green-400 mb-3 tracking-[0.2em] text-[15px] font-black">4. SATISFACTION GUARANTEE:</h5>
-                      <p className="text-green-200 font-medium lowercase italic tracking-normal leading-relaxed leading-relaxed">Conversion unusable? <span className="underline cursor-pointer hover:text-green-400 transition-colors" onClick={() => setIsWaitlistOpen(true)}>Contact support@cuttora.com</span>. We will refund credits instantly or fix technical paths manually.</p>
+                      <p className="text-green-200 font-medium lowercase italic tracking-normal leading-relaxed">Conversion unusable? <span className="underline cursor-pointer hover:text-green-400 transition-colors" onClick={() => setIsWaitlistOpen(true)}>Contact support@cuttora.com</span>. We will refund credits instantly or fix technical paths manually.</p>
                     </div>
                   </div>
                 </div>
                 <div className="mt-12 text-center border-t border-slate-800 pt-8 opacity-50">
                   <p className="text-[10px] text-slate-500 font-black tracking-[0.5em] uppercase">CUTTORA SECURE FABRICATION PROTOCOL — REV 1.2.0</p>
                 </div>
-              </div> {/* 1. BU EKSİKTİ: workshop-panel div'ini kapatır */}
-            </div> {/* 2. Sağ Panel içeriğini kapatır */}
-          </div> {/* 3. Grid yapısını kapatır */}
-        </div> {/* 4. max-w-7xl div'ini kapatır */}
-      </section> {/* 5. ŞİMDİ HATA VERMEYECEK: Workspace Section kapanışı */}
-    </>
-  ) : (
-	 	  
-		// --- LANDING PAGE (LOGGED OUT) ---
+              </div> 
+            </div> {/* max-w-7xl SONU */}
+          </section> {/* Workspace Section SONU */}
+        </>
+      ) : (
+        // --- LANDING PAGE (LOGGED OUT) ---
         <>
             <section className="relative z-10 pt-32 pb-24 px-6">
-                <div className="max-w-7xl mx-auto text-center">				
-				<Reveal>
-					<div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-cyan-500/30 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default">
-						<span className="flex h-2 w-2 relative">
-							<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-							<span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-						</span>
-						<span>v1.2 Update: Batch Processing Engine Online</span>
-					</div>
-				</Reveal>				
+                <div className="max-w-7xl mx-auto text-center">        
+                <Reveal>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/40 border border-cyan-500/30 text-cyan-400 text-xs font-bold mb-8 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.2)] animate-float-delayed hover:bg-slate-800/60 transition-colors cursor-default">
+                    <span className="flex h-2 w-2 relative">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                    </span>
+                    <span>v1.2 Update: Batch Processing Engine Online</span>
+                  </div>
+                </Reveal>        
                 
-				<h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">
-				  Transform AI Art & Images into Precision <br/>
-				  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">
-					CNC Vectors
-				  </span>
-				</h1>
+                <h1 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight mb-8 max-w-6xl mx-auto leading-[1.1] drop-shadow-2xl">
+                  Transform AI Art & Images into Precision <br/>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 animate-text-shimmer">
+                    CNC Vectors
+                  </span>
+                </h1>
 
-				<Reveal delay={200}>
-				  <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]">
-					<TypingText 
-					  text="From AI Concept to Physical Reality. Automatically convert WebP, photos, and AI-generated art into precision DXF & SVG files for CNC, Laser, and Plasma production."					  
-					  speed={30} 
-					  delay={500} 
-					/>
-				  </p>
-				</Reveal>
-								
-				{/* --- ACİL GİRİŞ BUTONU (BURASI YENİ!) --- */}
+                <Reveal delay={200}>
+                  <p className="text-lg md:text-2xl text-slate-300 max-w-3xl mx-auto mb-12 leading-relaxed font-normal min-h-[60px]">
+                    <TypingText 
+                      text="From AI Concept to Physical Reality. Automatically convert WebP, photos, and AI-generated art into precision DXF & SVG files for CNC, Laser, and Plasma production."            
+                      speed={30} 
+                      delay={500} 
+                    />
+                  </p>
+                </Reveal>
+                
                 <Reveal delay={400}>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24">
                         <Button variant="gradient" className="w-full sm:w-auto text-xl px-10 py-4 shadow-[0_0_30px_rgba(6,182,212,0.4)]" onClick={() => document.getElementById('pricing').scrollIntoView()}>Get Started Now <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></Button>
                         <Button variant="outline" className="w-full sm:w-auto text-xl px-10 py-4" onClick={manualLogin}>I have a Key</Button>
-                    </div>					
-				{/* BURAYA EKLE: */}
-				<p className="mt-[-4rem] mb-12 text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] flex items-center justify-center gap-2 animate-fade-in">
-				  <Lock className="w-3 h-3" /> Risk-Free Trial • 30 Day Money Back Guarantee
-				</p>										
+                    </div>          
+                    <p className="mt-[-4rem] mb-12 text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] flex items-center justify-center gap-2 animate-fade-in">
+                      <Lock className="w-3 h-3" /> Risk-Free Trial • 30 Day Money Back Guarantee
+                    </p>                    
                 </Reveal>
                
                 <Reveal delay={600}><ShowcaseSection /></Reveal>
@@ -1164,70 +1159,68 @@ export default function App() {
                 </div>
             </section>
             
-            {/* YENİ VE SINIRLANDIRILMIŞ LOGO BÖLÜMÜ */}
-			<section className="py-16 border-y border-slate-800/50 bg-slate-950/40 backdrop-blur-sm relative z-10 overflow-hidden">
-			  <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
-				{/* Kenar Yumuşatma Maskeleri */}
-				<div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none" />
-				<div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none" />
-				
-				<div className="flex animate-scroll whitespace-nowrap gap-20 items-center">
-				  {doubledBrands.map((brand, i) => (
-					<span key={i} className="text-2xl font-bold font-mono text-slate-400 flex items-center gap-2 hover:text-cyan-400 transition-colors cursor-default flex-shrink-0">
-					  <div className="w-6 h-6 bg-slate-800 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.1)]">
-						<div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-					  </div>
-					  {brand}
-					</span>
-				  ))}
-				</div>
-			  </div>
-			</section>
+            <section className="py-16 border-y border-slate-800/50 bg-slate-950/40 backdrop-blur-sm relative z-10 overflow-hidden">
+              <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none" />
+                
+                <div className="flex animate-scroll whitespace-nowrap gap-20 items-center">
+                  {doubledBrands.map((brand, i) => (
+                    <span key={i} className="text-2xl font-bold font-mono text-slate-400 flex items-center gap-2 hover:text-cyan-400 transition-colors cursor-default flex-shrink-0">
+                      <div className="w-6 h-6 bg-slate-800 rounded-sm flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                        <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                      </div>
+                      {brand}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </section>
 
             <section id="features" className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid md:grid-cols-2 gap-8">
-					<Reveal delay={100}><FeatureCard icon={Cpu} title="Industrial Conversion Pipeline" description="Optimized toolpaths designed specifically for physical output. No double lines or messy nodes." /></Reveal>                    					
-					<Reveal delay={200}><FeatureCard icon={Maximize} title="Pre-Production Diagnostic Scan" description="Get a detailed quality report and action plan before you authorize credit usage. Avoid wasted material." /></Reveal>                    					
-					<Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging (V2)" description="AI-powered connection for floating islands. Coming in January 2026." badge="Roadmap" /></Reveal>                    	
-					<Reveal delay={400}><FeatureCard icon={Zap} title="Industrial Batch Processing" description="Simultaneously process up to 100 designs. Get your entire production library optimized in minutes." /></Reveal>                
-					<Reveal delay={500}><FeatureCard icon={Maximize} title="AI Perspective Correction (V2)" description="Automatically flatten angled mockup photos into perfect 2D planes for precise cutting geometry." badge="Roadmap" /></Reveal>
-					<Reveal delay={600}><FeatureCard icon={AlertCircle} title="Smart Island Detection (V2)" description="Identify 'islands' or closed paths that would fall out during the cutting process before production." badge="Roadmap" /></Reveal>
-				</div>
+                  <Reveal delay={100}><FeatureCard icon={Cpu} title="Industrial Conversion Pipeline" description="Optimized toolpaths designed specifically for physical output. No double lines or messy nodes." /></Reveal>                               
+                  <Reveal delay={200}><FeatureCard icon={Maximize} title="Pre-Production Diagnostic Scan" description="Get a detailed quality report and action plan before you authorize credit usage. Avoid wasted material." /></Reveal>                               
+                  <Reveal delay={300}><FeatureCard icon={Layers} title="Smart Auto-Bridging (V2)" description="AI-powered connection for floating islands. Coming in January 2026." badge="Roadmap" /></Reveal>                                 
+                  <Reveal delay={400}><FeatureCard icon={Zap} title="Industrial Batch Processing" description="Simultaneously process up to 100 designs. Get your entire production library optimized in minutes." /></Reveal>                
+                  <Reveal delay={500}><FeatureCard icon={Maximize} title="AI Perspective Correction (V2)" description="Automatically flatten angled mockup photos into perfect 2D planes for precise cutting geometry." badge="Roadmap" /></Reveal>
+                  <Reveal delay={600}><FeatureCard icon={AlertCircle} title="Smart Island Detection (V2)" description="Identify 'islands' or closed paths that would fall out during the cutting process before production." badge="Roadmap" /></Reveal>
+                </div>
                 </div>
             </section>
-            			
-			<section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
-				<div className="max-w-7xl mx-auto px-6">
-				<Reveal><h2 className="text-5xl md:text-7xl font-extrabold text-white mb-24 text-center tracking-tight">Industrial <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Workflow</span>
-				</h2>
-				</Reveal>
-				<div className="grid md:grid-cols-4 gap-12 relative">
-				<Step 
-					number="1" 
-					title="Asset Ingestion" 
-					description="Submit high-contrast PNG/JPG files. Use front-facing artwork to ensure perfect vector geometry." 
-				/>
-				<Step 
-					number="2" 
-					title="Batch Pipeline" 
-					description="Deploy up to 100 designs simultaneously. Our engine handles mass-optimization in minutes." 
-				/>
-				<Step 
-					number="3" 
-					title="Integrity Audit" 
-					description="AI scans for resolution and cutting hazards. View your diagnostic report before processing." 
-				/>
-				<Step 
-					number="4" 
-					title="Master Bundle" 
-					description="Download a secure ZIP containing Raw/Smooth DXF, SVG, EPS, and a Technical README." 
-					isLast={true} 
-				/>
-				</div>
-			</div>
-			</section>
-			
+            
+            <section id="how-it-works" className="py-32 bg-slate-900/30 relative z-10 border-y border-slate-800/50 backdrop-blur-sm">
+                <div className="max-w-7xl mx-auto px-6">
+                <Reveal><h2 className="text-5xl md:text-7xl font-extrabold text-white mb-24 text-center tracking-tight">Industrial <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Workflow</span>
+                </h2>
+                </Reveal>
+                <div className="grid md:grid-cols-4 gap-12 relative">
+                <Step 
+                  number="1" 
+                  title="Asset Ingestion" 
+                  description="Submit high-contrast PNG/JPG files. Use front-facing artwork to ensure perfect vector geometry." 
+                />
+                <Step 
+                  number="2" 
+                  title="Batch Pipeline" 
+                  description="Deploy up to 100 designs simultaneously. Our engine handles mass-optimization in minutes." 
+                />
+                <Step 
+                  number="3" 
+                  title="Integrity Audit" 
+                  description="AI scans for resolution and cutting hazards. View your diagnostic report before processing." 
+                />
+                <Step 
+                  number="4" 
+                  title="Master Bundle" 
+                  description="Download a secure ZIP containing Raw/Smooth DXF, SVG, EPS, and a Technical README." 
+                  isLast={true} 
+                />
+                </div>
+            </div>
+            </section>
+            
             <section className="py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-6">
                 <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -1243,30 +1236,28 @@ export default function App() {
             </section>
             
             <section className="py-32 bg-slate-900/20 relative z-10 border-y border-slate-800/50 backdrop-blur-sm overflow-hidden">
-			  <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
-				<Reveal>
-				  <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-					Feedback from our <span className="text-cyan-400">Private Beta</span>
-				  </h2>
-				</Reveal>
-			  </div>
-			  
-			  {/* Sınırlandırılmış ve Maskelenmiş Kaydırma Alanı */}
-			  <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
-				<div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
-				<div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
-				
-				<div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8">
-				  {doubledTestimonials.map((t, i) => (
-					<div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300">
-					  <TestimonialCard quote={t.quote} author={t.author} role={t.role} />
-					</div>
-				  ))}
-				</div>
-			  </div>
-			</section>
+              <div className="max-w-7xl mx-auto px-6 mb-16 text-center">
+                <Reveal>
+                  <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                    Feedback from our <span className="text-cyan-400">Private Beta</span>
+                  </h2>
+                </Reveal>
+              </div>
+              
+              <div className="max-w-7xl mx-auto overflow-hidden relative px-6">
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-950 to-transparent z-20 pointer-events-none md:block hidden" />
+                
+                <div className="flex animate-scroll hover:pause-scroll whitespace-nowrap gap-8">
+                  {doubledTestimonials.map((t, i) => (
+                    <div key={i} className="inline-block transform transition-transform hover:scale-105 duration-300">
+                      <TestimonialCard quote={t.quote} author={t.author} role={t.role} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
 
-			  {/* --- PRODUCTION DEMO SECTION (howitworks.mp4) --- */}
             <section id="demo" className="py-24 relative z-10 overflow-hidden bg-slate-950/50 border-t border-slate-800/50">
                 <div className="max-w-6xl mx-auto px-6">
                     <Reveal>
@@ -1302,125 +1293,117 @@ export default function App() {
             </section>
 
             <section id="pricing" className="py-32 relative z-10">
-			  <div className="max-w-7xl mx-auto px-6">
-				<Reveal>
-				  <div className="text-center mb-20">
-					<h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2>
-					<p className="text-slate-300 text-2xl font-light">🔥 Limited offer for the first 500 users.</p>
-				  </div>
-				</Reveal>
-				
-				{/* PRICING CARDS LISTER (GÜNCELLENMİŞ VE ZENGİNLEŞTİRİLMİŞ İÇERİK) */}
-				<div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
-				  
-				  {/* 1. STARTER PLAN - HOBİCİLER İÇİN */}
-				  <Reveal delay={100} className="h-full">
-				    <PricingCard 
-				      plan="Starter" 
-				      price="$10" 
-				      originalPrice="$20" 
-				      description="Perfect for testing & hobby projects." 
-				      features={[
-				        "5 Credits (No Expiration)",
-				        "Clean SVG & DXF Export",
-				        "Smart Path Closing",
-				        "Standard Node Optimization",
-				        "Personal Use License"
-				      ]} 
-				      onJoin={() => openPaymentModal('starter', 10)} 
-				    />
-				  </Reveal>
+              <div className="max-w-7xl mx-auto px-6">
+                <Reveal>
+                  <div className="text-center mb-20">
+                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Choose Your Plan</h2>
+                    <p className="text-slate-300 text-2xl font-light">🔥 Limited offer for the first 500 users.</p>
+                  </div>
+                </Reveal>
+                
+                <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-stretch">
+                  <Reveal delay={100} className="h-full">
+                    <PricingCard 
+                      plan="Starter" 
+                      price="$10" 
+                      originalPrice="$20" 
+                      description="Perfect for testing & hobby projects." 
+                      features={[
+                        "5 Credits (No Expiration)",
+                        "Clean SVG & DXF Export",
+                        "Smart Path Closing",
+                        "Standard Node Optimization",
+                        "Personal Use License"
+                      ]} 
+                      onJoin={() => openPaymentModal('starter', 10)} 
+                    />
+                  </Reveal>
 
-				  {/* 2. PRO PLAN - ETSY/SATICILAR İÇİN (En Önemlisi) */}
-				  <Reveal delay={200} className="h-full">
-				    <PricingCard 
-				      plan="Pro" 
-				      price="$40" 
-				      originalPrice="$80" 
-				      description="For Etsy sellers & small workshops." 
-				      recommended={true} 
-				      features={[
-				        "50 Credits ($0.80 / file)",
-				        "✨ Batch Processing (NEW)",
-				        "Commercial Use License",
-				        "Advanced Node Reduction",
-				        "Thin Line Safety Check"
-				      ]} 
-				      onJoin={() => openPaymentModal('pro', 40)} 
-				    />
-				  </Reveal>
+                  <Reveal delay={200} className="h-full">
+                    <PricingCard 
+                      plan="Pro" 
+                      price="$40" 
+                      originalPrice="$80" 
+                      description="For Etsy sellers & small workshops." 
+                      recommended={true} 
+                      features={[
+                        "50 Credits ($0.80 / file)",
+                        "✨ Batch Processing (NEW)",
+                        "Commercial Use License",
+                        "Advanced Node Reduction",
+                        "Thin Line Safety Check"
+                      ]} 
+                      onJoin={() => openPaymentModal('pro', 40)} 
+                    />
+                  </Reveal>
 
-				  {/* 3. AGENCY PLAN - ATÖLYELER İÇİN */}
-				  <Reveal delay={300} className="h-full">
-				    <PricingCard 
-				      plan="Agency" 
-				      price="$90" 
-				      originalPrice="$180" 
-				      description="High volume production ready." 
-				      features={[
-				        "150 Credits ($0.60 / file)",
-				        "Unlimited Batch Size",
-				        "Lifetime Commercial Rights",
-				        "Priority Server Queue",
-				        "Direct Engineer Support"
-				      ]} 
-				      onJoin={() => openPaymentModal('agency', 90)} 
-				    />
-				  </Reveal>
+                  <Reveal delay={300} className="h-full">
+                    <PricingCard 
+                      plan="Agency" 
+                      price="$90" 
+                      originalPrice="$180" 
+                      description="High volume production ready." 
+                      features={[
+                        "150 Credits ($0.60 / file)",
+                        "Unlimited Batch Size",
+                        "Lifetime Commercial Rights",
+                        "Priority Server Queue",
+                        "Direct Engineer Support"
+                      ]} 
+                      onJoin={() => openPaymentModal('agency', 90)} 
+                    />
+                  </Reveal>
+                </div>
+                
+                <Reveal delay={400}>
+                  <div className="mt-20 max-w-5xl mx-auto border-t border-slate-800/50 pt-16">
+                    <div className="text-center mb-10">
+                      <h3 className="text-2xl font-black text-white uppercase tracking-widest flex items-center justify-center gap-3">
+                        <Zap className="text-cyan-400 w-6 h-6" /> Quick Refuel Packs
+                      </h3>
+                      <p className="text-slate-400 text-sm mt-2 font-medium uppercase tracking-widest">Already have a key? Top up your production credits instantly.</p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, 
+                        {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, 
+                        {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
+                        <div key={pkg.id} className={`group p-6 rounded-2xl border transition-all cursor-pointer backdrop-blur-md ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-900/40 border-slate-800 hover:border-slate-600'}`} onClick={() => openPaymentModal(pkg.id, pkg.p)}>
+                          <div className="flex justify-between items-start mb-4">
+                            <div className={`text-4xl font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div>
+                            <div className="text-slate-200 font-mono font-bold text-lg">${pkg.p}</div>
+                          </div>
+                          <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-6">{pkg.l}</div>
+                          <Button variant={pkg.b ? 'gradient' : 'outline'} className="w-full justify-center py-2 text-[10px] uppercase tracking-widest">Add Credits</Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
 
-				</div>
-				
-				  {/* --- EXTERNAL REFUEL STATION (GİRİŞ YAPMAYANLAR İÇİN) --- */}
-				<Reveal delay={400}>
-				  <div className="mt-20 max-w-5xl mx-auto border-t border-slate-800/50 pt-16">
-				    <div className="text-center mb-10">
-				      <h3 className="text-2xl font-black text-white uppercase tracking-widest flex items-center justify-center gap-3">
-				        <Zap className="text-cyan-400 w-6 h-6" /> Quick Refuel Packs
-				      </h3>
-				      <p className="text-slate-400 text-sm mt-2 font-medium uppercase tracking-widest">Already have a key? Top up your production credits instantly.</p>
-				    </div>
-				    
-				    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-				      {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, 
-				        {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, 
-				        {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
-				        <div key={pkg.id} className={`group p-6 rounded-2xl border transition-all cursor-pointer backdrop-blur-md ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-900/40 border-slate-800 hover:border-slate-600'}`} onClick={() => openPaymentModal(pkg.id, pkg.p)}>
-				          <div className="flex justify-between items-start mb-4">
-				            <div className={`text-4xl font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div>
-				            <div className="text-slate-200 font-mono font-bold text-lg">${pkg.p}</div>
-				          </div>
-				          <div className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-6">{pkg.l}</div>
-				          <Button variant={pkg.b ? 'gradient' : 'outline'} className="w-full justify-center py-2 text-[10px] uppercase tracking-widest">Add Credits</Button>
-				        </div>
-				      ))}
-				    </div>
-				  </div>
-				</Reveal>
-
-				{/* ✅ GÜVEN BANDI (DOĞRU HİYERARŞİ) */}
-                    <Reveal delay={400}>
-                        <div className="mt-16 flex flex-col items-center justify-center">
-                            <div className="flex items-center gap-4 px-8 py-5 bg-slate-900/40 border border-green-500/20 rounded-[2rem] backdrop-blur-md shadow-[0_0_40px_rgba(34,197,94,0.1)] group hover:border-green-500/40 transition-all">
-                                <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform">
-                                    <Check className="w-6 h-6 text-green-400" />
-                                </div>
-                                <div className="text-left">
-                                    <h4 className="text-white font-black uppercase tracking-widest text-xs">30-Day Satisfaction Guarantee</h4>
-                                    <p className="text-slate-400 text-[10px] uppercase font-bold mt-1 tracking-tight">
-                                        Not satisfied with the vectors? We'll refund your credits or manually fix your file.
-                                    </p>
-                                </div>
+                <Reveal delay={400}>
+                    <div className="mt-16 flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-4 px-8 py-5 bg-slate-900/40 border border-green-500/20 rounded-[2rem] backdrop-blur-md shadow-[0_0_40px_rgba(34,197,94,0.1)] group hover:border-green-500/40 transition-all">
+                            <div className="w-12 h-12 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/30 group-hover:scale-110 transition-transform">
+                                <Check className="w-6 h-6 text-green-400" />
+                            </div>
+                            <div className="text-left">
+                                <h4 className="text-white font-black uppercase tracking-widest text-xs">30-Day Satisfaction Guarantee</h4>
+                                <p className="text-slate-400 text-[10px] uppercase font-bold mt-1 tracking-tight">
+                                    Not satisfied with the vectors? We'll refund your credits or manually fix your file.
+                                </p>
                             </div>
                         </div>
-                    </Reveal>
-
-                    <div className="text-center mt-12">
-                        <p className="text-slate-400 text-lg">
-                            Have custom requirements or high volume needs? 
-                            <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}> Contact us</a> for enterprise solutions.
-                        </p>
                     </div>
+                </Reveal>
+
+                <div className="text-center mt-12">
+                    <p className="text-slate-400 text-lg">
+                        Have custom requirements or high volume needs? 
+                        <a href="mailto:contact@cuttora.com" className="text-cyan-400 hover:text-cyan-300 font-bold underline transition-colors" onClick={(e) => { e.preventDefault(); setIsWaitlistOpen(true); }}> Contact us</a> for enterprise solutions.
+                    </p>
                 </div>
+              </div>
             </section>
             
             <section id="faq" className="py-32 relative z-10">
@@ -1454,23 +1437,18 @@ export default function App() {
         </>
       )}
 
-      <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
+      <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-1 md:col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6"><div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center"><Scissors className="w-4 h-4 text-white" /></div>Cuttora</div><p className="text-slate-300 leading-relaxed text-lg">The AI-powered vector engine for makers, fabricators, and designers.</p></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li><li>API</li><li>Showcase</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Resources</h4><ul className="space-y-4 text-slate-300"><li>Documentation</li><li>Laser Cutting Guide</li><li>Blog</li><li>Community</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6 text-xl">Legal</h4><ul className="space-y-4 text-slate-300"><li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors">Privacy Policy</button></li><li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors">Terms of Service</button></li><li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors">Cookie Policy</button></li></ul></div>
+            <div className="col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6">Cuttora</div><p className="text-slate-300">The AI-powered vector engine for makers.</p></div>
+            <div><h4 className="font-bold text-white mb-6">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li></ul></div>
+            <div><h4 className="font-bold text-white mb-6">Legal</h4><ul className="space-y-4 text-slate-300">
+              <li><button onClick={() => setPrivacyOpen(true)}>Privacy Policy</button></li>
+              <li><button onClick={() => setTermsOpen(true)}>Terms of Service</button></li>
+            </ul></div>
           </div>
-         		  
-		  <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400">
-            <p className="text-lg">© 2025 Cuttora Inc. All rights reserved.</p>
-            <div className="flex gap-6 items-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-500/50 flex items-center gap-2">
-                <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse" />
-                Community hubs launching Jan 2026
-              </span>
-            </div>
+          <div className="border-t border-slate-800 pt-8 text-slate-400">
+            <p>© 2025 Cuttora Inc. All rights reserved.</p>
           </div>
         </div>
       </footer>
