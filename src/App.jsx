@@ -867,6 +867,24 @@ export default function App() {
         content={`Last Updated: December 2025\n\n1. Essential Cookies: We use only strictly necessary cookies to maintain your secure login session and manage your license key authentication.\n\n2. No Tracking: Cuttora does not use any third-party tracking, advertising, or analytics cookies. We do not follow your behavior across other websites.\n\n3. Storage: Session data is stored locally on your browser to ensure you don't have to re-enter your license key every time you refresh the workspace.`} 
       />
 
+	  {/* --- FREE TRIAL POPUP --- */}
+      {showFreeTrialPopup && (
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md" onClick={() => setShowFreeTrialPopup(false)} />
+          <div className="relative bg-slate-900 border-2 border-cyan-500/50 rounded-[2.5rem] p-10 max-w-md w-full shadow-[0_0_60px_rgba(6,182,212,0.3)] animate-float text-center">
+            <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">FROM AI TO CNC 🎨⚡</h3>
+            <p className="text-slate-300 mb-8 font-medium italic">"Stop manual tracing. Upload your AI art or photo and get a production-ready DXF instantly."</p>
+            <div className="bg-slate-950 border-2 border-dashed border-slate-700 p-4 rounded-2xl mb-8 font-mono text-2xl text-cyan-400 font-black tracking-widest">
+              LAUNCHFREE
+            </div>
+            <Button variant="gradient" className="w-full justify-center py-4" onClick={() => { setShowFreeTrialPopup(false); manualLogin(); }}>
+              CLAIM FREE TRIAL
+            </Button>
+            <button onClick={() => { setShowFreeTrialPopup(false); sessionStorage.setItem('cuttora_trial_popup', 'true'); }} className="mt-6 text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-white transition-colors">Maybe later</button>
+          </div>
+        </div>
+      )}
+
       {/* --- NAVIGATION (TEK KONTROL NOKTASI) --- */}
       <nav className={`w-full z-50 transition-all duration-300 border-b ${isScrolled ? 'fixed top-0 bg-slate-950/80 backdrop-blur-xl border-slate-700/50 py-4 shadow-lg' : 'relative bg-transparent border-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
