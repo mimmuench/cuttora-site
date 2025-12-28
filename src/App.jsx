@@ -945,6 +945,29 @@ export default function App() {
                     </div>
                   </div>
 
+			  {/* --- TRIAL USER UPGRADE PANEL (Sadece LAUNCHFREE İçin) --- */}
+			  {apiKey === "LAUNCHFREE" && (
+			    <div className="mb-0 p-6 rounded-2xl bg-gradient-to-br from-yellow-500/20 via-slate-900 to-slate-950 border-2 border-yellow-500/40 shadow-[0_0_30px_rgba(234,179,8,0.2)] animate-float">
+				  <div className="flex items-center gap-2 mb-3">
+				    <Lock className={`w-4 h-4 text-yellow-500`} />
+				    <span className="text-[10px] font-black text-white uppercase tracking-widest">Public Trial Active</span>
+				  </div>
+				  <p className="text-[11px] text-slate-300 font-bold mb-6 leading-relaxed italic">
+				    "You are using a shared key. Purchase a plan to get your PRIVATE License Key and save your production history."
+				  </p>
+				  <Button 
+				    variant="gradient" 
+				    className="w-full justify-center py-4 text-[10px] font-black uppercase tracking-widest"
+				    onClick={() => {
+					  logout(); 
+					  setTimeout(() => document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' }), 100);
+				    }}
+				  >
+				    Get My Private Key
+				  </Button>
+			    </div>
+			  )}
+
                   <div className="relative group/upload h-40 lg:flex-1">
                     <input type="file" multiple onChange={handleUpload} className="absolute inset-0 opacity-0 cursor-pointer z-20" />
                     <div className="h-full border-2 border-dashed border-slate-800 rounded-2xl bg-slate-900/40 group-hover/upload:border-cyan-500/50 transition-all text-center flex flex-col justify-center items-center backdrop-blur-sm">
@@ -954,17 +977,20 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* REFUEL STATION (ZARİF PAKETLER) */}
-                  <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-6 space-y-3 shadow-xl">
-                    <h4 className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2 px-1 flex items-center gap-2"><Zap className="w-3 h-3" /> Quick Refueling</h4>
-                    {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
-                      <button key={pkg.id} onClick={() => openPaymentModal(pkg.id, pkg.p)} className={`w-full p-4 rounded-xl text-left transition-all flex justify-between items-center border ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-950/50 border-slate-800/50 hover:border-slate-700'}`}>
-                        <div><div className={`text-lg font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div><div className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{pkg.l}</div></div>
-                        <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+				  {/* SADECE GERÇEK MÜŞTERİLER İÇİN REFUEL STATION (LAUNCHFREE İÇİN DEĞİL) */}
+				  {apiKey && apiKey !== "LAUNCHFREE" && (
+				    <div className="bg-slate-900/60 border border-slate-800/50 rounded-2xl p-6 space-y-3 shadow-xl">
+					  <h4 className="text-[9px] text-slate-500 font-black uppercase tracking-widest mb-2 px-1 flex items-center gap-2">
+					    <Zap className="w-3 h-3" /> Quick Refueling
+					  </h4>
+					  {[{id: 'extra_10', c: 10, p: 15, l: 'Quick Fix'}, {id: 'extra_50', c: 50, p: 50, l: 'Project Pack', b: true}, {id: 'extra_100', c: 100, p: 90, l: 'Studio Bulk'}].map(pkg => (
+					    <button key={pkg.id} onClick={() => openPaymentModal(pkg.id, pkg.p)} className={`w-full p-4 rounded-xl text-left transition-all flex justify-between items-center border ${pkg.b ? 'bg-cyan-500/5 border-cyan-500/30 hover:border-cyan-400' : 'bg-slate-950/50 border-slate-800/50 hover:border-slate-700'}`}>
+						  <div><div className={`text-lg font-black ${pkg.b ? 'text-cyan-400' : 'text-white'}`}>+{pkg.c}</div><div className="text-[9px] text-slate-500 font-black uppercase tracking-tighter">{pkg.l}</div></div>
+						  <div className="text-slate-300 font-mono text-xs font-bold">${pkg.p}</div>
+					    </button>
+					  ))}
+				    </div>
+				  )}
 
                 {/* SAĞ ANA PANEL: ÜRETİM TERMİNALİ VE AKILLI ANALİZ RAPORU */}
                 <div className="flex flex-col gap-6">
@@ -1338,6 +1364,16 @@ export default function App() {
 				  </Reveal>
 
 				</div>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 
 				  {/* --- EXTERNAL REFUEL STATION (GİRİŞ YAPMAYANLAR İÇİN) --- */}
 				<Reveal delay={400}>
