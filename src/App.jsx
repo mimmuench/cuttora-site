@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import LiveTicker from './components/LiveTicker';
 
 // --- DATASET: 3 Ürünlü + Hız Verisi ---
 const SHOWCASE_DATA = [
@@ -841,6 +842,7 @@ export default function App() {
     <div className="min-h-screen text-slate-100 font-sans selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden relative">
       <GlobalStyles />
       <TechBackground />
+	  <LiveTicker />
       <AnnouncementBar />
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
@@ -1437,18 +1439,76 @@ export default function App() {
         </>
       )}
 
-      <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10">
+      {/* --- FINAL AUTHENTIC RICH FOOTER WITH SOCIAL LINKS --- */}
+      <footer className="bg-slate-950 border-t border-slate-800 py-16 relative z-10 text-base font-medium">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-1"><div className="flex items-center gap-2 font-bold text-2xl text-white mb-6">Cuttora</div><p className="text-slate-300">The AI-powered vector engine for makers.</p></div>
-            <div><h4 className="font-bold text-white mb-6">Product</h4><ul className="space-y-4 text-slate-300"><li>Features</li><li>Pricing</li></ul></div>
-            <div><h4 className="font-bold text-white mb-6">Legal</h4><ul className="space-y-4 text-slate-300">
-              <li><button onClick={() => setPrivacyOpen(true)}>Privacy Policy</button></li>
-              <li><button onClick={() => setTermsOpen(true)}>Terms of Service</button></li>
-            </ul></div>
+            
+            {/* 1. KOLON: MARKA VE MİSYON */}
+            <div className="col-span-1 md:col-span-1">
+              <div className="flex items-center gap-2 font-bold text-2xl text-white mb-6">
+                <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+                  <Scissors className="w-4 h-4 text-white" />
+                </div>
+                Cuttora
+              </div>
+              <p className="text-slate-300 leading-relaxed text-lg font-medium">
+                The AI-powered vector engine for makers, fabricators, and designers worldwide.
+              </p>
+            </div>
+            
+            {/* 2. KOLON: PRODUCT */}
+            <div>
+              <h4 className="font-bold text-white mb-6 text-xl uppercase tracking-wider">Product</h4>
+              <ul className="space-y-4 text-slate-300 font-bold">
+                <li><a href="#features" className="hover:text-cyan-400 transition-colors flex items-center gap-2">Features <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100"/></a></li>
+                <li><a href="#pricing" className="hover:text-cyan-400 transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Showcase</a></li>
+              </ul>
+            </div>
+
+            {/* 3. KOLON: RESOURCES */}
+            <div>
+              <h4 className="font-bold text-white mb-6 text-xl uppercase tracking-wider">Resources</h4>
+              <ul className="space-y-4 text-slate-300 font-bold">
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-cyan-400 transition-colors">Laser Cutting Guide</a></li>
+                <li><button onClick={() => setIsWaitlistOpen(true)} className="hover:text-cyan-400 transition-colors text-left">Contact Sales</button></li>
+              </ul>
+            </div>
+
+            {/* 4. KOLON: LEGAL (POLİTİKALAR BURADA!) */}
+            <div>
+              <h4 className="font-bold text-white mb-6 text-xl uppercase tracking-wider">Legal</h4>
+              <ul className="space-y-4 text-slate-300 font-bold">
+                <li><button onClick={() => setPrivacyOpen(true)} className="hover:text-cyan-400 transition-colors text-left w-full">Privacy Policy</button></li>
+                <li><button onClick={() => setTermsOpen(true)} className="hover:text-cyan-400 transition-colors text-left w-full">Terms of Service</button></li>
+                <li><button onClick={() => setCookieOpen(true)} className="hover:text-cyan-400 transition-colors text-left w-full">Cookie Policy</button></li>
+              </ul>
+            </div>
           </div>
-          <div className="border-t border-slate-800 pt-8 text-slate-400">
-            <p>© 2025 Cuttora Inc. All rights reserved.</p>
+
+          {/* ALT BANT: TELİF VE CANLI SOSYAL LİNKLER */}
+          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-400">
+            <p className="text-lg font-bold uppercase tracking-widest">© 2026 Cuttora Inc. All rights reserved.</p>
+            <div className="flex gap-6">
+              
+              {/* X (Twitter) Profili */}
+              <a href="https://x.com/MundoMetalArt" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400 shadow-lg">
+                <span className="font-bold text-sm">𝕏</span>
+              </a>
+
+              {/* LinkedIn Profili */}
+              <a href="https://www.linkedin.com/in/silke-muench-0ba5a3330/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400 shadow-lg">
+                <span className="font-bold text-sm">In</span>
+              </a>
+
+              {/* Instagram Profili */}
+              <a href="https://www.instagram.com/cuttora.ai/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-900 rounded-full flex items-center justify-center hover:bg-cyan-500 hover:text-white cursor-pointer transition-all border border-slate-700 hover:border-cyan-400 shadow-lg">
+                <span className="font-bold text-sm">Ig</span>
+              </a>
+
+            </div>
           </div>
         </div>
       </footer>
