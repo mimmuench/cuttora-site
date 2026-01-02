@@ -53,8 +53,8 @@ const Lock = (props) => (<IconWrapper {...props}><rect x="3" y="11" width="18" h
 const Server = (props) => (<IconWrapper {...props}><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></IconWrapper>);
 const AlertCircle = (props) => (<IconWrapper {...props}><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></IconWrapper>);
 const FileText = (props) => (<IconWrapper {...props}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></IconWrapper>);
-
-const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile }) => {
+const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pendingFile, selectedMode, setSelectedMode }) => {
+    // 🎯 return kontrolü fonksiyonun İÇİNDE kalmalı.
     if (!isOpen || !report) return null;
 
     // --- RENK VE DURUM MANTIĞI ---
@@ -111,7 +111,25 @@ const QualityWarningModal = ({ isOpen, onClose, report, startFinalProcessing, pe
             </div>
           </div>
 
-          <Button 
+          {/* --- MOD SEÇİM PANELİ --- */}
+          <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800 mb-6">
+            <button 
+              type="button"
+              onClick={() => setSelectedMode("cnc")}
+              className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${selectedMode === "cnc" ? 'bg-cyan-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+            >
+              🔧 CNC Mode
+            </button>
+            <button 
+              type="button"
+              onClick={() => setSelectedMode("design")}
+              className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg transition-all ${selectedMode === "design" ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-500 hover:text-slate-300'}`}
+            >
+              🌈 Design Mode
+            </button>
+          </div>
+		  		  
+		  <Button 
             variant="gradient" 
             className="w-full justify-center py-4 text-lg" 
             onClick={() => {
@@ -573,7 +591,7 @@ export default function App() {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState({ name: '', price: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
-
+  const [selectedMode, setSelectedMode] = useState("cnc"); // Varsayılan mod CNC
   const [processStatus, setProcessStatus] = useState("");
   const [pendingFile, setPendingFile] = useState(null);
   const [qualityModalOpen, setQualityModalOpen] = useState(false);
@@ -731,6 +749,7 @@ export default function App() {
     const fd = new FormData();
     fd.append("file", file);
     fd.append("api_key", apiKey);
+	fd.append("mode", selectedMode);
 
     try {
         const res = await fetch(`${API_URL}/process`, { method: "POST", body: fd });
@@ -847,6 +866,17 @@ export default function App() {
       <PaymentModal isOpen={paymentModalOpen} onClose={() => setPaymentModalOpen(false)} plan={selectedPlan.name} price={selectedPlan.price} onSubmit={handlePaymentSubmit} />
       <WaitlistModal isOpen={isWaitlistOpen} onClose={() => setIsWaitlistOpen(false)} />
       
+	  {/* 🎯 İŞTE BURAYA TAŞIYACAKSIN: Etiket burada çağrılır! */}
+      <QualityWarningModal 
+        isOpen={qualityModalOpen} 
+        onClose={() => setQualityModalOpen(false)} 
+        report={qualityReport} 
+        startFinalProcessing={startFinalProcessing} 
+        pendingFile={pendingFile}
+        selectedMode={selectedMode}
+        setSelectedMode={setSelectedMode}
+      />
+	  
       {/* --- LEGAL MODALS (GÜNCELLENMİŞ & GÜVENLİ) --- */}
       <LegalModal 
         isOpen={privacyOpen} 
@@ -1011,11 +1041,21 @@ export default function App() {
                       <div className="bg-black/40 border border-slate-800/50 rounded-[2.5rem] p-8 flex-1 flex items-center justify-center relative overflow-hidden shadow-inner group mb-8">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.03),transparent_70%)]"></div>
                         {result ? (
-                          <img src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} className="max-w-full max-h-[450px] object-contain drop-shadow-[0_0_40px_rgba(6,182,212,0.2)] brightness-125 transition-all duration-700" alt="Output" style={{ filter: 'invert(0.9) hue-rotate(180deg)' }} />
-                        ) : pendingFile ? (
-                          <div className="relative w-full h-full flex items-center justify-center">
-                            <img src={URL.createObjectURL(pendingFile)} className="max-w-full max-h-[450px] object-contain opacity-70" alt="Input Source" />
-                            {isProcessing && (
+						  <img 
+							src={`${API_URL}${result.files.svg}?v=${new Date().getTime()}`} 
+							className="max-w-full max-h-[450px] object-contain drop-shadow-[0_0_40px_rgba(6,182,212,0.2)] brightness-125 transition-all duration-700" 
+							alt="Output" 
+							/* 🎯 Sadece CNC modunda renkleri ters çevir, Design modunda orijinal kalsın */
+							style={selectedMode === "cnc" ? { filter: 'invert(0.9) hue-rotate(180deg)' } : {}} 
+						  />
+						) : pendingFile ? (
+						  <div className="relative w-full h-full flex items-center justify-center">
+							<img 
+							  src={URL.createObjectURL(pendingFile)} 
+							  className="max-w-full max-h-[450px] object-contain opacity-70" 
+							  alt="Input Source" 
+							/>
+							{isProcessing && (
                                 <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-md flex flex-col items-center justify-center z-50 text-center px-12">
                                     <div className="text-cyan-400 text-3xl font-black uppercase tracking-[0.5em] animate-pulse mb-4">{processStatus}</div>
                                     <div className="text-[11px] text-slate-400 font-bold uppercase tracking-[0.3em] mb-10 leading-relaxed">Analyzing image quality & technical edge sharpness...</div>
